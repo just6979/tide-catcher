@@ -9,6 +9,19 @@ import webapp2
 
 api_key = open("api_key.txt").readline().strip()
 
+template = """
+<html>
+<head>
+<title>tide-cacher</title>
+</head>
+<body>
+<pre>
+%s
+</pre>
+</body>
+</html>
+"""
+
 
 def fetch_and_decode():
     out = ""
@@ -43,19 +56,7 @@ def fetch_and_decode():
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write("""
-<html>
-<head>
-<title>tide-cacher</title>
-</head>
-<body>
-<pre>
-%s
-</pre>
-</body>
-</html>
-""" % fetch_and_decode()
-                            )
+        self.response.write(template % fetch_and_decode())
 
 
 app = webapp2.WSGIApplication([
