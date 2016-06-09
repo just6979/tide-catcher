@@ -1,5 +1,5 @@
-/api_key.txt
+/app/api_key.txt
 
-.idea/libraries/*.xml
+.idea/libraries/Google_App_Engine_SDK.xml
 .idea/misc.xml
 .idea/workspace.xml
