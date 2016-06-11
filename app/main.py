@@ -39,14 +39,14 @@ def fetch_and_decode():
 
     response = urllib2.urlopen(request_url)
     data = json.loads(response.read().decode())
-    # out += data
+    # out += data + "\n"
 
     out += data['copyright'] + "\n"
 
     out += "Location: %s, %s\n" % (data['responseLat'], data['responseLon'])
 
     for tide in data['extremes']:
-        out += "{type}\t{time}\n".format(
+        out += "{type:>4}  {time}\n".format(
             type=tide['type'],
             time=time.asctime(time.localtime(tide['dt']))
         )
