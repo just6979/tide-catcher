@@ -21,9 +21,9 @@ api_key = tides.get_api_key()
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         output = ""
-        url, data = tides.fetch(api_key)
+        url, response = tides.fetch(api_key)
         output += url + '\n'
-        output += tides.decode(data)
+        output += tides.decode(response)
         self.response.write(template % output)
 
 
