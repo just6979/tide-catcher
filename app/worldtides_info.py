@@ -29,24 +29,25 @@ def fetch(api_key):
 
 def decode(data):
     data = json.loads(data)
-    out = ""
+    out = {}
 
     try:
-        out += data['copyright'] + "\n"
+        out['copyright'] = data['copyright']
 
         result_lat = data['responseLat']
         result_lon = data['responseLon']
 
-        out += "Location: %s, %s\n" % (result_lat, result_lon)
+        out['location'] = "%s, %s" % (result_lat, result_lon)
 
+        out['tides'] = []
         for tide in data['extremes']:
-            out += "{type:>4}  {time}\n".format(
+            out['tides'].append("{type:>4}  {time}\n".format(
                 type=tide['type'],
                 time=time.asctime(time.localtime(tide['dt']))
-            )
+            ))
     except KeyError:
-        out += "Error: Bad JSON Data\n"
-        out += str(data) + '\n'
+        out['error'] = "Error: Bad JSON Data\n"
+        out['data'] = str(data)
 
     return out
 

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tide Catcher - Tides for {{location}}</title>
+</head>
+<body>
+
+<h1>Tide Catcher</h1>
+
+<h2>Location</h2>
+<p>{{location}}
+
+<h2>Tides</h2>
+<ul>
+    {% for tide in tides %}
+    <li>{{tide}}</li>
+    {% endfor %}
+</ul>
+
+<h2>Query</h2>
+<p>{{query_url}}</p>
+
+<h2>Notes</h2>
+<p><em>{{copyright}}</em></p>
+
+</body>
+</html>
