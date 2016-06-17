@@ -31,12 +31,18 @@ class MainHandler(webapp2.RequestHandler):
         query_url, response = tides.fetch(api_key)
         data = tides.decode(response)
 
-        values = {
-            'query_url': query_url,
-            'copyright': data['copyright'],
-            'location': data['location'],
-            'tides': data['tides'],
-        }
+        if 'error' in data:
+            values = {
+                'error': data['error'],
+                'data': data['data'],
+            }
+        else:
+            values = {
+                'query_url': query_url,
+                'copyright': data['copyright'],
+                'location': data['location'],
+                'tides': data['tides'],
+            }
 
         template = JINJA_ENVIRONMENT.get_template("index.html")
         self.response.write(template.render(values))

@@ -8,6 +8,10 @@
 
 <h1>Tide Catcher</h1>
 
+{% if error %}
+<p>{{error}}</p>
+<pre>{{data}}</pre>
+{% else %}
 <h2>Location</h2>
 <p>{{location}}
 
@@ -24,5 +28,6 @@
 <h2>Notes</h2>
 <p><em>{{copyright}}</em></p>
 
+{% endif %}
 </body>
 </html>
