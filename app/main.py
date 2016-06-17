@@ -2,6 +2,7 @@ import os
 
 import jinja2
 import webapp2
+from google.appengine.ext import ndb
 
 import worldtides_info as tides
 
@@ -10,20 +11,17 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
-# template = """
-# <html>
-# <head>
-# <title>tide-cacher</title>
-# </head>
-# <body>
-# <pre>
-# %s
-# </pre>
-# </body>
-# </html>
-# """
-
 api_key = tides.get_api_key()
+
+
+class LocationMatch(ndb.Model):
+    query_location = ndb.StringProperty(indexed=True)
+    result_location = ndb.StringProperty(indexed=False, required=True)
+
+
+class TideData(ndb.Model):
+    result_location = ndb.StringProperty(indexed=True)
+    tide_data = ndb.JsonProperty(indexed=False, required=True)
 
 
 class MainHandler(webapp2.RequestHandler):
