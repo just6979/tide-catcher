@@ -13,12 +13,12 @@
 <pre>{{data}}</pre>
 {% else %}
 <h2>Location</h2>
-<p>{{location}}
+<p>{{lat}}, {{lon}}</p>
 
 <h2>Tides</h2>
 <ul>
     {% for tide in tides %}
-    <li>{{tide}}</li>
+    <li>{{tide.type}} - {{tide.time}}</li>
     {% endfor %}
 </ul>
 

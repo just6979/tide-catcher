@@ -38,7 +38,8 @@ class MainHandler(webapp2.RequestHandler):
             values = {
                 'query_url': query_url,
                 'copyright': data['copyright'],
-                'location': data['location'],
+                'lat': data['lat'],
+                'lon': data['lat'],
                 'tides': data['tides'],
             }
 

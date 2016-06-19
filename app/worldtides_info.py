@@ -34,17 +34,15 @@ def decode(data):
     try:
         out['copyright'] = data['copyright']
 
-        result_lat = data['responseLat']
-        result_lon = data['responseLon']
-
-        out['location'] = "%s, %s" % (result_lat, result_lon)
+        out['lat'] = data['responseLat']
+        out['lon'] = data['responseLon']
 
         out['tides'] = []
         for tide in data['extremes']:
-            out['tides'].append("{type:>4}  {time}\n".format(
-                type=tide['type'],
-                time=time.asctime(time.localtime(tide['dt']))
-            ))
+            out['tides'].append({
+                'type': tide['type'],
+                'time': time.asctime(time.localtime(tide['dt'])),
+            })
     except KeyError:
         out['error'] = "Error: Bad JSON Data\n"
         out['data'] = str(data)
