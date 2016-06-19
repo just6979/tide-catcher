@@ -16,11 +16,14 @@
 <p>{{lat}}, {{lon}}</p>
 
 <h2>Tides</h2>
-<ul>
+<table>
     {% for tide in tides %}
-    <li>{{tide.type}} - {{tide.time}}</li>
+    <tr>
+        <td>{{tide.type}}</td>
+        <td>{{tide.time}}</td>
+    </tr>
     {% endfor %}
-</ul>
+</table>
 
 <h2>Query</h2>
 <p>{{query_url}}</p>
