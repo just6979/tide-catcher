@@ -13,15 +13,11 @@
 <pre>{{data}}</pre>
 {% else %}
 <h2>Location</h2>
-<p>{{lat}}, {{lon}}</p>
-<h3>Timezone</h3>
-<p>
-    {{tz_name}},
-    {% if tz_offset > 0 %}
-    +
-    {% endif %}
-    {{tz_offset}} hours from UTC
-</p>
+<ul>
+    <li>Request: {{req_lat}}, {{req_lon}}</li>
+    <li>Response: {{resp_lat}}, {{resp_lon}}</li>
+    <li>Response Timezone: {{tz_name}}, UTC{{"%+05d" % tz_offset}}</li>
+</ul>
 
 <h2>Tides</h2>
 <table>

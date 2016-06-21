@@ -30,13 +30,15 @@ class LocationMatch(ndb.Model):
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         # Lynn, MA
-        location = (42.478744, -71.001188)
+        request_lat = 42.478744
+        request_lon = -71.001188
+        request_location = (request_lat, request_lon)
         # right now in UTC as seconds since epoch
         start_time = calendar.timegm(time.gmtime()),
 
-        tz_offset, tz_name = maps.get_tz_offset(location, start_time)
+        tz_offset, tz_name = maps.get_tz_offset(request_location, start_time)
 
-        query_url, response = tides.fetch(location, start_time, api_key)
+        query_url, response = tides.fetch(request_location, start_time, api_key)
         data = tides.decode(response, tz_offset)
 
         if 'error' in data:
@@ -48,8 +50,10 @@ class MainHandler(webapp2.RequestHandler):
             values = {
                 'query_url': query_url,
                 'copyright': data['copyright'],
-                'lat': data['lat'],
-                'lon': data['lon'],
+                'req_lat': request_lat,
+                'req_lon': request_lon,
+                'resp_lat': data['lat'],
+                'resp_lon': data['lon'],
                 'tz_offset': tz_offset,
                 'tz_name': tz_name,
                 'tides': data['tides'],
