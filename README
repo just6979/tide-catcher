@@ -1,1 +1,5 @@
-README
+Fetches tide info from worldtides.info,
+adjusts timestamps using Google Maps API,
+display the next 8 tides in an HTML table.
+
+Next up is finding last 2 tides and the next 6 tides, for reference.
