@@ -50,14 +50,17 @@ def decode(data):
     return out
 
 
-if __name__ == "__main__":
+def main():
     api_key = get_api_key()
     # Lynn, MA
     location = (42.478744, -71.001188)
     # right now in UTC as seconds since epoch
     start_time = calendar.timegm(time.gmtime()),
-
     url, response_data = fetch(location, start_time, api_key)
     print(url)
     out = decode(response_data)
     print(out)
+
+
+if __name__ == "__main__":
+    main()
