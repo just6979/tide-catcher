@@ -27,10 +27,7 @@
 
 <h1>Tide Catcher</h1>
 
-{% if error %}
-<p>{{error}}</p>
-<pre>{{data}}</pre>
-{% else %}
+{% if not error %}
 <h2>Tides</h2>
 <table>
     <tr>
@@ -69,6 +66,10 @@
 <h2>Notes</h2>
 <p><em>{{copyright}}</em></p>
 
+{% else %} # from 'if not error'
+<p>{{error}}</p>
+<pre>{{data}}</pre>
 {% endif %}
+
 </body>
 </html>
