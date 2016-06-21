@@ -9,9 +9,16 @@
         }
 
         table, th, td {
-            border: thin dotted;
             border-collapse: collapse;
             padding: 0.25em;
+        }
+
+        td {
+            border-left: dotted thin;
+        }
+
+        td:first-child {
+            border-left: none;
         }
 
         tr.high {
