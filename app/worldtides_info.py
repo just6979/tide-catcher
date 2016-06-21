@@ -17,6 +17,7 @@ def get_api_key():
 
 
 def fetch(location, start_time, api_key):
+    # TODO: handle errors
     origin_lat, origin_lon = location
 
     request_url = base_url.format(

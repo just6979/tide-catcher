@@ -13,6 +13,7 @@ def get_api_key():
 
 
 def fetch_data(location, timestamp):
+    # TODO: handle errors
     api_key = get_api_key()
     location_string = "%s,%s" % location
 
