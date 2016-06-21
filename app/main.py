@@ -54,6 +54,7 @@ class MainHandler(webapp2.RequestHandler):
                 'req_lon': request_lon,
                 'resp_lat': data['lat'],
                 'resp_lon': data['lon'],
+                'resp_station': data['station'],
                 'tz_offset': tz_offset,
                 'tz_name': tz_name,
                 'tides': data['tides'],

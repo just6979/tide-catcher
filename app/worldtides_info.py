@@ -41,7 +41,7 @@ def decode(data, tz_offset):
 
         out['lat'] = data['responseLat']
         out['lon'] = data['responseLon']
-
+        out['station'] = data['station']
         out['tides'] = []
         for tide in data['extremes']:
             epoch_time = datetime.datetime.utcfromtimestamp(tide['dt'])
