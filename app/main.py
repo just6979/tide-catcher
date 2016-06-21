@@ -34,7 +34,7 @@ class MainHandler(webapp2.RequestHandler):
         # right now in UTC as seconds since epoch
         start_time = calendar.timegm(time.gmtime()),
 
-        tz_offset = maps.get_tz_offset(location, start_time)
+        tz_offset, tz_name = maps.get_tz_offset(location, start_time)
 
         query_url, response = tides.fetch(location, start_time, api_key)
         data = tides.decode(response, tz_offset)
@@ -50,6 +50,8 @@ class MainHandler(webapp2.RequestHandler):
                 'copyright': data['copyright'],
                 'lat': data['lat'],
                 'lon': data['lon'],
+                'tz_offset': tz_offset,
+                'tz_name': tz_name,
                 'tides': data['tides'],
             }
 

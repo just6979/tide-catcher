@@ -37,6 +37,7 @@ def decode_json(data):
         if 'dstOffset' in data:
             offset = offset + data['dstOffset']
         out['offset'] = offset / 3600
+        out['name'] = data['timeZoneName']
     except KeyError:
         error = {
             'msg': "Error: Bad JSON Data\n",
@@ -50,7 +51,7 @@ def get_tz_offset(location, timestamp):
     request_url, json_data = fetch_data(location, timestamp)
     data, err = decode_json(json_data)
     if not err:
-        return data['offset']
+        return data['offset'], data['name']
 
 
 def main():
