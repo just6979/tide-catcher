@@ -52,7 +52,7 @@ def get_tz_offset(location, timestamp):
     request_url, json_data = fetch_data(location, timestamp)
     data, err = decode_json(json_data)
     if not err:
-        return data['offset'], data['name']
+        return request_url, data['offset'], data['name']
 
 
 def main():
