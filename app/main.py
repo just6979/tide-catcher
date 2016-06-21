@@ -6,6 +6,7 @@ import jinja2
 import webapp2
 from google.appengine.ext import ndb
 
+import google_maps as maps
 import worldtides_info as tides
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -33,8 +34,10 @@ class MainHandler(webapp2.RequestHandler):
         # right now in UTC as seconds since epoch
         start_time = calendar.timegm(time.gmtime()),
 
+        tz_offset = maps.get_tz_offset(location, start_time)
+
         query_url, response = tides.fetch(location, start_time, api_key)
-        data = tides.decode(response)
+        data = tides.decode(response, tz_offset)
 
         if 'error' in data:
             values = {

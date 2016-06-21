@@ -4,6 +4,8 @@ import json
 import time
 import urllib
 
+import google_maps as maps
+
 
 def get_api_key():
     return open("worldtides_api_key.txt").readline().strip()
@@ -16,7 +18,7 @@ def fetch(location, start_time, api_key):
         options="extremes",
         lat=origin_lat,
         lon=origin_lon,
-        start=start_time,
+        start=start_time[0],
         key=api_key,
     )
     response = urllib.urlopen(request_url)
@@ -24,7 +26,7 @@ def fetch(location, start_time, api_key):
     return request_url, response.read()
 
 
-def decode(data):
+def decode(data, tz_offset):
     data = json.loads(data)
     out = {}
 
@@ -37,11 +39,12 @@ def decode(data):
         out['tides'] = []
         for tide in data['extremes']:
             epoch_time = datetime.datetime.utcfromtimestamp(tide['dt'])
-
+            offset_delta = datetime.timedelta(hours=tz_offset)
+            adjusted_timestamp = epoch_time + offset_delta
             out['tides'].append({
                 'type': tide['type'],
-                'date': epoch_time.date(),
-                'time': epoch_time.time(),
+                'date': adjusted_timestamp.date(),
+                'time': adjusted_timestamp.time(),
             })
     except KeyError:
         out['error'] = "Error: Bad JSON Data\n"
@@ -58,7 +61,8 @@ def main():
     start_time = calendar.timegm(time.gmtime()),
     url, response_data = fetch(location, start_time, api_key)
     print(url)
-    out = decode(response_data)
+    offset = maps.get_tz_offset(location, start_time)
+    out = decode(response_data, offset)
     print(out)
 
 
