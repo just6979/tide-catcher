@@ -4,7 +4,7 @@ import json
 import time
 import urllib
 
-import google_maps as maps
+import google_maps as maps_api
 
 base_url = """\
 https://www.worldtides.info/api?\
@@ -16,7 +16,7 @@ def get_api_key():
     return open("worldtides_api_key.txt").readline().strip()
 
 
-def fetch(location, start_time, api_key):
+def fetch(api_key, location, start_time):
     # TODO: handle errors
     origin_lat, origin_lon = location
 
@@ -33,12 +33,12 @@ def fetch(location, start_time, api_key):
 
 
 def decode(data, tz_offset):
-    data = json.loads(data)
     out = {}
+
+    data = json.loads(data)
 
     try:
         out['copyright'] = data['copyright']
-
         out['lat'] = data['responseLat']
         out['lon'] = data['responseLon']
         out['station'] = data['station']
@@ -60,16 +60,32 @@ def decode(data, tz_offset):
 
 
 def main():
-    api_key = get_api_key()
+    tides_api_key = get_api_key()
+    maps_api_key = maps_api.get_api_key()
+
     # Lynn, MA
-    location = (42.478744, -71.001188)
+    request_lat = 42.478744
+    request_lon = -71.001188
+    request_location = (request_lat, request_lon)
+
     # right now in UTC as seconds since epoch
     start_time = calendar.timegm(time.gmtime()),
-    url, response_data = fetch(location, start_time, api_key)
-    print(url)
-    offset = maps.get_tz_offset(location, start_time)
-    out = decode(response_data, offset)
-    print(out)
+
+    tz_url, tz_response = maps_api.fetch(maps_api_key, request_location, start_time)
+    tz = maps_api.decode(tz_response)
+
+    tides_url, tides_response = fetch(tides_api_key, request_location, start_time)
+    tides = decode(tides_response, tz['offset'])
+
+    if 'error' in tz:
+        print tz['error']
+        print tz['data']
+    elif 'error' in tides:
+        print tides['error']
+        print tides['data']
+    else:
+        print(tides_url)
+        print(tides)
 
 
 if __name__ == "__main__":

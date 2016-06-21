@@ -12,9 +12,8 @@ def get_api_key():
     return open("google_api_key.txt").readline().strip()
 
 
-def fetch_data(location, timestamp):
+def fetch(api_key, location, timestamp):
     # TODO: handle errors
-    api_key = get_api_key()
     location_string = "%s,%s" % location
 
     request_url = base_url.format(
@@ -27,9 +26,8 @@ def fetch_data(location, timestamp):
     return request_url, response.read()
 
 
-def decode_json(data):
+def decode(data):
     out = {}
-    error = False
 
     data = json.loads(data)
 
@@ -40,34 +38,30 @@ def decode_json(data):
         out['offset'] = offset / 3600
         out['name'] = data['timeZoneName']
     except KeyError:
-        error = {
-            'msg': "Error: Bad JSON Data\n",
-            'data': str(data),
-        }
+        out['error'] = "Error: Bad JSON Data\n"
+        out['data'] = str(data)
 
-    return out, error
-
-
-def get_tz_offset(location, timestamp):
-    request_url, json_data = fetch_data(location, timestamp)
-    data, err = decode_json(json_data)
-    if not err:
-        return request_url, data['offset'], data['name']
+    return out
 
 
 def main():
     # Lynn, MA
-    location = (42.478744, -71.001188)
+    request_lat = 42.478744
+    request_lon = -71.001188
+    request_location = (request_lat, request_lon)
+
     # right now in UTC as seconds since epoch
     timestamp = time.time(),
-    request_url, json_data = fetch_data(location, timestamp)
-    print(request_url)
-    data, err = decode_json(json_data)
-    if not err:
-        print('Offset = %d hours' % data['offset'])
+
+    tz_url, tz_response = fetch(get_api_key(), request_location, timestamp)
+    tz = decode(tz_response)
+
+    print(tz_url)
+    if 'error' not in tz:
+        print('Offset = %s hours' % tz['offset'])
     else:
-        print data['error']
-        print data['data']
+        print tz['error']
+        print tz['data']
 
 
 if __name__ == "__main__":
