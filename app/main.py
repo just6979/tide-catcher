@@ -1,4 +1,5 @@
 import calendar
+import logging
 import os
 import time
 
@@ -55,6 +56,8 @@ class MainHandler(webapp2.RequestHandler):
                 'data': tides['data'],
             }
         else:
+            logging.info(tz_url)
+            logging.info(tides_url)
             values = {
                 'copyright': tides['copyright'],
                 'req_lat': request_lat,
