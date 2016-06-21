@@ -7,6 +7,20 @@
         body {
             font-family: "Droid Sans Mono", "DejaVu Sans Mono", "Consolas", "Courier New", monospace, sans-serif;
         }
+
+        table, th, td {
+            border: thin dotted;
+            border-collapse: collapse;
+            padding: 0.25em;
+        }
+
+        tr.high {
+            background-color: lightgray;
+        }
+
+        tr.low {
+            background-color: lightblue;
+        }
     </style>
 </head>
 <body>
@@ -18,16 +32,30 @@
 <pre>{{data}}</pre>
 {% else %}
 <h2>Location</h2>
-<ul>
-    <li>Request: {{req_lat}}, {{req_lon}}</li>
-    <li>Response: {{resp_lat}}, {{resp_lon}}</li>
-    <li>Response Timezone: {{tz_name}}, UTC{{"%+05d" % tz_offset}}</li>
-</ul>
+<table>
+    <tr class="high">
+        <td>Request</td>
+        <td>{{"%.4f" % req_lat}}, {{"%.4f" % req_lon}}</td>
+    </tr>
+    <tr class="low">
+        <td>Response</td>
+        <td>{{resp_lat}}, {{resp_lon}}</td>
+    </tr>
+    <tr style="background-color: lightblue">
+        <td>Timezone</td>
+        <td>{{tz_name}}, UTC{{"%+05d" % tz_offset}}</td>
+    </tr>
+</table>
 
 <h2>Tides</h2>
 <table>
-    {% for tide in tides %}
     <tr>
+        <th>Type</th>
+        <th>Date</th>
+        <th>Time</th>
+    </tr>
+    {% for tide in tides %}
+    <tr class="{{tide.type|lower}}">
         <td>{{tide.type}}</td>
         <td>{{tide.date}}</td>
         <td>{{tide.time}}</td>
