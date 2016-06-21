@@ -1,6 +1,7 @@
 import calendar
 import datetime
 import json
+import pprint
 import time
 import urllib
 
@@ -77,15 +78,17 @@ def main():
     tides_url, tides_response = fetch(tides_api_key, request_location, start_time)
     tides = decode(tides_response, tz['offset'])
 
+    pp = pprint.PrettyPrinter()
+
+    print(tides_url)
     if 'error' in tz:
-        print tz['error']
-        print tz['data']
+        print(tz['error'])
+        pp.pprint(tz['data'])
     elif 'error' in tides:
-        print tides['error']
-        print tides['data']
+        print(tides['error'])
+        pp.pprint(tides['data'])
     else:
-        print(tides_url)
-        print(tides)
+        pp.pprint(tides)
 
 
 if __name__ == "__main__":

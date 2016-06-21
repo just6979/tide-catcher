@@ -1,4 +1,5 @@
 import json
+import pprint
 import time
 import urllib2
 
@@ -56,12 +57,14 @@ def main():
     tz_url, tz_response = fetch(get_api_key(), request_location, timestamp)
     tz = decode(tz_response)
 
+    pp = pprint.PrettyPrinter()
+
     print(tz_url)
-    if 'error' not in tz:
-        print('Offset = %s hours' % tz['offset'])
+    if 'error' in tz:
+        print(tz['error'])
+        pp.pprint(tz['data'])
     else:
-        print tz['error']
-        print tz['data']
+        print('Offset = %s hours' % tz['offset'])
 
 
 if __name__ == "__main__":
