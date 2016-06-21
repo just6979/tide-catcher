@@ -1,4 +1,6 @@
+import calendar
 import os
+import time
 
 import jinja2
 import webapp2
@@ -14,19 +16,24 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 api_key = tides.get_api_key()
 
 
-class LocationMatch(ndb.Model):
-    query_location = ndb.StringProperty(indexed=True)
-    result_location = ndb.StringProperty(indexed=False, required=True)
-
-
 class TideData(ndb.Model):
     result_location = ndb.StringProperty(indexed=True)
     tide_data = ndb.JsonProperty(indexed=False, required=True)
 
 
+class LocationMatch(ndb.Model):
+    query_location = ndb.StringProperty(indexed=True)
+    result_location = ndb.StringProperty(indexed=False, required=True)
+
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        query_url, response = tides.fetch(api_key)
+        # Lynn, MA
+        location = (42.478744, -71.001188)
+        # right now in UTC as seconds since epoch
+        start_time = calendar.timegm(time.gmtime()),
+
+        query_url, response = tides.fetch(location, start_time, api_key)
         data = tides.decode(response)
 
         if 'error' in data:
@@ -39,7 +46,7 @@ class MainHandler(webapp2.RequestHandler):
                 'query_url': query_url,
                 'copyright': data['copyright'],
                 'lat': data['lat'],
-                'lon': data['lat'],
+                'lon': data['lon'],
                 'tides': data['tides'],
             }
 

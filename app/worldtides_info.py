@@ -1,4 +1,5 @@
 import calendar
+import datetime
 import json
 import time
 import urllib
@@ -8,19 +9,15 @@ def get_api_key():
     return open("worldtides_api_key.txt").readline().strip()
 
 
-def fetch(api_key):
-    # Lynn, MA
-    origin_lat = 42.478744
-    origin_lon = -71.001188
-    origin_location = (origin_lat, origin_lon)
+def fetch(location, start_time, api_key):
+    origin_lat, origin_lon = location
 
     request_url = "https://www.worldtides.info/api?{options}&lat={lat}&lon={lon}&start={start}&key={key}\n".format(
         options="extremes",
         lat=origin_lat,
         lon=origin_lon,
-        # right now in UTC as seconds since epoch
-        start=calendar.timegm(time.gmtime()),
-        key=api_key
+        start=start_time,
+        key=api_key,
     )
     response = urllib.urlopen(request_url)
 
@@ -39,9 +36,12 @@ def decode(data):
 
         out['tides'] = []
         for tide in data['extremes']:
+            epoch_time = datetime.datetime.utcfromtimestamp(tide['dt'])
+
             out['tides'].append({
                 'type': tide['type'],
-                'time': time.asctime(time.localtime(tide['dt'])),
+                'date': epoch_time.date(),
+                'time': epoch_time.time(),
             })
     except KeyError:
         out['error'] = "Error: Bad JSON Data\n"
@@ -51,8 +51,13 @@ def decode(data):
 
 
 if __name__ == "__main__":
-    key = get_api_key()
-    url, response_data = fetch(key)
+    api_key = get_api_key()
+    # Lynn, MA
+    location = (42.478744, -71.001188)
+    # right now in UTC as seconds since epoch
+    start_time = calendar.timegm(time.gmtime()),
+
+    url, response_data = fetch(location, start_time, api_key)
     print(url)
     out = decode(response_data)
     print(out)
