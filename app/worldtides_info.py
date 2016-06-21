@@ -6,6 +6,11 @@ import urllib
 
 import google_maps as maps
 
+base_url = """\
+https://www.worldtides.info/api?\
+{options}&lat={lat}&lon={lon}&start={start}&key={key}\
+"""
+
 
 def get_api_key():
     return open("worldtides_api_key.txt").readline().strip()
@@ -14,7 +19,7 @@ def get_api_key():
 def fetch(location, start_time, api_key):
     origin_lat, origin_lon = location
 
-    request_url = "https://www.worldtides.info/api?{options}&lat={lat}&lon={lon}&start={start}&key={key}\n".format(
+    request_url = base_url.format(
         options="extremes",
         lat=origin_lat,
         lon=origin_lon,

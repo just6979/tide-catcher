@@ -2,6 +2,11 @@ import json
 import time
 import urllib2
 
+base_url = """\
+https://maps.googleapis.com/maps/api/timezone/json?\
+location={location}&timestamp={timestamp}&key={api_key}\
+"""
+
 
 def get_api_key():
     return open("google_api_key.txt").readline().strip()
@@ -11,7 +16,7 @@ def fetch_data(location, timestamp):
     api_key = get_api_key()
     location_string = "%s,%s" % location
 
-    request_url = "https://maps.googleapis.com/maps/api/timezone/json?location={location}&timestamp={timestamp}&key={api_key}".format(
+    request_url = base_url.format(
         location=location_string,
         timestamp=timestamp[0],
         api_key=api_key,
@@ -33,9 +38,10 @@ def decode_json(data):
             offset = offset + data['dstOffset']
         out['offset'] = offset / 3600
     except KeyError:
-        error = {}
-        error['msg'] = "Error: Bad JSON Data\n"
-        error['data'] = str(data)
+        error = {
+            'msg': "Error: Bad JSON Data\n",
+            'data': str(data),
+        }
 
     return out, error
 
