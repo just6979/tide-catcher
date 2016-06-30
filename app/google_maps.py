@@ -19,7 +19,7 @@ def fetch(api_key, location, timestamp):
 
     request_url = base_url.format(
         location=location_string,
-        timestamp=timestamp[0],
+        timestamp=timestamp,
         api_key=api_key,
     )
     response = urllib2.urlopen(request_url)

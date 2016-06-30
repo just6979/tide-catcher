@@ -37,7 +37,7 @@ class MainHandler(webapp2.RequestHandler):
         request_location = (request_lat, request_lon)
 
         # right now in UTC as seconds since epoch
-        start_time = calendar.timegm(time.gmtime()),
+        start_time = calendar.timegm(time.gmtime())
 
         (tides, tides_url), (tz, tz_url) = tides_api.fetch_and_decode(
             tides_api_key, maps_api_key, request_location, start_time

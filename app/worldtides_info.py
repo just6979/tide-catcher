@@ -25,7 +25,7 @@ def fetch(api_key, location, start_time):
         options="extremes",
         lat=origin_lat,
         lon=origin_lon,
-        start=start_time[0],
+        start=start_time,
         key=api_key,
     )
     response = urllib.urlopen(request_url)
