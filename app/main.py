@@ -39,11 +39,9 @@ class MainHandler(webapp2.RequestHandler):
         # right now in UTC as seconds since epoch
         start_time = calendar.timegm(time.gmtime()),
 
-        tz_url, tz_response = maps_api.fetch(maps_api_key, request_location, start_time)
-        tz = maps_api.decode(tz_response)
-
-        tides_url, tides_response = tides_api.fetch(tides_api_key, request_location, start_time)
-        tides = tides_api.decode(tides_response, tz['offset'])
+        (tides, tides_url), (tz, tz_url) = tides_api.fetch_and_decode(
+            tides_api_key, maps_api_key, request_location, start_time
+        )
 
         if 'error' in tz:
             values = {
