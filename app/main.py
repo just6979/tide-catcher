@@ -32,6 +32,7 @@ class LocationMatch(ndb.Model):
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
+        # TODO: handle incoming location requests (Full page response or HttpReq and JSON?)
         # Lynn, MA
         request_lat = 42.478744
         request_lon = -71.001188

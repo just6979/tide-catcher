@@ -59,6 +59,7 @@ def decode(data, tz_offset):
 
 
 def fetch_and_decode(tides_api_key, maps_api_key, location, start_time):
+    # TODO: adjust timezone based on request location or response location?
     tz_url, tz_response = maps_api.fetch(maps_api_key, location, start_time)
     tz = maps_api.decode(tz_response)
 
