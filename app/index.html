@@ -3,32 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Tide Catcher - Tides for {{location}}</title>
-    <style>
-        body {
-            font-family: "Droid Sans Mono", "DejaVu Sans Mono", "Consolas", "Courier New", monospace, sans-serif;
-        }
 
-        table, th, td {
-            border-collapse: collapse;
-            padding: 0.25em;
-        }
-
-        td {
-            border-left: dotted thin;
-        }
-
-        td:first-child {
-            border-left: none;
-        }
-
-        tr.high {
-            background-color: lightgray;
-        }
-
-        tr.low {
-            background-color: lightblue;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="/style/main.css"/>
 </head>
 <body>
 
@@ -65,7 +41,7 @@
         <td>Station</td>
         <td>{{resp_station}}</td>
     </tr>
-    <tr style="background-color: lightblue">
+    <tr class="low">
         <td>Timezone</td>
         <td>{{tz_name}}, UTC{{"%+05d" % tz_offset}}</td>
     </tr>

@@ -1,0 +1,24 @@
+body {
+    font-family: "Droid Sans Mono", "DejaVu Sans Mono", "Consolas", "Courier New", monospace, sans-serif;
+}
+
+table, th, td {
+    border-collapse: collapse;
+    padding: 0.25em;
+}
+
+td {
+    border-left: dotted thin;
+}
+
+td:first-child {
+    border-left: none;
+}
+
+tr.high {
+    background-color: lightgray;
+}
+
+tr.low {
+    background-color: lightblue;
+}
