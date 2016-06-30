@@ -14,7 +14,7 @@
 
 {% if not error %}
 <h2>Tides</h2>
-<table>
+<table id="tides">
     <tr>
         <th>Type</th>
         <th>Date</th>
@@ -30,7 +30,7 @@
 </table>
 
 <h2>Location</h2>
-<table>
+<table id="location">
     <tr class="high">
         <td>Request</td>
         <td>{{"%.4f" % req_lat}}, {{"%.4f" % req_lon}}</td>
@@ -50,7 +50,7 @@
 </table>
 
 <h2>Notes</h2>
-<p><em>{{copyright}}</em></p>
+<p id="notes"><em>{{copyright}}</em></p>
 
 {% else %} # from 'if not error'
 <p>{{error}}</p>

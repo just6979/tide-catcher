@@ -1,5 +1,5 @@
 body {
-    font-family: "Droid Sans Mono", "DejaVu Sans Mono", "Consolas", "Courier New", monospace, sans-serif;
+    font-family: "Droid Sans Mono", "DejaVu Sans Mono", "Consolas", monospace, sans-serif;
     width: 100%;
 }
 
@@ -8,12 +8,14 @@ table, th, td {
     padding: 0.25em;
 }
 
-td {
-    border-left: dotted thin;
+th:first-child, td:first-child {
+    border-left: none;
+    text-align: right;
 }
 
-td:first-child {
-    border-left: none;
+th, td {
+    border-left: dotted thin;
+    text-align: center;
 }
 
 tr.high {
@@ -22,4 +24,16 @@ tr.high {
 
 tr.low {
     background-color: lightblue;
+}
+
+#tides td {
+    padding: 0.5em;
+}
+
+#location {
+    font-size: 75%;
+}
+
+#notes {
+    font-size: 75%;
 }
