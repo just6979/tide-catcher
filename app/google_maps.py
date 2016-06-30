@@ -45,6 +45,13 @@ def decode(data):
     return out
 
 
+def fetch_and_decode(api_key, location, timestamp):
+    tz_url, tz_response = fetch(api_key, location, timestamp)
+    tz = decode(tz_response)
+
+    return tz, tz_url
+
+
 def main():
     # Lynn, MA
     request_lat = 42.478744

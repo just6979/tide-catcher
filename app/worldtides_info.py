@@ -60,6 +60,16 @@ def decode(data, tz_offset):
     return out
 
 
+def fetch_and_decode(tides_api_key, maps_api_key, location, start_time):
+    tz_url, tz_response = maps_api.fetch(maps_api_key, location, start_time)
+    tz = maps_api.decode(tz_response)
+
+    tides_url, tides_response = fetch(tides_api_key, location, start_time)
+    tides = decode(tides_response, tz['offset'])
+
+    return (tides, tides_url), (tz, tz_url)
+
+
 def main():
     tides_api_key = get_api_key()
     maps_api_key = maps_api.get_api_key()
