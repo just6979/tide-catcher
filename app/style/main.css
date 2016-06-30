@@ -1,25 +1,48 @@
-body {
-    font-family: "Droid Sans Mono", "DejaVu Sans Mono", "Consolas", "Courier New", monospace, sans-serif;
-    width: 100%;
+html {
+    padding: 0.5em;
 }
-
+body {
+    font-family: "Droid Sans Mono", "DejaVu Sans Mono", "Consolas", monospace, sans-serif;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+h1 {
+    font-size: 125%;
+}
+h2 {
+    font-size: 110%;
+}
 table, th, td {
     border-collapse: collapse;
-    padding: 0.25em;
+    padding: 0.5em;
 }
-
 td {
     border-left: dotted thin;
 }
-
+#tides td {
+    text-align: center;
+}
 td:first-child {
     border-left: none;
+    text-align: right;
 }
-
+#tides td:first-child {
+    text-align: right;
+}
 tr.high {
     background-color: lightgray;
 }
-
 tr.low {
     background-color: lightblue;
+}
+@media (max-width: 500px) {
+    #tides, #location {
+        width: inherit;
+    }
+}
+@media (min-width: 20em) {
+    td:first-child, #tides td:first-child {
+        width: 5em;
+    }
 }
