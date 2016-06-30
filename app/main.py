@@ -9,6 +9,7 @@ from google.appengine.ext import ndb
 
 import google_maps as maps_api
 import worldtides_info as tides_api
+from utils import adjusted_datetime
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -37,10 +38,10 @@ class MainHandler(webapp2.RequestHandler):
         request_location = (request_lat, request_lon)
 
         # right now in UTC as seconds since epoch
-        start_time = calendar.timegm(time.gmtime())
+        utc_start_time = calendar.timegm(time.gmtime())
 
         (tides, tides_url), (tz, tz_url) = tides_api.fetch_and_decode(
-            tides_api_key, maps_api_key, request_location, start_time
+            tides_api_key, maps_api_key, request_location, utc_start_time
         )
 
         if 'error' in tz:
@@ -56,8 +57,11 @@ class MainHandler(webapp2.RequestHandler):
         else:
             logging.info(tz_url)
             logging.info(tides_url)
+            adjusted_start_time = adjusted_datetime(utc_start_time, tz['offset'])
+            req_time = "%s %s" % (adjusted_start_time.date(), adjusted_start_time.time())
             values = {
                 'copyright': tides['copyright'],
+                'req_time': req_time,
                 'req_lat': request_lat,
                 'req_lon': request_lon,
                 'resp_lat': tides['lat'],

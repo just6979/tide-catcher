@@ -1,11 +1,11 @@
 import calendar
-import datetime
 import json
 import pprint
 import time
 import urllib
 
 import google_maps as maps_api
+from utils import adjusted_datetime
 
 base_url = """\
 https://www.worldtides.info/api?\
@@ -17,7 +17,7 @@ def get_api_key():
     return open("worldtides_api_key.txt").readline().strip()
 
 
-def fetch(api_key, location, start_time):
+def fetch(api_key, location, utc_start_time):
     # TODO: handle errors
     origin_lat, origin_lon = location
 
@@ -25,7 +25,7 @@ def fetch(api_key, location, start_time):
         options="extremes",
         lat=origin_lat,
         lon=origin_lon,
-        start=start_time,
+        start=utc_start_time,
         key=api_key,
     )
     response = urllib.urlopen(request_url)
@@ -45,9 +45,7 @@ def decode(data, tz_offset):
         out['station'] = data['station']
         out['tides'] = []
         for tide in data['extremes']:
-            epoch_time = datetime.datetime.utcfromtimestamp(tide['dt'])
-            offset_delta = datetime.timedelta(hours=tz_offset)
-            adjusted_timestamp = epoch_time + offset_delta
+            adjusted_timestamp = adjusted_datetime(tide['dt'], tz_offset)
             out['tides'].append({
                 'type': tide['type'],
                 'date': adjusted_timestamp.date(),

@@ -16,49 +16,53 @@
 <div id="tides">
     <h2>{{resp_station}}</h2>
     <table>
-    <tr>
-        <th>Type</th>
-        <th>Date</th>
-        <th>Time</th>
-    </tr>
-    {% for tide in tides %}
-    <tr class="{{tide.type|lower}}">
-        <td>{{tide.type}}</td>
-        <td>{{tide.date}}</td>
-        <td>{{tide.time}}</td>
-    </tr>
-    {% endfor %}
-</table>
+        <tr>
+            <th>Type</th>
+            <th>Date</th>
+            <th>Time</th>
+        </tr>
+        {% for tide in tides %}
+        <tr class="{{tide.type|lower}}">
+            <td>{{tide.type}}</td>
+            <td>{{tide.date}}</td>
+            <td>{{tide.time}}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
 <div id="info">
     <h2>Info</h2>
     <table>
         <tr class="request">
-        <td>Request</td>
-        <td>{{"%.4f" % req_lat}}, {{"%.4f" % req_lon}}</td>
-    </tr>
+            <td>Request</td>
+            <td>{{"%.4f" % req_lat}}, {{"%.4f" % req_lon}}</td>
+        </tr>
+        <tr class="request">
+            <td>Time</td>
+            <td>{{req_time}}</td>
+        </tr>
         <tr class="response">
-        <td>Response</td>
-        <td>{{resp_lat}}, {{resp_lon}}</td>
-    </tr>
+            <td>Response</td>
+            <td>{{resp_lat}}, {{resp_lon}}</td>
+        </tr>
         <tr class="response">
-        <td>Station</td>
-        <td>{{resp_station}}</td>
-    </tr>
+            <td>Station</td>
+            <td>{{resp_station}}</td>
+        </tr>
         <tr class="response">
-        <td>Timezone</td>
-        <td>{{tz_name}}, UTC{{"%+05d" % tz_offset}}</td>
-    </tr>
-</table>
+            <td>Timezone</td>
+            <td>{{tz_name}}, UTC{{"%+05d" % tz_offset}}</td>
+        </tr>
+    </table>
 </div>
 <div id="notes">
-<h2>Notes</h2>
+    <h2>Notes</h2>
     <p><em>{{copyright}}</em></p>
 
-{% else %} # from 'if not error'
-<p>{{error}}</p>
-<pre>{{data}}</pre>
-{% endif %}
+    {% else %} # from 'if not error'
+    <p>{{error}}</p>
+    <pre>{{data}}</pre>
+    {% endif %}
 </div>
 </body>
 </html>
