@@ -2,16 +2,20 @@ html {
     padding: 0.5em;
 }
 body {
-    font-family: "Droid Sans Mono", "DejaVu Sans Mono", "Consolas", monospace, sans-serif;
+    font-family: monospace;
     width: 100%;
     margin: 0;
     padding: 0;
+    background-color: lightblue;
 }
 h1 {
     font-size: 125%;
 }
 h2 {
     font-size: 110%;
+    margin-top: 1em;
+    padding-bottom: 0;
+    margin-bottom: 0.5em;
 }
 table, th, td {
     border-collapse: collapse;
@@ -27,22 +31,27 @@ td:first-child {
     border-left: none;
     text-align: right;
 }
-#tides td:first-child {
+
+#tides td:first-child, th:first-child {
     text-align: right;
 }
-tr.high {
+
+th, tr.request {
     background-color: lightgray;
 }
+
+tr.high, tr.response {
+    background-color: lightyellow;
+}
 tr.low {
-    background-color: lightblue;
+    background-color: lightgreen;
+}
+
+#info, #notes {
+    font-size: 75%;
 }
 @media (max-width: 500px) {
-    #tides, #location {
-        width: inherit;
-    }
-}
-@media (min-width: 20em) {
-    td:first-child, #tides td:first-child {
-        width: 5em;
+    #tides table, #info table {
+        width: 100%;
     }
 }
