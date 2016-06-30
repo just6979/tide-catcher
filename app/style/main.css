@@ -8,18 +8,19 @@ body {
     padding: 0;
     background-color: lightblue;
 }
-h1 {
-    font-size: 125%;
-}
-h2 {
-    font-size: 110%;
-    margin-top: 1em;
-    padding-bottom: 0;
-    margin-bottom: 0.5em;
+
+#tides, #info {
+    margin-bottom: 1em;
 }
 table, th, td {
     border-collapse: collapse;
     padding: 0.5em;
+}
+
+table caption {
+    margin: 0.5em;
+    text-align: left;
+    font-weight: bold;
 }
 td {
     border-left: dotted thin;
@@ -36,19 +37,15 @@ td:first-child {
     text-align: right;
 }
 
-th, tr.request {
+th, table.request {
     background-color: lightgray;
 }
 
-tr.high, tr.response {
+tr.high, table.response {
     background-color: lightyellow;
 }
 tr.low {
     background-color: lightgreen;
-}
-
-#info, #notes {
-    font-size: 75%;
 }
 @media (max-width: 500px) {
     #tides table, #info table {
