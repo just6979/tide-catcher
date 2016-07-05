@@ -8,8 +8,13 @@ body {
     margin: 0;
     padding: 0;
     background-color: lightblue;
+    text-align: center;
 }
 
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
 #tides, #info {
     margin-bottom: 1em;
 }
@@ -18,37 +23,61 @@ table, th, td {
     padding: 0.5em;
 }
 
-table caption {
+caption {
     margin: 0.5em;
-    text-align: left;
+}
+
+caption.top {
     font-weight: bold;
+    caption-side: top;
+}
+
+caption.bottom {
+    caption-side: bottom;
 }
 td {
-    /*border-left: dotted thin;*/
+    border-left: dotted thin;
 }
-#tides td {
-    text-align: center;
+
+td.date {
+    text-align: right;
+}
+
+td.time {
+    text-align: left;
+}
+
+#request td, #response td {
+    text-align: left;
 }
 td:first-child {
     border-left: none;
-    /*text-align: right;*/
+    text-align: right;
 }
 
-#tides td:first-child, th:first-child {
-    /*text-align: right;*/
-}
-.high, .response {
+.high, #response {
     background-color: lightyellow;
 }
 .low {
     background-color: lightgreen;
 }
 
-.prior, .request {
+.prior {
+    font-size: 80%;
+    color: gray;
+}
+
+#request {
     background-color: lightgray;
 }
 @media (max-width: 500px) {
     #tides table, #info table {
         width: 100%;
     }
+}
+
+#notes {
+    margin: 2em 1em;
+    text-align: justify;
+    font-size: 80%;
 }
