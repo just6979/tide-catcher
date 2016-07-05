@@ -1,7 +1,6 @@
-import calendar
+import datetime
 import logging
 import os
-import time
 
 import jinja2
 import webapp2
@@ -38,11 +37,13 @@ class MainHandler(webapp2.RequestHandler):
         request_lon = -71.001188
         request_location = (request_lat, request_lon)
 
-        # right now in UTC as seconds since epoch
-        utc_start_time = calendar.timegm(time.gmtime())
+        # right now in UTC as naive datetime
+        utc_now = datetime.datetime.utcnow()
+        # minus 12 hours to make sure we get the last tide (maybe last 2)
+        utc_minus_12 = utc_now + datetime.timedelta(hours=-12)
 
         (tides, tides_url), (tz, tz_url) = tides_api.fetch_and_decode(
-            tides_api_key, maps_api_key, request_location, utc_start_time
+            tides_api_key, maps_api_key, request_location, utc_minus_12, utc_now
         )
 
         if 'error' in tz:
@@ -58,7 +59,7 @@ class MainHandler(webapp2.RequestHandler):
         else:
             logging.info(tz_url)
             logging.info(tides_url)
-            adjusted_start_time = adjusted_datetime(utc_start_time, tz['offset'])
+            adjusted_start_time = adjusted_datetime(utc_minus_12, tz['offset'])
             req_time = "%s %s" % (adjusted_start_time.date(), adjusted_start_time.time())
             values = {
                 'copyright': tides['copyright'],
