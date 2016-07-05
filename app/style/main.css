@@ -70,14 +70,19 @@ td:first-child {
 #request {
     background-color: lightgray;
 }
+
+#info {
+    font-size: 80%
+}
+#notes {
+    margin: 2em 1em;
+    text-align: justify;
+    font-size: 80%;
+}
+
 @media (max-width: 500px) {
     #tides table, #info table {
         width: 100%;
     }
 }
 
-#notes {
-    margin: 2em 1em;
-    text-align: justify;
-    font-size: 80%;
-}
