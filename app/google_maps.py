@@ -1,6 +1,7 @@
+import calendar
+import datetime
 import json
 import pprint
-import time
 import urllib2
 
 base_url = """\
@@ -19,7 +20,8 @@ def fetch(api_key, location, timestamp):
 
     request_url = base_url.format(
         location=location_string,
-        timestamp=timestamp,
+        # convert datetime to unix time
+        timestamp=calendar.timegm(timestamp.timetuple()),
         api_key=api_key,
     )
     response = urllib2.urlopen(request_url)
@@ -59,7 +61,7 @@ def main():
     request_location = (request_lat, request_lon)
 
     # right now in UTC as seconds since epoch
-    timestamp = time.time(),
+    timestamp = datetime.datetime.utcnow()
 
     tz_url, tz_response = fetch(get_api_key(), request_location, timestamp)
     tz = decode(tz_response)
