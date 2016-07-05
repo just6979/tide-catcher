@@ -1,6 +1,7 @@
 html {
     padding: 0.5em;
 }
+
 body {
     font-family: monospace;
     font-size: 150%;
@@ -15,9 +16,11 @@ table {
     margin-left: auto;
     margin-right: auto;
 }
+
 #tides, #info {
     margin-bottom: 1em;
 }
+
 table, th, td {
     border-collapse: collapse;
     padding: 0.5em;
@@ -35,6 +38,7 @@ caption.top {
 caption.bottom {
     caption-side: bottom;
 }
+
 td {
     border-left: dotted thin;
 }
@@ -50,6 +54,7 @@ td.time {
 #request td, #response td {
     text-align: left;
 }
+
 td:first-child {
     border-left: none;
     text-align: right;
@@ -58,6 +63,7 @@ td:first-child {
 .high, #response {
     background-color: lightyellow;
 }
+
 .low {
     background-color: lightgreen;
 }
@@ -74,6 +80,7 @@ td:first-child {
 #info {
     font-size: 80%
 }
+
 #notes {
     margin: 2em 1em;
     text-align: justify;
@@ -85,4 +92,3 @@ td:first-child {
         width: 100%;
     }
 }
-
