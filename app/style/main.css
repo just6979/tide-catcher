@@ -37,14 +37,15 @@ td:first-child {
     text-align: right;
 }
 
-th, table.request {
+th, .request {
     background-color: lightgray;
 }
 
-tr.high, table.response {
+.high, .response {
     background-color: lightyellow;
 }
-tr.low {
+
+.low {
     background-color: lightgreen;
 }
 @media (max-width: 500px) {
