@@ -1,7 +1,6 @@
-import calendar
+import datetime
 import json
 import pprint
-import time
 import urllib
 
 import google_maps as maps_api
@@ -33,7 +32,7 @@ def fetch(api_key, location, utc_start_time):
     return request_url, response.read()
 
 
-def decode(data, tz_offset):
+def decode(data, now_time, tz_offset):
     out = {}
 
     data = json.loads(data)
@@ -45,11 +44,17 @@ def decode(data, tz_offset):
         out['station'] = data['station']
         out['tides'] = []
         for tide in data['extremes']:
-            adjusted_timestamp = adjusted_datetime(tide['dt'], tz_offset)
+            adjusted_timestamp = adjusted_datetime(datetime.datetime.utcfromtimestamp(tide['dt']), tz_offset)
+            adjusted_now = adjusted_datetime(now_time, tz_offset)
+            if adjusted_timestamp < adjusted_now:
+                prior = True
+            else:
+                prior = False
             out['tides'].append({
                 'type': tide['type'],
                 'date': adjusted_timestamp.date(),
                 'time': adjusted_timestamp.time(),
+                'prior': prior,
             })
     except KeyError:
         out['error'] = "Error: Bad JSON Data\n"
@@ -58,13 +63,13 @@ def decode(data, tz_offset):
     return out
 
 
-def fetch_and_decode(tides_api_key, maps_api_key, location, start_time):
+def fetch_and_decode(tides_api_key, maps_api_key, location, start_time, now_time):
     # TODO: adjust timezone based on request location or response location?
     tz_url, tz_response = maps_api.fetch(maps_api_key, location, start_time)
     tz = maps_api.decode(tz_response)
 
     tides_url, tides_response = fetch(tides_api_key, location, start_time)
-    tides = decode(tides_response, tz['offset'])
+    tides = decode(tides_response, now_time, tz['offset'])
 
     return (tides, tides_url), (tz, tz_url)
 
@@ -78,14 +83,14 @@ def main():
     request_lon = -71.001188
     request_location = (request_lat, request_lon)
 
-    # right now in UTC as seconds since epoch
-    start_time = calendar.timegm(time.gmtime()),
+    # right now in  UTC as unix time
+    utc_now = datetime.datetime.utcnow()
+    # minus 12 hours to make sure we get the last tide
+    utc_minus_12 = utc_now + datetime.timedelta(hours=-12)
 
-    tz_url, tz_response = maps_api.fetch(maps_api_key, request_location, start_time)
-    tz = maps_api.decode(tz_response)
-
-    tides_url, tides_response = fetch(tides_api_key, request_location, start_time)
-    tides = decode(tides_response, tz['offset'])
+    (tides, tides_url), (tz, tz_url) = fetch_and_decode(
+        tides_api_key, maps_api_key, request_location, utc_minus_12, utc_now
+    )
 
     pp = pprint.PrettyPrinter()
 
