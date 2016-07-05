@@ -53,7 +53,8 @@ def decode(data, now_time, tz_offset):
             out['tides'].append({
                 'type': tide['type'],
                 'date': adjusted_timestamp.date(),
-                'time': adjusted_timestamp.time(),
+                # TODO: round times to nearest minute
+                'time': adjusted_timestamp.strftime("%H:%M"),
                 'prior': prior,
             })
     except KeyError:
