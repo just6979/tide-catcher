@@ -3,6 +3,7 @@ html {
 }
 body {
     font-family: monospace;
+    font-size: 150%;
     width: 100%;
     margin: 0;
     padding: 0;
@@ -23,18 +24,18 @@ table caption {
     font-weight: bold;
 }
 td {
-    border-left: dotted thin;
+    /*border-left: dotted thin;*/
 }
 #tides td {
     text-align: center;
 }
 td:first-child {
     border-left: none;
-    text-align: right;
+    /*text-align: right;*/
 }
 
 #tides td:first-child, th:first-child {
-    text-align: right;
+    /*text-align: right;*/
 }
 
 th, .request {
@@ -44,7 +45,6 @@ th, .request {
 .high, .response {
     background-color: lightyellow;
 }
-
 .low {
     background-color: lightgreen;
 }
