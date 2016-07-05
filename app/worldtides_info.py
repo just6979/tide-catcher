@@ -47,9 +47,9 @@ def decode(data, now_time, tz_offset):
             adjusted_timestamp = adjusted_datetime(datetime.datetime.utcfromtimestamp(tide['dt']), tz_offset)
             adjusted_now = adjusted_datetime(now_time, tz_offset)
             if adjusted_timestamp < adjusted_now:
-                prior = True
+                prior = 'prior'
             else:
-                prior = False
+                prior = 'future'
             out['tides'].append({
                 'type': tide['type'],
                 'date': adjusted_timestamp.date(),
