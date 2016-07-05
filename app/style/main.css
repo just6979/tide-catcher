@@ -37,16 +37,15 @@ td:first-child {
 #tides td:first-child, th:first-child {
     /*text-align: right;*/
 }
-
-th, .request {
-    background-color: lightgray;
-}
-
 .high, .response {
     background-color: lightyellow;
 }
 .low {
     background-color: lightgreen;
+}
+
+.prior, .request {
+    background-color: lightgray;
 }
 @media (max-width: 500px) {
     #tides table, #info table {
