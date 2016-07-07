@@ -7,14 +7,14 @@ threadsafe: true
 handlers:
 - url: /(.*icon.*)$
   static_files: icons/\1
-  upload: icons/.*icon.*
-
-- url: /image
-  static_dir: image
   expiration: 7d
 
-- url: /style
-  static_dir: style
+- url: /images
+  static_dir: images
+  expiration: 7d
+
+- url: /styles
+  static_dir: styles
 
 - url: .*
   script: main.app
