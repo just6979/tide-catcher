@@ -46,9 +46,8 @@ def decode(data, utc_now_stamp, tz_offset):
 
         for tide in data['extremes']:
             utc_timestamp = datetime.datetime.utcfromtimestamp(tide['dt'])
-            timestamp = offset_timestamp(utc_timestamp, tz_offset)
-            timestamp = to_nearest_minute(timestamp)
-            now_stamp = offset_timestamp(utc_now_stamp, tz_offset)
+            timestamp = to_nearest_minute(offset_timestamp(utc_timestamp, tz_offset))
+            now_stamp = to_nearest_minute(offset_timestamp(utc_now_stamp, tz_offset))
 
             if timestamp < now_stamp:
                 prior = 'prior'

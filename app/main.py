@@ -58,8 +58,7 @@ class MainHandler(webapp2.RequestHandler):
         else:
             logging.info(tz_url)
             logging.info(tides_url)
-            start_timestamp = offset_timestamp(utc_minus_12, tz['offset'])
-            start_timestamp = to_nearest_minute(start_timestamp)
+            start_timestamp = to_nearest_minute(offset_timestamp(utc_now, tz['offset']))
             req_timestamp = {
                 'date': start_timestamp.strftime(DATE_FORMAT),
                 'time': start_timestamp.strftime(TIME_FORMAT),
