@@ -1,14 +1,13 @@
 import datetime
 
 DATE_FORMAT = "%m-%d"
-DAY_FORMAT = "%a"
 TIME_FORMAT = "%H:%M"
+# TIME_FORMAT = "%I:%M %p"
+DAY_FORMAT = "%a"
 
 
 def offset_timestamp(timestamp, tz_offset):
-    offset_delta = datetime.timedelta(hours=tz_offset)
-    adjusted_timestamp = timestamp + offset_delta
-    return adjusted_timestamp
+    return timestamp + datetime.timedelta(hours=tz_offset)
 
 
 def to_nearest_minute(timestamp):
