@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress HtmlUnknownTarget -->
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Tide Catcher - {{resp_station}}</title>
@@ -42,28 +43,17 @@
         </caption>
         {% for tide in tides %}
         <tr class="{{tide.type|lower}} {{tide.prior|lower}}">
-            <td class="type">
-                {{tide.type}}
-            </td>
-            <td class="date">
-                <!--{% if tide.prior|lower == "prior" %}*{% endif %}-->
-                {{tide.date}}
-            </td>
-            <td class="day">
-                <!--{% if tide.prior|lower == "prior" %}*{% endif %}-->
-                {{tide.day}}
-            </td>
-            <td class="time">
-                {{tide.time}}
-                <!--{% if tide.prior|lower == "prior" %}*{% endif %}-->
-            </td>
+            <td class="type">{{tide.type}}</td>
+            <td class="date">{{tide.date}}</td>
+            <td class="day">{{tide.day}}</td>
+            <td class="time">{{tide.time}}</td>
         </tr>
         {% endfor %}
         <caption class="bottom">
             Color Key:<br/>
+            <span class="prior">Prior&nbsp;Tides</span><br/>
             <span class="low">Low&nbsp;Tides</span>
             <span class="high">High&nbsp;Tides</span>
-            <span class="prior">Prior&nbsp;Tides</span>
         </caption>
     </table>
 </div>
