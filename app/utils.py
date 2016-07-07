@@ -1,8 +1,8 @@
 import datetime
 
 DATE_FORMAT = "%m-%d"
-TIME_FORMAT = "%H:%M"
-# TIME_FORMAT = "%I:%M %p"
+# TIME_FORMAT = "%H:%M"
+TIME_FORMAT = "%I:%M %p"
 DAY_FORMAT = "%a"
 
 
