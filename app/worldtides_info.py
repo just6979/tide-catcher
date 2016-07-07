@@ -1,11 +1,10 @@
 import calendar
-import datetime
 import json
 import pprint
 import urllib
 
 import google_maps as maps_api
-from utils import adjusted_datetime, DATE_FORMAT, TIME_FORMAT
+from utils import *
 
 base_url = """\
 https://www.worldtides.info/api?\
@@ -54,6 +53,7 @@ def decode(data, now_time, tz_offset):
             out['tides'].append({
                 'type': tide['type'],
                 'date': adjusted_timestamp.strftime(DATE_FORMAT),
+                'day': adjusted_timestamp.strftime(DAY_FORMAT),
                 # TODO: round times to nearest minute
                 'time': adjusted_timestamp.strftime(TIME_FORMAT),
                 'prior': prior,

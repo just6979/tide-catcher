@@ -1,4 +1,3 @@
-import datetime
 import logging
 import os
 
@@ -8,7 +7,7 @@ from google.appengine.ext import ndb
 
 import google_maps as maps_api
 import worldtides_info as tides_api
-from utils import adjusted_datetime, TIME_FORMAT, DATE_FORMAT
+from utils import *
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -63,6 +62,7 @@ class MainHandler(webapp2.RequestHandler):
             req_timestamp = {
                 'date': adjusted_start_time.strftime(DATE_FORMAT),
                 'time': adjusted_start_time.strftime(TIME_FORMAT),
+                'day': adjusted_start_time.strftime(DAY_FORMAT),
             }
             values = {
                 'copyright': tides['copyright'],

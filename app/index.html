@@ -27,6 +27,10 @@
                 <!--{% if tide.prior|lower == "prior" %}*{% endif %}-->
                 {{tide.date}}
             </td>
+            <td class="day">
+                <!--{% if tide.prior|lower == "prior" %}*{% endif %}-->
+                {{tide.day}}
+            </td>
             <td class="time">
                 {{tide.time}}
                 <!--{% if tide.prior|lower == "prior" %}*{% endif %}-->
@@ -51,7 +55,7 @@
         </tr>
         <tr>
             <td>Time</td>
-            <td>{{req_timestamp.date}} {{req_timestamp.time}}</td>
+            <td>{{req_timestamp.date}} {{req_timestamp.day}} {{req_timestamp.time}}</td>
         </tr>
     </table>
     <table id="response">
