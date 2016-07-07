@@ -32,7 +32,7 @@ def fetch(api_key, location, utc_start_time):
     return request_url, response.read()
 
 
-def decode(data, now_stamp, tz_offset):
+def decode(data, utc_now_stamp, tz_offset):
     out = {}
 
     data = json.loads(data)
@@ -45,9 +45,10 @@ def decode(data, now_stamp, tz_offset):
         out['tides'] = []
 
         for tide in data['extremes']:
-            timestamp = datetime.datetime.utcfromtimestamp(tide['dt'])
-            timestamp = offset_timestamp(timestamp, tz_offset)
-            now_stamp = offset_timestamp(now_stamp, tz_offset)
+            utc_timestamp = datetime.datetime.utcfromtimestamp(tide['dt'])
+            timestamp = offset_timestamp(utc_timestamp, tz_offset)
+            timestamp = to_nearest_minute(timestamp)
+            now_stamp = offset_timestamp(utc_now_stamp, tz_offset)
 
             if timestamp < now_stamp:
                 prior = 'prior'
