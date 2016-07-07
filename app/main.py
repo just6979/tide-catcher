@@ -32,9 +32,9 @@ class MainHandler(webapp2.RequestHandler):
     def get(self):
         # TODO: handle incoming location requests (Full page response or HttpReq and JSON?)
         # Lynn, MA
-        request_lat = 42.478744
-        request_lon = -71.001188
-        request_location = (request_lat, request_lon)
+        req_lat = 42.478744
+        req_lon = -71.001188
+        req_loc = (req_lat, req_lon)
 
         # right now in UTC as naive datetime
         utc_now = datetime.datetime.utcnow()
@@ -42,7 +42,7 @@ class MainHandler(webapp2.RequestHandler):
         utc_minus_12 = utc_now + datetime.timedelta(hours=-12)
 
         (tides, tides_url), (tz, tz_url) = tides_api.fetch_and_decode(
-            tides_api_key, maps_api_key, request_location, utc_minus_12, utc_now
+            tides_api_key, maps_api_key, req_loc, utc_minus_12, utc_now
         )
 
         if 'error' in tz:
@@ -58,17 +58,17 @@ class MainHandler(webapp2.RequestHandler):
         else:
             logging.info(tz_url)
             logging.info(tides_url)
-            adjusted_start_time = adjusted_datetime(utc_minus_12, tz['offset'])
+            start_timestamp = offset_timestamp(utc_minus_12, tz['offset'])
             req_timestamp = {
-                'date': adjusted_start_time.strftime(DATE_FORMAT),
-                'time': adjusted_start_time.strftime(TIME_FORMAT),
-                'day': adjusted_start_time.strftime(DAY_FORMAT),
+                'date': start_timestamp.strftime(DATE_FORMAT),
+                'time': start_timestamp.strftime(TIME_FORMAT),
+                'day': start_timestamp.strftime(DAY_FORMAT),
             }
             values = {
                 'copyright': tides['copyright'],
                 'req_timestamp': req_timestamp,
-                'req_lat': request_lat,
-                'req_lon': request_lon,
+                'req_lat': req_lat,
+                'req_lon': req_lon,
                 'resp_lat': tides['lat'],
                 'resp_lon': tides['lon'],
                 'resp_station': tides['station'],

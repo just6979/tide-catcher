@@ -32,7 +32,7 @@ def fetch(api_key, location, utc_start_time):
     return request_url, response.read()
 
 
-def decode(data, now_time, tz_offset):
+def decode(data, now_stamp, tz_offset):
     out = {}
 
     data = json.loads(data)
@@ -43,19 +43,23 @@ def decode(data, now_time, tz_offset):
         out['lon'] = data['responseLon']
         out['station'] = data['station']
         out['tides'] = []
+
         for tide in data['extremes']:
-            adjusted_timestamp = adjusted_datetime(datetime.datetime.utcfromtimestamp(tide['dt']), tz_offset)
-            adjusted_now = adjusted_datetime(now_time, tz_offset)
-            if adjusted_timestamp < adjusted_now:
+            timestamp = datetime.datetime.utcfromtimestamp(tide['dt'])
+            timestamp = offset_timestamp(timestamp, tz_offset)
+            now_stamp = offset_timestamp(now_stamp, tz_offset)
+
+            if timestamp < now_stamp:
                 prior = 'prior'
             else:
                 prior = 'future'
+
             out['tides'].append({
                 'type': tide['type'],
-                'date': adjusted_timestamp.strftime(DATE_FORMAT),
-                'day': adjusted_timestamp.strftime(DAY_FORMAT),
+                'date': timestamp.strftime(DATE_FORMAT),
+                'day': timestamp.strftime(DAY_FORMAT),
                 # TODO: round times to nearest minute
-                'time': adjusted_timestamp.strftime(TIME_FORMAT),
+                'time': timestamp.strftime(TIME_FORMAT),
                 'prior': prior,
             })
     except KeyError:

@@ -6,7 +6,7 @@ DAY_FORMAT = "%a"
 TIME_FORMAT = "%H:%M"
 
 
-def adjusted_datetime(timestamp, tz_offset):
+def offset_timestamp(timestamp, tz_offset):
     offset_delta = datetime.timedelta(hours=tz_offset)
     adjusted_timestamp = timestamp + offset_delta
     return adjusted_timestamp
