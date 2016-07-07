@@ -60,10 +60,13 @@ class MainHandler(webapp2.RequestHandler):
             logging.info(tz_url)
             logging.info(tides_url)
             adjusted_start_time = adjusted_datetime(utc_minus_12, tz['offset'])
-            req_time = "%s %s" % (adjusted_start_time.strftime(DATE_FORMAT), adjusted_start_time.strftime(TIME_FORMAT))
+            req_timestamp = {
+                'date': adjusted_start_time.strftime(DATE_FORMAT),
+                'time': adjusted_start_time.strftime(TIME_FORMAT),
+            }
             values = {
                 'copyright': tides['copyright'],
-                'req_time': req_time,
+                'req_timestamp': req_timestamp,
                 'req_lat': request_lat,
                 'req_lon': request_lon,
                 'resp_lat': tides['lat'],
