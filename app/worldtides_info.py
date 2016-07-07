@@ -1,3 +1,4 @@
+import calendar
 import datetime
 import json
 import pprint
@@ -24,7 +25,7 @@ def fetch(api_key, location, utc_start_time):
         options="extremes",
         lat=origin_lat,
         lon=origin_lon,
-        start=utc_start_time,
+        start=calendar.timegm(utc_start_time.timetuple()),
         key=api_key,
     )
     response = urllib.urlopen(request_url)
