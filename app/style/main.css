@@ -40,7 +40,7 @@ caption.bottom {
 }
 
 td {
-    border-left: dotted thin;
+    border: none;
 }
 
 td.date {
@@ -51,30 +51,29 @@ td.time {
     text-align: left;
 }
 
-#request td, #response td {
+td:first-child {
+    border-right: dotted thin;
+}
+
+#info td {
     text-align: left;
 }
 
-td:first-child {
-    border-left: none;
+#info td:first-child {
     text-align: right;
 }
 
-.high, #response {
+.high, #request {
     background-color: lightyellow;
 }
 
-.low {
+.low, #response {
     background-color: lightgreen;
 }
 
 .prior {
     font-size: 80%;
     color: gray;
-}
-
-#request {
-    background-color: lightgray;
 }
 
 #info {
