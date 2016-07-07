@@ -81,9 +81,9 @@ caption .prior {
     background: repeating-linear-gradient(
             -45deg,
             lightyellow,
-            lightyellow 0.5em,
-            lightgreen 0.5em,
-            lightgreen 1em
+            lightyellow 0.25em,
+            lightgreen 0.25em,
+            lightgreen 0.5em
     );
 }
 
