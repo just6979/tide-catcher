@@ -8,6 +8,7 @@ handlers:
 - url: /(.*icon.*)$
   static_files: icons/\1
   expiration: 7d
+  upload: icons/.*icon.*
 
 - url: /images
   static_dir: images
