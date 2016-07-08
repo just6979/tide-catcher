@@ -59,6 +59,10 @@ td:first-child {
     border-right: dotted thin;
 }
 
+ul {
+    list-style-position: inside;
+}
+
 #info td {
     text-align: left;
 }
