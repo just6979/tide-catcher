@@ -110,6 +110,24 @@ class MainHandler(webapp2.RequestHandler):
         self.response.write(template.render(values))
 
 
+class BaseHandler(webapp2.RequestHandler):
+    # show the empty base template, for reference
+    def get(self):
+        values = {}
+        template = JINJA_ENVIRONMENT.get_template("base.html")
+        self.response.write(template.render(values))
+
+
+class BaseErrorHandler(webapp2.RequestHandler):
+    # show the empty base template, for reference
+    def get(self):
+        values = {'error': True}
+        template = JINJA_ENVIRONMENT.get_template("error.html")
+        self.response.write(template.render(values))
+
+
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', MainHandler),
+    ('/base', BaseHandler),
+    ('/error', BaseErrorHandler),
 ], debug=True)
