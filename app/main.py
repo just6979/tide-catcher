@@ -116,7 +116,11 @@ class MainHandler(webapp2.RequestHandler):
 
 class StationsHandler(webapp2.RequestHandler):
     def get(self):
-        values = {}
+        (stations_url, stations) = tides_api.fetch_stations(tides_api_key)
+
+        values = {
+            'stations': stations
+        }
         template = JINJA_ENVIRONMENT.get_template("stations.html")
         self.response.write(template.render(values))
 

@@ -80,6 +80,25 @@ def fetch_and_decode(tides_api_key, maps_api_key, location, start_time, now_time
     return (tides, tides_url), (tz, tz_url)
 
 
+def fetch_stations(api_key):
+    stations_url = "https://www.worldtides.info/api?stations&key={key}".format(
+        options="stations",
+        key=api_key,
+    )
+    response = urllib.urlopen(stations_url)
+    data = json.loads(response.read())
+
+    try:
+        out = data['stations']
+    except KeyError:
+        out = {
+            'error': "Error: Bad JSON Data\n",
+            'data': str(data)
+        }
+
+    return stations_url, out
+
+
 def main():
     tides_api_key = get_api_key()
     maps_api_key = maps_api.get_api_key()
