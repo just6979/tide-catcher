@@ -29,6 +29,13 @@ class LocationMatch(ndb.Model):
     resp_location = ndb.StringProperty(indexed=False, required=True)
 
 
+class Station(ndb.Model):
+    id = ndb.StringProperty(indexed=True)
+    lat = ndb.FloatProperty(required=True)
+    lon = ndb.FloatProperty(required=True)
+    name = ndb.StringProperty(required=True)
+
+
 def nearest_station_loc(req_loc):
     return req_loc
 
@@ -116,13 +123,29 @@ class MainHandler(webapp2.RequestHandler):
 
 class StationsHandler(webapp2.RequestHandler):
     def get(self):
-        (stations_url, stations) = tides_api.fetch_stations(tides_api_key)
+        stations = Station.query()
 
         values = {
             'stations': stations
         }
         template = JINJA_ENVIRONMENT.get_template("stations.html")
         self.response.write(template.render(values))
+
+
+class StationRefreshHandler(webapp2.RequestHandler):
+    def get(self):
+        (stations_url, stations) = tides_api.fetch_stations(tides_api_key)
+
+        for station in stations:
+            new_station = Station(
+                id=station['id'],
+                name=station['name'],
+                lat=station['lat'],
+                lon=station['lon'],
+            )
+            new_station.put()
+
+        return webapp2.redirect('/stations')
 
 
 class BaseTestHandler(webapp2.RequestHandler):
@@ -146,4 +169,5 @@ app = webapp2.WSGIApplication([
     ('/base', BaseTestHandler),
     ('/error', ErrorTestHandler),
     ('/stations', StationsHandler),
+    ('/refresh-stations', StationRefreshHandler),
 ], debug=True)
