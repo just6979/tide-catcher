@@ -36,44 +36,13 @@
 
 <h1 id="title">{{ self.title() }}</h1>
 
-{% if error %}
+{% block data %}
 
-{% block error %}
-<div id="error">
-    <p>Error info will go here.</p>
+<div id="data">
+    <p>Child templates go here.</p>
 </div>
+
 {% endblock %}
-
-{% else %}
-
-{% block tides %}
-<div id="tides">
-    <p>Tide data will go here.</p>
-</div>
-{% endblock %}
-
-{% block info %}
-<div id="info">
-    <p>Info about the last request will go here.</p>
-</div>
-{% endblock %}
-
-<div id="coming_soon">
-    <h2>Coming Soon</h2>
-    <ul>
-        <li>Auto-select station based on your location.</li>
-        <li>Save your favorite stations.</li>
-        <li>Offline mode: see the last tides retrieved even if you lose connection.</li>
-    </ul>
-</div>
-
-{% block notes %}
-<div id="notes">
-    <p>Any notes will go here.</p>
-</div>
-{% endblock %}
-
-{% endif %}
 
 </body>
 </html>
