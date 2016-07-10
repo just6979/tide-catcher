@@ -77,11 +77,15 @@ class MainHandler(webapp2.RequestHandler):
                     'error': tz['error'],
                     'data': tz['data'],
                 }
+                template = JINJA_ENVIRONMENT.get_template("error.html")
+                self.response.write(template.render(values))
             elif 'error' in tides:
                 values = {
                     'error': tides['error'],
                     'data': tides['data'],
                 }
+                template = JINJA_ENVIRONMENT.get_template("error.html")
+                self.response.write(template.render(values))
             else:
                 logging.info(tz_url)
                 logging.info(tides_url)
@@ -106,8 +110,8 @@ class MainHandler(webapp2.RequestHandler):
 
             save_to_cache(station_loc, utc_now)
 
-        template = JINJA_ENVIRONMENT.get_template("index.html")
-        self.response.write(template.render(values))
+            template = JINJA_ENVIRONMENT.get_template("index.html")
+            self.response.write(template.render(values))
 
 
 class BaseHandler(webapp2.RequestHandler):
@@ -121,7 +125,7 @@ class BaseHandler(webapp2.RequestHandler):
 class BaseErrorHandler(webapp2.RequestHandler):
     # show the empty base template, for reference
     def get(self):
-        values = {'error': True}
+        values = {'error': "Test Error"}
         template = JINJA_ENVIRONMENT.get_template("error.html")
         self.response.write(template.render(values))
 

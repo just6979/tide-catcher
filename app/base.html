@@ -36,7 +36,16 @@
 
 <h1 id="title">{{ self.title() }}</h1>
 
-{% if not error %}
+{% if error %}
+
+{% block error %}
+<div id="error">
+    <p>Error info will go here.</p>
+</div>
+{% endblock %}
+
+{% else %}
+
 {% block tides %}
 <div id="tides">
     <p>Tide data will go here.</p>
@@ -63,12 +72,7 @@
     <p>Any notes will go here.</p>
 </div>
 {% endblock %}
-{% else %}
-{% block error %}
-<div id="error">
-    <p>Error info will go here.</p>
-</div>
-{% endblock %}
+
 {% endif %}
 
 </body>
