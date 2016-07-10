@@ -110,19 +110,19 @@ class MainHandler(webapp2.RequestHandler):
 
             save_to_cache(station_loc, utc_now)
 
-            template = JINJA_ENVIRONMENT.get_template("index.html")
+            template = JINJA_ENVIRONMENT.get_template("tides.html")
             self.response.write(template.render(values))
 
 
-class BaseHandler(webapp2.RequestHandler):
+class BaseTestHandler(webapp2.RequestHandler):
     # show the empty base template, for reference
     def get(self):
-        values = {}
+        values = {'data': '<div id="data">\n<p>Base template looks good!</p>\n</div>'}
         template = JINJA_ENVIRONMENT.get_template("base.html")
         self.response.write(template.render(values))
 
 
-class BaseErrorHandler(webapp2.RequestHandler):
+class ErrorTestHandler(webapp2.RequestHandler):
     # show the empty base template, for reference
     def get(self):
         values = {'error': "Test Error"}
@@ -132,6 +132,6 @@ class BaseErrorHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/base', BaseHandler),
-    ('/error', BaseErrorHandler),
+    ('/base', BaseTestHandler),
+    ('/error', ErrorTestHandler),
 ], debug=True)
