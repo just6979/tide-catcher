@@ -2,18 +2,18 @@
 {% block title %}Tide Catcher{% endblock %}
 
 {% block data %}
-<!--suppress HtmlUnknownTarget -->
-<div id="stations">
-    <h2>Station List (from cache)</h2>
-    <p><a href="/refresh-stations">Refresh Station Cache</a></p>
-    <ul>
-        {% for station in stations %}
-        <li>
-            {{station.name}},
-            ({{"%.4f" % station.lat}}, {{"%.4f" % station.lon}}),
-            {{station.id}}
-        </li>
-        {% endfor %}
-    </ul>
-</div>
+    <!--suppress HtmlUnknownTarget -->
+    <div id="stations">
+        <h2>Station List (from cache)</h2>
+        <p><a href="/refresh-stations">Refresh Station Cache</a></p>
+        <ul>
+            {% for station in stations %}
+                <li>
+                    {{ station.name }},
+                    ({{ "%.4f" % station.lat }}, {{ "%.4f" % station.lon }}),
+                    {{ station.id }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}

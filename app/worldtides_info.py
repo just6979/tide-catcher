@@ -46,8 +46,10 @@ def decode(data, utc_now_stamp, tz_offset):
 
         for tide in data['extremes']:
             utc_timestamp = datetime.datetime.utcfromtimestamp(tide['dt'])
-            timestamp = to_nearest_minute(offset_timestamp(utc_timestamp, tz_offset))
-            now_stamp = to_nearest_minute(offset_timestamp(utc_now_stamp, tz_offset))
+            timestamp = to_nearest_minute(
+                offset_timestamp(utc_timestamp, tz_offset))
+            now_stamp = to_nearest_minute(
+                offset_timestamp(utc_now_stamp, tz_offset))
 
             if timestamp < now_stamp:
                 prior = 'prior'
@@ -69,7 +71,8 @@ def decode(data, utc_now_stamp, tz_offset):
     return out
 
 
-def fetch_and_decode(tides_api_key, maps_api_key, location, start_time, now_time):
+def fetch_and_decode(tides_api_key, maps_api_key, location, start_time,
+                     now_time):
     # TODO: adjust timezone based on request location or response location?
     tz_url, tz_response = maps_api.fetch(maps_api_key, location, start_time)
     tz = maps_api.decode(tz_response)

@@ -10,7 +10,8 @@ import worldtides_info as tides_api
 from utils import *
 
 JINJA_ENVIRONMENT = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(__file__), 'templates')),
+    loader=jinja2.FileSystemLoader(
+        os.path.join(os.path.dirname(__file__), 'templates')),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
@@ -96,7 +97,9 @@ class MainHandler(webapp2.RequestHandler):
             else:
                 logging.info(tz_url)
                 logging.info(tides_url)
-                start_timestamp = to_nearest_minute(offset_timestamp(utc_now, tz['offset']))
+                start_timestamp = to_nearest_minute(
+                    offset_timestamp(utc_now, tz['offset'])
+                )
                 req_timestamp = {
                     'date': start_timestamp.strftime(DATE_FORMAT),
                     'time': start_timestamp.strftime(TIME_FORMAT),
@@ -152,7 +155,8 @@ class StationRefreshHandler(webapp2.RequestHandler):
 class BaseTestHandler(webapp2.RequestHandler):
     # show the base template, for reference
     def get(self):
-        values = {'data': '<div id="data">\n<p>Base template looks good!</p>\n</div>'}
+        values = {
+            'data': '<div id="data">\n<p>Base template looks good!</p>\n</div>'}
         template = JINJA_ENVIRONMENT.get_template("base.html")
         self.response.write(template.render(values))
 
