@@ -17,6 +17,10 @@ handlers:
 - url: /styles
   static_dir: styles
 
+- url: /(manifest.json|browserconfig.xml)
+  static_files: static/\1
+  upload: static/*
+
 - url: .*
   script: main.app
 
