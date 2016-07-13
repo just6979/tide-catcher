@@ -133,7 +133,8 @@ class StationsHandler(webapp2.RequestHandler):
 
 
 class StationRefreshHandler(webapp2.RequestHandler):
-    def get(self):
+    @staticmethod
+    def get():
         (stations_url, stations) = tides_api.fetch_stations(tides_api_key)
 
         for station in stations:
