@@ -3,64 +3,64 @@
 
 {% block data %}
 
-<div id="tides">
-    <table>
-        <caption class="top">
-            {{resp_station}}
-        </caption>
-        {% for tide in tides %}
-        <tr class="{{tide.type|lower}} {{tide.prior|lower}}">
-            <td class="type">{{tide.type}}</td>
-            <td class="date">{{tide.date}}</td>
-            <td class="day">{{tide.day}}</td>
-            <td class="time">{{tide.time}}</td>
-        </tr>
-        {% endfor %}
-        <caption class="bottom">
-            Color Key:<br/>
-            <span class="prior">Prior&nbsp;Tides</span><br/>
-            <span class="low">Low&nbsp;Tides</span>
-            <span class="high">High&nbsp;Tides</span>
-        </caption>
-    </table>
-</div>
+    <div id="tides">
+        <table>
+            <caption class="top">
+                {{ resp_station }}
+            </caption>
+            {% for tide in tides %}
+                <tr class="{{ tide.type|lower }} {{ tide.prior|lower }}">
+                    <td class="type">{{ tide.type }}</td>
+                    <td class="date">{{ tide.date }}</td>
+                    <td class="day">{{ tide.day }}</td>
+                    <td class="time">{{ tide.time }}</td>
+                </tr>
+            {% endfor %}
+            <caption class="bottom">
+                Color Key:<br/>
+                <span class="prior">Prior&nbsp;Tides</span><br/>
+                <span class="low">Low&nbsp;Tides</span>
+                <span class="high">High&nbsp;Tides</span>
+            </caption>
+        </table>
+    </div>
 
-<div id="info">
-    <table id="request">
-        <caption class="top">Request</caption>
-        <tr>
-            <td>Location</td>
-            <td>{{"%.4f" % req_lat}}, {{"%.4f" % req_lon}}</td>
-        </tr>
-        <tr>
-            <td>Time</td>
-            <td>{{req_timestamp.date}} {{req_timestamp.day}} {{req_timestamp.time}}</td>
-        </tr>
-    </table>
-    <table id="response">
-        <caption class="top">Response</caption>
-        <tr>
-            <td>Location</td>
-            <td>{{"%.4f" % resp_lat}}, {{"%.4f" % resp_lon}}</td>
-        </tr>
-        <tr>
-            <td>Timezone</td>
-            <td>{{tz_name}}, UTC{{"%+d" % tz_offset}}</td>
-        </tr>
-    </table>
-</div>
+    <div id="info">
+        <table id="request">
+            <caption class="top">Request</caption>
+            <tr>
+                <td>Location</td>
+                <td>{{ "%.4f" % req_lat }}, {{ "%.4f" % req_lon }}</td>
+            </tr>
+            <tr>
+                <td>Time</td>
+                <td>{{ req_timestamp.date }} {{ req_timestamp.day }} {{ req_timestamp.time }}</td>
+            </tr>
+        </table>
+        <table id="response">
+            <caption class="top">Response</caption>
+            <tr>
+                <td>Location</td>
+                <td>{{ "%.4f" % resp_lat }}, {{ "%.4f" % resp_lon }}</td>
+            </tr>
+            <tr>
+                <td>Timezone</td>
+                <td>{{ tz_name }}, UTC{{ "%+d" % tz_offset }}</td>
+            </tr>
+        </table>
+    </div>
 
-<div id="coming_soon">
-    <h2>Coming Soon</h2>
-    <ul>
-        <li>Auto-select station based on your location.</li>
-        <li>Save your favorite stations.</li>
-        <li>Offline mode: see the last tides retrieved even if you lose connection.</li>
-    </ul>
-</div>
+    <div id="coming_soon">
+        <h2>Coming Soon</h2>
+        <ul>
+            <li>Auto-select station based on your location.</li>
+            <li>Save your favorite stations.</li>
+            <li>Offline mode: see the last tides retrieved even if you lose connection.</li>
+        </ul>
+    </div>
 
-<div id="notes">
-    <p><em>{{copyright}}</em></p>
-</div>
+    <div id="notes">
+        <p><em>{{ copyright }}</em></p>
+    </div>
 
 {% endblock %}
