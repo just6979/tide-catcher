@@ -42,10 +42,12 @@
 <body>
 <!-- TODO: prompt for location, send to server, display results (Full page response or HttpReq and JSON?) -->
 
-<img id="logo" src="../images/wave_left_48.png"/>
-
-<h1 id="title">{{ self.title() }}</h1>
-
+<div id="title">
+    <a href="/">
+        <img id="logo" src="../images/wave_left_48.png"/>
+        <h1>{{ self.title() }}</h1>
+    </a>
+</div>
 {% block data %}
 
     <div id="data">

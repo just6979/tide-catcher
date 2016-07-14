@@ -9,11 +9,17 @@ body {
     margin: 0;
     padding: 0;
     background-color: lightblue;
+    color: black;
     text-align: center;
 }
 
-#title {
+#title h1 {
     margin-top: 0;
+}
+
+#title a {
+    color: black;
+    text-decoration: none;
 }
 
 table {
