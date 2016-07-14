@@ -51,7 +51,7 @@ def save_to_cache(location, utc_now):
     pass
 
 
-class MainHandler(webapp2.RequestHandler):
+class TidesHandler(webapp2.RequestHandler):
     def get(self):
         # TODO: cache & reuse requests for the same station within 12 hours
         # TODO: handle incoming location requests (Full page response or HttpReq and JSON?)
@@ -134,8 +134,7 @@ class StationsHandler(webapp2.RequestHandler):
 
 
 class StationRefreshHandler(webapp2.RequestHandler):
-    @staticmethod
-    def get():
+    def get(self):
         (stations_url, stations) = tides_api.fetch_stations(tides_api_key)
 
         for station in stations:
@@ -147,15 +146,68 @@ class StationRefreshHandler(webapp2.RequestHandler):
             )
             new_station.put()
 
-        return webapp2.redirect('/stations')
+        return self.redirect('/stations')
+
+
+class TestHandler(webapp2.RequestHandler):
+    # show the base template, for reference
+    def get(self):
+        values = {
+            'data': '''
+<p>
+Template testing:<br/>
+<a href="/test/base">Base</a>
+<a href="/test/error">Error</a>
+<a href="/test/tides">Tides</a>
+<a href="/test/stations">Stations</a>
+<p>
+            '''
+        }
+        template = JINJA_ENVIRONMENT.get_template("base.html")
+        self.response.write(template.render(values))
 
 
 class BaseTestHandler(webapp2.RequestHandler):
     # show the base template, for reference
     def get(self):
         values = {
-            'data': '<div id="data">\n<p>Base template looks good!</p>\n</div>'}
+            'data': 'Base Test'}
         template = JINJA_ENVIRONMENT.get_template("base.html")
+        self.response.write(template.render(values))
+
+
+class TidesTestHandler(webapp2.RequestHandler):
+    # show the error template, for reference
+    def get(self):
+        values = {
+            'copyright': 'copyright',
+            'req_timestamp': {'day': 'day', 'date': 'date', 'time': 'time'},
+            'req_lat': 0.0,
+            'req_lon': 0.0,
+            'resp_lat': 0.0,
+            'resp_lon': 0.0,
+            'resp_station': 'tides[station]',
+            'tz_offset': 0,
+            'tz_name': 'tz[name]',
+            'tides': [
+                {
+                    'type': 'low',
+                    'date': 'timestamp.strftime(DATE_FORMAT)',
+                    'day': 'timestamp.strftime(DAY_FORMAT)',
+                    'time': 'timestamp.strftime(TIME_FORMAT)',
+                    'prior': 'prior',
+
+                },
+                {
+                    'type': 'high',
+                    'date': 'timestamp.strftime(DATE_FORMAT)',
+                    'day': 'timestamp.strftime(DAY_FORMAT)',
+                    'time': 'timestamp.strftime(TIME_FORMAT)',
+                    'prior': 'future',
+                },
+            ]
+        }
+        template = JINJA_ENVIRONMENT.get_template("tides.html")
         self.response.write(template.render(values))
 
 
@@ -167,10 +219,28 @@ class ErrorTestHandler(webapp2.RequestHandler):
         self.response.write(template.render(values))
 
 
+class StationsTestHandler(webapp2.RequestHandler):
+    # show the error template, for reference
+    def get(self):
+        values = {
+            'station_count': 1,
+            'stations': [{
+                'name': 'Test Station',
+                'loc': {'lat': 0.0, 'lon': 0.0},
+                'id': '0000000'
+            }]
+        }
+        template = JINJA_ENVIRONMENT.get_template("stations.html")
+        self.response.write(template.render(values))
+
+
 app = webapp2.WSGIApplication([
-    ('/', MainHandler),
-    ('/base', BaseTestHandler),
-    ('/error', ErrorTestHandler),
+    ('/', TidesHandler),
     ('/stations', StationsHandler),
     ('/refresh-stations', StationRefreshHandler),
+    ('/test', TestHandler),
+    ('/test/base', BaseTestHandler),
+    ('/test/error', ErrorTestHandler),
+    ('/test/tides', TidesTestHandler),
+    ('/test/stations', StationsTestHandler),
 ], debug=True)
