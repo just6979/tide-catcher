@@ -1,6 +1,7 @@
 import calendar
 import datetime
 import json
+import logging
 import pprint
 import urllib2
 
@@ -24,6 +25,8 @@ def fetch(api_key, location, timestamp):
         timestamp=calendar.timegm(timestamp.timetuple()),
         api_key=api_key,
     )
+    logging.info(request_url)
+
     response = urllib2.urlopen(request_url)
 
     return request_url, response.read()

@@ -1,4 +1,3 @@
-import logging
 import os
 
 import jinja2
@@ -94,8 +93,6 @@ class MainHandler(webapp2.RequestHandler):
                 template = JINJA_ENVIRONMENT.get_template("error.html")
                 self.response.write(template.render(values))
             else:
-                logging.info(tz_url)
-                logging.info(tides_url)
                 start_timestamp = to_nearest_minute(
                     offset_timestamp(utc_now, tz['offset'])
                 )
