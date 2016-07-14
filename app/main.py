@@ -31,9 +31,8 @@ class LocationMatch(ndb.Model):
 
 
 class Station(ndb.Model):
-    id = ndb.StringProperty(indexed=True)
-    lat = ndb.FloatProperty(required=True)
-    lon = ndb.FloatProperty(required=True)
+    id = ndb.IntegerProperty(indexed=True)
+    loc = ndb.GeoPtProperty(indexed=True)
     name = ndb.StringProperty(required=True)
 
 
@@ -129,8 +128,10 @@ class StationsHandler(webapp2.RequestHandler):
         stations = Station.query()
 
         values = {
+            'station_count': stations.count(),
             'stations': stations
         }
+
         template = JINJA_ENVIRONMENT.get_template("stations.html")
         self.response.write(template.render(values))
 
@@ -141,11 +142,11 @@ class StationRefreshHandler(webapp2.RequestHandler):
         (stations_url, stations) = tides_api.fetch_stations(tides_api_key)
 
         for station in stations:
+
             new_station = Station(
-                id=station['id'],
+                id=int(station['id'][5:]),
+                loc=(ndb.GeoPt(station['lat'], station['lon'])),
                 name=station['name'],
-                lat=station['lat'],
-                lon=station['lon'],
             )
             new_station.put()
 
