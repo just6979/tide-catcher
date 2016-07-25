@@ -37,38 +37,42 @@ def fetch(api_key, location, utc_start_time):
 def decode(data, utc_now_stamp, tz_offset):
     out = {}
 
-    data = json.loads(data)
-
     try:
-        out['copyright'] = data['copyright']
-        out['lat'] = data['responseLat']
-        out['lon'] = data['responseLon']
-        out['station'] = data['station']
-        out['tides'] = []
+        data = json.loads(data)
+    except ValueError as e:
+        out['error'] = 'in decoding JSON from worldtides.info request'
+        out['data'] = e.message
+    else:
+        try:
+            out['copyright'] = data['copyright']
+            out['lat'] = data['responseLat']
+            out['lon'] = data['responseLon']
+            out['station'] = data['station']
+            out['tides'] = []
 
-        for tide in data['extremes']:
-            utc_timestamp = datetime.datetime.utcfromtimestamp(tide['dt'])
-            timestamp = to_nearest_minute(
-                offset_timestamp(utc_timestamp, tz_offset))
-            now_stamp = to_nearest_minute(
-                offset_timestamp(utc_now_stamp, tz_offset))
+            for tide in data['extremes']:
+                utc_timestamp = datetime.datetime.utcfromtimestamp(tide['dt'])
+                timestamp = to_nearest_minute(
+                    offset_timestamp(utc_timestamp, tz_offset))
+                now_stamp = to_nearest_minute(
+                    offset_timestamp(utc_now_stamp, tz_offset))
 
-            if timestamp < now_stamp:
-                prior = 'prior'
-            else:
-                prior = 'future'
+                if timestamp < now_stamp:
+                    prior = 'prior'
+                else:
+                    prior = 'future'
 
-            out['tides'].append({
-                'type': tide['type'],
-                'date': timestamp.strftime(DATE_FORMAT),
-                'day': timestamp.strftime(DAY_FORMAT),
-                # TODO: round times to nearest minute
-                'time': timestamp.strftime(TIME_FORMAT),
-                'prior': prior,
-            })
-    except KeyError:
-        out['error'] = "Error: Bad JSON Data\n"
-        out['data'] = str(data)
+                out['tides'].append({
+                    'type': tide['type'],
+                    'date': timestamp.strftime(DATE_FORMAT),
+                    'day': timestamp.strftime(DAY_FORMAT),
+                    # TODO: round times to nearest minute
+                    'time': timestamp.strftime(TIME_FORMAT),
+                    'prior': prior,
+                })
+        except KeyError:
+            out['error'] = "Error: Bad JSON Data\n"
+            out['data'] = str(data)
 
     return out
 

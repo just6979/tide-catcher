@@ -46,8 +46,6 @@ class TidesHandler(webapp2.RequestHandler):
                 tides_api_key, maps_api_key, req_loc, utc_minus_12, utc_now
             )
 
-            station_loc = (tides['lat'], tides['lon'])
-
             if 'error' in tz:
                 values = {
                     'error': tz['error'],
@@ -84,10 +82,10 @@ class TidesHandler(webapp2.RequestHandler):
                     'tides': tides['tides'],
                 }
 
-            save_to_cache(station_loc, utc_now)
+                save_to_cache((tides['lat'], tides['lon']), utc_now)
 
-            template = JINJA_ENVIRONMENT.get_template("tides.html")
-            self.response.write(template.render(values))
+                template = JINJA_ENVIRONMENT.get_template("tides.html")
+                self.response.write(template.render(values))
 
 
 class StationsHandler(webapp2.RequestHandler):

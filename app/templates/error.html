@@ -3,7 +3,10 @@
 
 {% block data %}
     <div id="error">
-        <p>An error occurred: {{ error }}</p>
+        <p>Error {{ error }}:</p>
         <pre>{{ data }}</pre>
+    </div>
+    <div>
+        <p><a href="/">Start Over?</a></p>
     </div>
 {% endblock %}
