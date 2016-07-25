@@ -53,14 +53,10 @@ class TidesHandler(webapp2.RequestHandler):
                 }
                 template = JINJA_ENVIRONMENT.get_template("error.html")
                 self.response.write(template.render(values))
-            elif 'error' in tides:
-                values = {
-                    'error': tides['error'],
-                    'data': tides['data'],
-                }
-                template = JINJA_ENVIRONMENT.get_template("error.html")
-                self.response.write(template.render(values))
-            else:
+                return
+
+            status = tides['status']
+            if status == 200:  # OK
                 start_timestamp = to_nearest_minute(
                     offset_timestamp(utc_now, tz['offset'])
                 )
@@ -85,6 +81,14 @@ class TidesHandler(webapp2.RequestHandler):
                 save_to_cache((tides['lat'], tides['lon']), utc_now)
 
                 template = JINJA_ENVIRONMENT.get_template("tides.html")
+                self.response.write(template.render(values))
+            else:
+                values = {
+                    'status': tides['status'],
+                    'error': tides['error'],
+                    'msg': tides['msg'],
+                }
+                template = JINJA_ENVIRONMENT.get_template("error.html")
                 self.response.write(template.render(values))
 
 

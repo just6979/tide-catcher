@@ -40,36 +40,49 @@ def decode(data, utc_now_stamp, tz_offset):
     try:
         data = json.loads(data)
     except ValueError as e:
-        out['error'] = 'in decoding JSON from worldtides.info request'
-        out['data'] = e.message
+        # we got bad JSON from worldtides.info, probably a 500 ISE
+        # TODO: instead of an error, return a warning that the source is down &
+        # force a cache read instead
+        out['status'] = 500
+        out['error'] = e.message
+        out['msg'] = \
+            'Our tides information source seems to be down at the moment, ' \
+            'please try again later.'
     else:
+        # looks like we got a JSON response, try to extract data from it
         try:
-            out['copyright'] = data['copyright']
-            out['lat'] = data['responseLat']
-            out['lon'] = data['responseLon']
-            out['station'] = data['station']
-            out['tides'] = []
+            status = data['status']
+            out['status'] = status
+            if status == 200:
+                out['copyright'] = data['copyright']
+                out['lat'] = data['responseLat']
+                out['lon'] = data['responseLon']
+                out['station'] = data['station']
+                out['tides'] = []
 
-            for tide in data['extremes']:
-                utc_timestamp = datetime.datetime.utcfromtimestamp(tide['dt'])
-                timestamp = to_nearest_minute(
-                    offset_timestamp(utc_timestamp, tz_offset))
-                now_stamp = to_nearest_minute(
-                    offset_timestamp(utc_now_stamp, tz_offset))
+                for tide in data['extremes']:
+                    utc_timestamp = datetime.datetime.utcfromtimestamp(tide['dt'])
+                    timestamp = to_nearest_minute(
+                        offset_timestamp(utc_timestamp, tz_offset))
+                    now_stamp = to_nearest_minute(
+                        offset_timestamp(utc_now_stamp, tz_offset))
 
-                if timestamp < now_stamp:
-                    prior = 'prior'
-                else:
-                    prior = 'future'
+                    if timestamp < now_stamp:
+                        prior = 'prior'
+                    else:
+                        prior = 'future'
 
-                out['tides'].append({
-                    'type': tide['type'],
-                    'date': timestamp.strftime(DATE_FORMAT),
-                    'day': timestamp.strftime(DAY_FORMAT),
-                    # TODO: round times to nearest minute
-                    'time': timestamp.strftime(TIME_FORMAT),
-                    'prior': prior,
-                })
+                    out['tides'].append({
+                        'type': tide['type'],
+                        'date': timestamp.strftime(DATE_FORMAT),
+                        'day': timestamp.strftime(DAY_FORMAT),
+                        # TODO: round times to nearest minute
+                        'time': timestamp.strftime(TIME_FORMAT),
+                        'prior': prior,
+                    })
+            else:
+                out['error'] = data['error']
+                out['msg'] = ''
         except KeyError:
             out['error'] = "Error: Bad JSON Data\n"
             out['data'] = str(data)

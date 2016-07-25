@@ -3,8 +3,9 @@
 
 {% block data %}
     <div id="error">
-        <p>Error {{ error }}:</p>
-        <pre>{{ data }}</pre>
+        <p>Error {{ status }}:</p>
+        <pre>{{ error }}</pre>
+        <p>{{ msg }}</p>
     </div>
     <div>
         <p><a href="/">Start Over?</a></p>
