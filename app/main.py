@@ -42,21 +42,29 @@ class TidesHandler(webapp2.RequestHandler):
 
         if not values:
             # if this location wasn't cached
-            (tides, tides_url), (tz, tz_url) = tides_api.fetch_and_decode(
-                tides_api_key, maps_api_key, req_loc, utc_minus_12, utc_now
+            tz, tz_url = maps_api.fetch_and_decode(
+                maps_api_key, req_loc, utc_now
             )
 
-            if 'error' in tz:
+            status = tz['status']
+            if status != 'OK':
                 values = {
+                    'module': 'Google Maps API',
+                    'status': tz['status'],
                     'error': tz['error'],
-                    'data': tz['data'],
+                    'msg': tz['msg'],
                 }
                 template = JINJA_ENVIRONMENT.get_template("error.html")
+                print(status)
                 self.response.write(template.render(values))
                 return
 
+            tides, tides_url = tides_api.fetch_and_decode(
+                tides_api_key, req_loc, utc_minus_12, utc_now, tz['offset']
+            )
+
             status = tides['status']
-            if status == 200:  # OK
+            if status == 'OK':
                 start_timestamp = to_nearest_minute(
                     offset_timestamp(utc_now, tz['offset'])
                 )
@@ -84,6 +92,7 @@ class TidesHandler(webapp2.RequestHandler):
                 self.response.write(template.render(values))
             else:
                 values = {
+                    'module': 'World Tides API',
                     'status': tides['status'],
                     'error': tides['error'],
                     'msg': tides['msg'],

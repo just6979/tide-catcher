@@ -52,8 +52,8 @@ def decode(data, utc_now_stamp, tz_offset):
         # looks like we got a JSON response, try to extract data from it
         try:
             status = data['status']
-            out['status'] = status
             if status == 200:
+                out['status'] = 'OK'
                 out['copyright'] = data['copyright']
                 out['lat'] = data['responseLat']
                 out['lon'] = data['responseLon']
@@ -81,25 +81,24 @@ def decode(data, utc_now_stamp, tz_offset):
                         'prior': prior,
                     })
             else:
+                out['status'] = status
                 out['error'] = data['error']
                 out['msg'] = ''
         except KeyError:
+            out['status'] = 500
             out['error'] = "Error: Bad JSON Data\n"
             out['data'] = str(data)
 
     return out
 
 
-def fetch_and_decode(tides_api_key, maps_api_key, location, start_time,
-                     now_time):
+def fetch_and_decode(tides_api_key, location, start_time,
+                     now_time, tz_offset):
     # TODO: adjust timezone based on request location or response location?
-    tz_url, tz_response = maps_api.fetch(maps_api_key, location, start_time)
-    tz = maps_api.decode(tz_response)
-
     tides_url, tides_response = fetch(tides_api_key, location, start_time)
-    tides = decode(tides_response, now_time, tz['offset'])
+    tides = decode(tides_response, now_time, tz_offset)
 
-    return (tides, tides_url), (tz, tz_url)
+    return tides, tides_url
 
 
 def fetch_stations(api_key):

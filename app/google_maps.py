@@ -38,14 +38,22 @@ def decode(data):
     data = json.loads(data)
 
     try:
-        offset = data['rawOffset']
-        if 'dstOffset' in data:
-            offset = offset + data['dstOffset']
-        out['offset'] = offset / 3600
-        out['name'] = data['timeZoneName']
+        status = data['status']
+        if status == 'OK':
+            out['status'] = 'OK'
+            offset = data['rawOffset']
+            if 'dstOffset' in data:
+                offset = offset + data['dstOffset']
+            out['offset'] = offset / 3600
+            out['name'] = data['timeZoneName']
+        else:
+            out['status'] = status
+            out['error'] = data.get('error_message', '')
+            out['msg'] = ''
     except KeyError:
-        out['error'] = "Error: Bad JSON Data\n"
-        out['data'] = str(data)
+        out['status'] = 'BAD_JSON_DATA'
+        out['error'] = "Bad JSON Data from Google Maps API"
+        out['msg'] = str(data)
 
     return out
 
