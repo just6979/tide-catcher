@@ -21,6 +21,11 @@ tides_api_key = tides_api.get_api_key()
 maps_api_key = maps_api.get_api_key()
 
 
+def render_template(handler, template_file, values):
+    template = JINJA_ENVIRONMENT.get_template(template_file)
+    handler.response.write(template.render(values))
+
+
 class TidesHandler(webapp2.RequestHandler):
     def get(self):
         # TODO: cache & reuse requests for the same station within 12 hours
@@ -54,50 +59,46 @@ class TidesHandler(webapp2.RequestHandler):
                     'error': tz['error'],
                     'msg': tz['msg'],
                 }
-                template = JINJA_ENVIRONMENT.get_template("error.html")
-                self.response.write(template.render(values))
-                return
-
-            tides, tides_url = tides_api.fetch_and_decode(
-                tides_api_key, req_loc, utc_minus_12, utc_now, tz['offset']
-            )
-
-            status = tides['status']
-            if status == 'OK':
-                start_timestamp = to_nearest_minute(
-                    offset_timestamp(utc_now, tz['offset'])
-                )
-                req_timestamp = {
-                    'date': start_timestamp.strftime(DATE_FORMAT),
-                    'time': start_timestamp.strftime(TIME_FORMAT),
-                    'day': start_timestamp.strftime(DAY_FORMAT),
-                }
-                values = {
-                    'copyright': tides['copyright'],
-                    'req_timestamp': req_timestamp,
-                    'req_lat': req_lat,
-                    'req_lon': req_lon,
-                    'resp_lat': tides['lat'],
-                    'resp_lon': tides['lon'],
-                    'resp_station': tides['station'],
-                    'tz_offset': tz['offset'],
-                    'tz_name': tz['name'],
-                    'tides': tides['tides'],
-                }
-
-                save_to_cache((tides['lat'], tides['lon']), utc_now)
-
-                template = JINJA_ENVIRONMENT.get_template("tides.html")
-                self.response.write(template.render(values))
+                template_file = "error.html"
             else:
-                values = {
-                    'module': tides['module'],
-                    'status': tides['status'],
-                    'error': tides['error'],
-                    'msg': tides['msg'],
-                }
-                template = JINJA_ENVIRONMENT.get_template("error.html")
-                self.response.write(template.render(values))
+                tides, tides_url = tides_api.fetch_and_decode(
+                    tides_api_key, req_loc, utc_minus_12, utc_now, tz['offset']
+                )
+
+                status = tides['status']
+                if status == 'OK':
+                    start_timestamp = to_nearest_minute(
+                        offset_timestamp(utc_now, tz['offset'])
+                    )
+                    req_timestamp = {
+                        'date': start_timestamp.strftime(DATE_FORMAT),
+                        'time': start_timestamp.strftime(TIME_FORMAT),
+                        'day': start_timestamp.strftime(DAY_FORMAT),
+                    }
+                    values = {
+                        'copyright': tides['copyright'],
+                        'req_timestamp': req_timestamp,
+                        'req_lat': req_lat,
+                        'req_lon': req_lon,
+                        'resp_lat': tides['lat'],
+                        'resp_lon': tides['lon'],
+                        'resp_station': tides['station'],
+                        'tz_offset': tz['offset'],
+                        'tz_name': tz['name'],
+                        'tides': tides['tides'],
+                    }
+                    save_to_cache((tides['lat'], tides['lon']), utc_now)
+                    template_file = "tides.html"
+                else:
+                    values = {
+                        'module': tides['module'],
+                        'status': tides['status'],
+                        'error': tides['error'],
+                        'msg': tides['msg'],
+                    }
+                    template_file = "error.html"
+
+            render_template(self, template_file, values)
 
 
 class StationsHandler(webapp2.RequestHandler):
@@ -109,8 +110,7 @@ class StationsHandler(webapp2.RequestHandler):
             'stations': stations
         }
 
-        template = JINJA_ENVIRONMENT.get_template("stations.html")
-        self.response.write(template.render(values))
+        render_template(self, "stations.html", values)
 
 
 class StationRefreshHandler(webapp2.RequestHandler):
