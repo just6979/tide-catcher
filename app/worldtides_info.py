@@ -48,7 +48,7 @@ def decode(data, utc_now_stamp, tz_offset):
             mod_name,
             500,
             e.message,
-            'Our tides information source seems to be down at the moment, ' \
+            'Our tides information source seems to be down at the moment, '
             'please try again later.'
         )
     else:
@@ -137,15 +137,19 @@ def main():
     # Lynn, MA
     request_lat = 42.478744
     request_lon = -71.001188
-    request_location = (request_lat, request_lon)
+    req_loc = (request_lat, request_lon)
 
     # right now in  UTC as unix time
     utc_now = datetime.datetime.utcnow()
     # minus 12 hours to make sure we get the last tide
     utc_minus_12 = utc_now + datetime.timedelta(hours=-12)
 
-    (tides, tides_url), (tz, tz_url) = fetch_and_decode(
-        tides_api_key, maps_api_key, request_location, utc_minus_12, utc_now
+    tz, tz_url = maps_api.fetch_and_decode(
+        maps_api_key, req_loc, utc_now
+    )
+
+    tides, tides_url = fetch_and_decode(
+        tides_api_key, req_loc, utc_minus_12, utc_now, tz['offset']
     )
 
     pp = pprint.PrettyPrinter()

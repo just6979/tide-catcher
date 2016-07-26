@@ -55,7 +55,6 @@ class TidesHandler(webapp2.RequestHandler):
                     'msg': tz['msg'],
                 }
                 template = JINJA_ENVIRONMENT.get_template("error.html")
-                print(status)
                 self.response.write(template.render(values))
                 return
 
