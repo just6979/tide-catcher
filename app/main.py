@@ -49,7 +49,7 @@ class TidesHandler(webapp2.RequestHandler):
             status = tz['status']
             if status != 'OK':
                 values = {
-                    'module': 'Google Maps API',
+                    'module': tz['module'],
                     'status': tz['status'],
                     'error': tz['error'],
                     'msg': tz['msg'],
@@ -92,7 +92,7 @@ class TidesHandler(webapp2.RequestHandler):
                 self.response.write(template.render(values))
             else:
                 values = {
-                    'module': 'World Tides API',
+                    'module': tides['module'],
                     'status': tides['status'],
                     'error': tides['error'],
                     'msg': tides['msg'],

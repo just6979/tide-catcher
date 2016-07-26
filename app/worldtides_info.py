@@ -7,6 +7,8 @@ import urllib
 import google_maps as maps_api
 from utils import *
 
+mod_name = 'World Tides API'
+
 base_url = """\
 https://www.worldtides.info/api?\
 {options}&lat={lat}&lon={lon}&start={start}&key={key}\
@@ -41,13 +43,14 @@ def decode(data, utc_now_stamp, tz_offset):
         data = json.loads(data)
     except ValueError as e:
         # we got bad JSON from worldtides.info, probably a 500 ISE
-        # TODO: instead of an error, return a warning that the source is down &
-        # force a cache read instead
-        out['status'] = 500
-        out['error'] = e.message
-        out['msg'] = \
+        # TODO: instead of an error, return a warning that the source is down & force a cache read instead
+        out = error_builder(
+            mod_name,
+            500,
+            e.message,
             'Our tides information source seems to be down at the moment, ' \
             'please try again later.'
+        )
     else:
         # looks like we got a JSON response, try to extract data from it
         try:
@@ -61,7 +64,8 @@ def decode(data, utc_now_stamp, tz_offset):
                 out['tides'] = []
 
                 for tide in data['extremes']:
-                    utc_timestamp = datetime.datetime.utcfromtimestamp(tide['dt'])
+                    utc_timestamp = datetime.datetime.utcfromtimestamp(
+                        tide['dt'])
                     timestamp = to_nearest_minute(
                         offset_timestamp(utc_timestamp, tz_offset))
                     now_stamp = to_nearest_minute(
@@ -81,13 +85,18 @@ def decode(data, utc_now_stamp, tz_offset):
                         'prior': prior,
                     })
             else:
-                out['status'] = status
-                out['error'] = data['error']
-                out['msg'] = ''
+                out = error_builder(
+                    mod_name,
+                    status,
+                    data['error']
+                )
         except KeyError:
-            out['status'] = 500
-            out['error'] = "Error: Bad JSON Data\n"
-            out['data'] = str(data)
+            out = error_builder(
+                mod_name,
+                'JSON_DECODING_ERROR',
+                'Error while decoding JSON Data from World Tides API:',
+                str(data)
+            )
 
     return out
 
@@ -121,6 +130,7 @@ def fetch_stations(api_key):
 
 
 def main():
+    # TODO: update self test
     tides_api_key = get_api_key()
     maps_api_key = maps_api.get_api_key()
 

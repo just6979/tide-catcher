@@ -15,3 +15,13 @@ def to_nearest_minute(timestamp):
         return timestamp.replace(second=0)
     else:
         return timestamp.replace(minute=timestamp.minute + 1, second=0)
+
+
+# TODO: ?convert error dicts to exceptions?
+def error_builder(mod_name, status, error='', msg=''):
+    return {
+        'module': mod_name,
+        'status': status,
+        'error': error,
+        'msg': msg
+    }
