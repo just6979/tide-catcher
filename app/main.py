@@ -110,7 +110,7 @@ class StationsHandler(webapp2.RequestHandler):
             'stations': stations
         }
 
-        render_template(self, "stations.html", values)
+        render_template(self, 'stations.html', values)
 
 
 class StationRefreshHandler(webapp2.RequestHandler):

@@ -9,14 +9,14 @@ from utils import *
 
 mod_name = 'World Tides API'
 
-base_url = """\
+base_url = '''\
 https://www.worldtides.info/api?\
 {options}&lat={lat}&lon={lon}&start={start}&key={key}\
-"""
+'''
 
 
 def get_api_key():
-    return open("worldtides_api_key.txt").readline().strip()
+    return open('worldtides_api_key.txt').readline().strip()
 
 
 def fetch(api_key, location, utc_start_time):
@@ -24,7 +24,7 @@ def fetch(api_key, location, utc_start_time):
     origin_lat, origin_lon = location
 
     request_url = base_url.format(
-        options="extremes",
+        options='extremes',
         lat=origin_lat,
         lon=origin_lon,
         start=calendar.timegm(utc_start_time.timetuple()),
@@ -111,8 +111,8 @@ def fetch_and_decode(tides_api_key, location, start_time,
 
 
 def fetch_stations(api_key):
-    stations_url = "https://www.worldtides.info/api?stations&key={key}".format(
-        options="stations",
+    stations_url = 'https://www.worldtides.info/api?stations&key={key}'.format(
+        options='stations',
         key=api_key,
     )
     response = urllib.urlopen(stations_url)
@@ -122,7 +122,7 @@ def fetch_stations(api_key):
         out = data['stations']
     except KeyError:
         out = {
-            'error': "Error: Bad JSON Data\n",
+            'error': 'Error: Bad JSON Data\n',
             'data': str(data)
         }
 
@@ -165,5 +165,5 @@ def main():
         pp.pprint(tides)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

@@ -1,9 +1,9 @@
 import datetime
 
-DATE_FORMAT = "%m-%d"
-# TIME_FORMAT = "%H:%M"
-TIME_FORMAT = "%I:%M %p"
-DAY_FORMAT = "%a"
+DATE_FORMAT = '%m-%d'
+# TIME_FORMAT = '%H:%M'
+TIME_FORMAT = '%I:%M %p'
+DAY_FORMAT = '%a'
 
 
 def offset_timestamp(timestamp, tz_offset):

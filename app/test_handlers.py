@@ -24,7 +24,7 @@ Template testing:<br/>
 <p>
             '''
         }
-        template = JINJA_ENVIRONMENT.get_template("base.html")
+        template = JINJA_ENVIRONMENT.get_template('base.html')
         self.response.write(template.render(values))
 
 
@@ -33,7 +33,7 @@ class BaseTestHandler(webapp2.RequestHandler):
     def get(self):
         values = {
             'data': 'Base Test'}
-        template = JINJA_ENVIRONMENT.get_template("base.html")
+        template = JINJA_ENVIRONMENT.get_template('base.html')
         self.response.write(template.render(values))
 
 
@@ -68,15 +68,15 @@ class TidesTestHandler(webapp2.RequestHandler):
                 },
             ]
         }
-        template = JINJA_ENVIRONMENT.get_template("tides.html")
+        template = JINJA_ENVIRONMENT.get_template('tides.html')
         self.response.write(template.render(values))
 
 
 class ErrorTestHandler(webapp2.RequestHandler):
     # show the error template, for reference
     def get(self):
-        values = {'error': "Test Error"}
-        template = JINJA_ENVIRONMENT.get_template("error.html")
+        values = {'error': 'Test Error'}
+        template = JINJA_ENVIRONMENT.get_template('error.html')
         self.response.write(template.render(values))
 
 
@@ -91,5 +91,5 @@ class StationsTestHandler(webapp2.RequestHandler):
                 'id': '0000000'
             }]
         }
-        template = JINJA_ENVIRONMENT.get_template("stations.html")
+        template = JINJA_ENVIRONMENT.get_template('stations.html')
         self.response.write(template.render(values))

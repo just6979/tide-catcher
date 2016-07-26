@@ -16,12 +16,12 @@ location={location}&timestamp={timestamp}&key={api_key}\
 
 
 def get_api_key():
-    return open("google_api_key.txt").readline().strip()
+    return open('google_api_key.txt').readline().strip()
 
 
 def fetch(api_key, location, timestamp):
     # TODO: handle errors
-    location_string = "%s,%s" % location
+    location_string = '%s,%s' % location
 
     request_url = base_url.format(
         location=location_string,
@@ -97,5 +97,5 @@ def main():
         print('Offset = %s hours' % tz['offset'])
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
