@@ -13,8 +13,8 @@ def offset_timestamp(timestamp, tz_offset):
 def to_nearest_minute(timestamp):
     if timestamp.second < 30:
         return timestamp.replace(second=0)
-    else:
-        return timestamp.replace(minute=timestamp.minute + 1, second=0)
+    else:  # second >= 30
+        return timestamp.replace(second=0) + datetime.timedelta(minutes=1)
 
 
 # TODO: ?convert error dicts to exceptions?
