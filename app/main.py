@@ -76,7 +76,6 @@ class TidesHandler(webapp2.RequestHandler):
                         'day': start_timestamp.strftime(DAY_FORMAT),
                     }
                     values = {
-                        'copyright': tides['copyright'],
                         'req_timestamp': req_timestamp,
                         'req_lat': req_lat,
                         'req_lon': req_lon,
