@@ -17,12 +17,17 @@ handlers:
 - url: /styles
   static_dir: styles
 
+- url: /scripts
+  static_dir: scripts
+
 - url: /(manifest.json|browserconfig.xml)
   static_files: static/\1
   upload: static/*
 
 - url: .*
   script: main.app
+  login: optional
+  secure: always
 
 libraries:
 - name: webapp2
