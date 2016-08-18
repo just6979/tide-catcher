@@ -4,8 +4,8 @@ import jinja2
 import webapp2
 from google.appengine.ext import ndb
 
-import google_maps as maps_api
-import worldtides_info as tides_api
+import google_maps_api as maps_api
+import worldtides_info_api as tides_api
 from datastore import Station, check_cache, nearest_station_loc, save_to_cache
 from test_handlers import BaseTestHandler, ErrorTestHandler, \
     StationsTestHandler, TestHandler, TidesTestHandler

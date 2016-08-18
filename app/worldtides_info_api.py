@@ -5,7 +5,7 @@ import urllib
 from datetime import datetime, timedelta
 from pprint import pprint
 
-import google_maps as maps_api
+import google_maps_api as maps_api
 import utils
 
 _module = 'World Tides API'
