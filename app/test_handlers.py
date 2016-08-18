@@ -9,6 +9,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
+
 def render_template(handler, template_file, values):
     template = JINJA_ENVIRONMENT.get_template(template_file)
     handler.response.write(template.render(values))
