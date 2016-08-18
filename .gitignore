@@ -1,6 +1,7 @@
 .idea/libraries/
 .idea/misc.xml
 .idea/workspace.xml
+/.idea/dataSources.ids
 
 /app/worldtides_api_key.txt
 /app/google_api_key.txt
