@@ -17,9 +17,6 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
-tides_api_key = tides_api.get_api_key()
-maps_api_key = maps_api.get_api_key()
-
 
 def render_template(handler, template_file, values):
     template = JINJA_ENVIRONMENT.get_template(template_file)
@@ -47,28 +44,21 @@ class TidesHandler(webapp2.RequestHandler):
 
         if not values:
             # if this location wasn't cached
-            tz, tz_url = maps_api.fetch_and_decode(
-                maps_api_key, req_loc, utc_now
-            )
+            tz_data = maps_api.get_tz_offset(req_loc, utc_now)
 
-            status = tz['status']
+            status = tz_data['status']
             if status != 'OK':
-                values = {
-                    'module': tz['module'],
-                    'status': tz['status'],
-                    'error': tz['error'],
-                    'msg': tz['msg'],
-                }
+                values = tz_data
                 template_file = "error.html"
             else:
-                tides, tides_url = tides_api.fetch_and_decode(
-                    tides_api_key, req_loc, utc_minus_12, utc_now, tz['offset']
+                tides = tides_api.fetch_tides(
+                    req_loc, utc_minus_12, utc_now, tz_data['offset']
                 )
 
                 status = tides['status']
                 if status == 'OK':
                     start_timestamp = to_nearest_minute(
-                        offset_timestamp(utc_now, tz['offset'])
+                        offset_timestamp(utc_now, tz_data['offset'])
                     )
                     req_timestamp = {
                         'date': start_timestamp.strftime(DATE_FORMAT),
@@ -82,19 +72,14 @@ class TidesHandler(webapp2.RequestHandler):
                         'resp_lat': tides['lat'],
                         'resp_lon': tides['lon'],
                         'resp_station': tides['station'],
-                        'tz_offset': tz['offset'],
-                        'tz_name': tz['name'],
+                        'tz_offset': tz_data['offset'],
+                        'tz_name': tz_data['name'],
                         'tides': tides['tides'],
                     }
                     save_to_cache((tides['lat'], tides['lon']), utc_now)
                     template_file = "tides.html"
                 else:
-                    values = {
-                        'module': tides['module'],
-                        'status': tides['status'],
-                        'error': tides['error'],
-                        'msg': tides['msg'],
-                    }
+                    values = tides
                     template_file = "error.html"
 
             render_template(self, template_file, values)
@@ -103,29 +88,30 @@ class TidesHandler(webapp2.RequestHandler):
 class StationsHandler(webapp2.RequestHandler):
     def get(self):
         stations = Station.query()
-
         values = {
             'station_count': stations.count(),
             'stations': stations
         }
-
         render_template(self, 'stations.html', values)
 
 
 class StationRefreshHandler(webapp2.RequestHandler):
     def get(self):
-        (stations_url, stations) = tides_api.fetch_stations(tides_api_key)
+        stations = tides_api.fetch_stations()
 
-        for station in stations:
-
-            new_station = Station(
-                id=int(station['id'][5:]),
-                loc=(ndb.GeoPt(station['lat'], station['lon'])),
-                name=station['name'],
-            )
-            new_station.put()
-
-        return self.redirect('/stations')
+        if stations['status'] != 'OK':
+            values = stations
+            template_file = "error.html"
+            render_template(self, template_file, values)
+        else:
+            for station in stations:
+                new_station = Station(
+                    id=int(station['id'][5:]),
+                    loc=(ndb.GeoPt(station['lat'], station['lon'])),
+                    name=station['name'],
+                )
+                new_station.put()
+            return self.redirect('/stations')
 
 
 app = webapp2.WSGIApplication([

@@ -1,101 +1,88 @@
 import calendar
 import datetime
 import json
-import logging
-import pprint
 import urllib2
+from pprint import pprint
 
-from utils import error_builder
+import utils
 
-mod_name = 'Google Maps API'
+_module = 'Google Maps Timezone API'
 
-base_url = """\
+_base_url = """\
 https://maps.googleapis.com/maps/api/timezone/json?\
 location={location}&timestamp={timestamp}&key={api_key}\
 """
 
-
-def get_api_key():
-    return open('google_api_key.txt').readline().strip()
+_api_key = open('google_api_key.txt').readline().strip()
 
 
-def fetch(api_key, location, timestamp):
-    # TODO: handle errors
+def get_tz_offset(location, timestamp):
+    tz_data = {}
+
     location_string = '%s,%s' % location
 
-    request_url = base_url.format(
+    # convert datetime to unix time
+    unix_timestamp = calendar.timegm(timestamp.timetuple())
+    request_url = _base_url.format(
         location=location_string,
-        # convert datetime to unix time
-        timestamp=calendar.timegm(timestamp.timetuple()),
-        api_key=api_key,
+        timestamp=unix_timestamp,
+        api_key=_api_key,
     )
-    logging.info(request_url)
 
-    response = urllib2.urlopen(request_url)
-
-    return request_url, response.read()
-
-
-def decode(data):
-    out = {}
-
-    data = json.loads(data)
+    response = urllib2.urlopen(request_url).read()
+    response_data = json.loads(response)
 
     try:
-        status = data['status']
+        status = response_data['status']
         if status == 'OK':
-            out['status'] = status
-            offset = data['rawOffset']
-            if 'dstOffset' in data:
-                offset = offset + data['dstOffset']
-            out['offset'] = offset / 3600
-            out['name'] = data['timeZoneName']
+            tz_data['status'] = status
+            offset = response_data['rawOffset']
+            if 'dstOffset' in response_data:
+                offset = offset + response_data['dstOffset']
+            tz_data['offset'] = offset / 3600
+            tz_data['name'] = response_data['timeZoneName']
         else:
-            out = error_builder(
-                mod_name,
-                status,
-                data.get('error_message')
+            tz_data = utils.error_builder(
+                module=_module,
+                status=status,
+                msg=response_data.get('errorMessage')
             )
     except KeyError:
-        out = error_builder(
-            mod_name,
-            'JSON_DECODING_ERROR',
-            'Error decoding JSON Data from Google Maps API:',
-            str(data)
+        tz_data = utils.error_builder(
+            module=_module,
+            status='JSON_DECODING_ERROR',
+            msg=str(response_data)
         )
 
-    return out
+    return tz_data
 
 
-def fetch_and_decode(api_key, location, timestamp):
-    tz_url, tz_response = fetch(api_key, location, timestamp)
-    tz = decode(tz_response)
+def _main():
+    print('Testing Google Maps Timezone API:')
 
-    return tz, tz_url
-
-
-def main():
-    # TODO: update self test
-    # Lynn, MA
-    request_lat = 42.478744
-    request_lon = -71.001188
-    request_location = (request_lat, request_lon)
-
+    request_location = utils.test_location
     # right now in UTC as seconds since epoch
     timestamp = datetime.datetime.utcnow()
 
-    tz_url, tz_response = fetch(get_api_key(), request_location, timestamp)
-    tz = decode(tz_response)
+    tz_data = get_tz_offset(request_location, timestamp)
 
-    pp = pprint.PrettyPrinter()
-
-    print(tz_url)
-    if 'error' in tz:
-        print(tz['error'])
-        pp.pprint(tz['data'])
+    if tz_data['status'] == 'OK':
+        pprint(tz_data)
     else:
-        print('Offset = %s hours' % tz['offset'])
+        print(utils.error_dump(tz_data))
+
+    # now we break it on purpose
+    print('Testing Google Maps Timezone API error handling (bad API key):')
+    global _api_key
+    _api_key = 'foobar'
+
+    tz_data = get_tz_offset(request_location, timestamp)
+
+    if tz_data['status'] == 'OK':
+        pprint(tz_data)
+    else:
+        print(utils.error_dump(tz_data))
 
 
 if __name__ == '__main__':
-    main()
+    _main()
