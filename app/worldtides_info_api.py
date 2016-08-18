@@ -114,7 +114,10 @@ def fetch_stations():
         )
 
     try:
-        return data['stations']
+        return {
+            'status': 'OK',
+            'stations': data['stations']
+        }
     except KeyError:
         return utils.error_builder(
             module=_module,

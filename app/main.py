@@ -97,14 +97,14 @@ class StationsHandler(webapp2.RequestHandler):
 
 class StationRefreshHandler(webapp2.RequestHandler):
     def get(self):
-        stations = tides_api.fetch_stations()
+        station_data = tides_api.fetch_stations()
 
-        if stations['status'] != 'OK':
-            values = stations
+        if station_data['status'] != 'OK':
+            values = station_data
             template_file = "error.html"
             render_template(self, template_file, values)
         else:
-            for station in stations:
+            for station in station_data['stations']:
                 new_station = Station(
                     id=int(station['id'][5:]),
                     loc=(ndb.GeoPt(station['lat'], station['lon'])),
