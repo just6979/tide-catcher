@@ -4,14 +4,19 @@ $(document).ready( function () {
 });
 
 function getLocation(position) {
-    location_string = position.coords.latitude + "," + position.coords.longitude;
+    var location_string = position.coords.latitude + "," + position.coords.longitude;
     console.log(location_string);
+
     $.ajax({
-        url: '/json/tides?loc=' + location_string,
+        url: '/json/tides',
+        data: 'loc=' + location_string,
         type: 'GET',
         dataType: 'json'
     })
         .done(function (json_data) {
             console.log(json_data);
-        });
+        })
+        .fail(function (xhr, status, errorThrown) {
+            console.log(xhr, status, errorThrown);
+        })
 }
