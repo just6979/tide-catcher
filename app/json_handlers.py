@@ -1,11 +1,22 @@
+import json
+
 import webapp2
+
+import tides
 
 
 class JSONTidesHandler(webapp2.RequestHandler):
     def get(self):
-        pass
+        # Lynn, MA
+        req_lat = 42.478744
+        req_lon = -71.001188
+        req_loc = (req_lat, req_lon)
+
+        values = tides.for_location(req_loc)
+        self.response.out.write(json.dumps(values))
 
 
 class JSONStationsHandler(webapp2.RequestHandler):
     def get(self):
-        pass
+        values = tides.get_stations()
+        self.response.out.write(json.dumps(values))
