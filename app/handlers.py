@@ -47,8 +47,6 @@ class StationRefreshHandler(webapp2.RequestHandler):
 
 class TidesAJAXHandler(webapp2.RequestHandler):
     def get(self):
-        # TODO: cache & reuse requests for the same station within 12 hours
-        # TODO: handle incoming location requests
         # Lynn, MA
         req_lat = 42.478744
         req_lon = -71.001188

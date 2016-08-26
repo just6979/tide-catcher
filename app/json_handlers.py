@@ -8,8 +8,10 @@ import tides
 class JSONTidesHandler(webapp2.RequestHandler):
     def get(self):
         # Lynn, MA
-        req_lat = 42.478744
-        req_lon = -71.001188
+        # req_lat, req_lon = 42.478744, -71.001188
+
+        location = self.request.get(u'loc')
+        req_lat, req_lon = location.split(u',')
         req_loc = (req_lat, req_lon)
 
         values = tides.for_location(req_loc)
