@@ -1,19 +1,6 @@
-import os
-
-import jinja2
 import webapp2
 
-JINJA_ENVIRONMENT = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(
-        os.path.join(os.path.dirname(__file__), 'templates')),
-    extensions=['jinja2.ext.autoescape'],
-    autoescape=True)
-
-
-def render_template(handler, template_file, values):
-    template = JINJA_ENVIRONMENT.get_template(template_file)
-    handler.response.write(template.render(values))
-
+import templates
 
 class TestHandler(webapp2.RequestHandler):
     # show the base template, for reference
@@ -29,7 +16,7 @@ Template testing:<br/>
 <p>
             '''
         }
-        render_template(self, 'base.html', values)
+        templates.render(self, 'base.html', values)
 
 
 class BaseTestHandler(webapp2.RequestHandler):
@@ -37,7 +24,7 @@ class BaseTestHandler(webapp2.RequestHandler):
     def get(self):
         values = {
             'data': 'Base Test'}
-        render_template(self, 'base.html', values)
+        templates.render(self, 'base.html', values)
 
 
 class TidesTestHandler(webapp2.RequestHandler):
@@ -71,14 +58,14 @@ class TidesTestHandler(webapp2.RequestHandler):
                 },
             ]
         }
-        render_template(self, 'tides.html', values)
+        templates.render(self, 'tides.html', values)
 
 
 class ErrorTestHandler(webapp2.RequestHandler):
     # show the error template, for reference
     def get(self):
         values = {'error': 'Test Error'}
-        render_template(self, 'error.html', values)
+        templates.render(self, 'error.html', values)
 
 
 class StationsTestHandler(webapp2.RequestHandler):
@@ -92,4 +79,4 @@ class StationsTestHandler(webapp2.RequestHandler):
                 'id': '0000000'
             }]
         }
-        render_template(self, 'stations.html', values)
+        templates.render(self, 'stations.html', values)

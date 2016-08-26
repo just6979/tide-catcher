@@ -1,126 +1,22 @@
-import os
-
-import jinja2
 import webapp2
-from google.appengine.ext import ndb
 
-import google_maps_api as maps_api
-import worldtides_info_api as tides_api
-from datastore import Station, check_cache, nearest_station_loc, save_to_cache
-from test_handlers import BaseTestHandler, ErrorTestHandler, \
-    StationsTestHandler, TestHandler, TidesTestHandler
-from utils import *
-
-JINJA_ENVIRONMENT = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(
-        os.path.join(os.path.dirname(__file__), 'templates')),
-    extensions=['jinja2.ext.autoescape'],
-    autoescape=True)
-
-
-def render_template(handler, template_file, values):
-    template = JINJA_ENVIRONMENT.get_template(template_file)
-    handler.response.write(template.render(values))
-
-
-class TidesHandler(webapp2.RequestHandler):
-    def get(self):
-        # TODO: cache & reuse requests for the same station within 12 hours
-        # TODO: handle incoming location requests
-        # Lynn, MA
-        req_lat = 42.478744
-        req_lon = -71.001188
-        req_loc = (req_lat, req_lon)
-
-        # right now in UTC as naive datetime
-        utc_now = datetime.datetime.utcnow()
-        # minus 12 hours to make sure we get the last tide (maybe last 2)
-        utc_minus_12 = utc_now + datetime.timedelta(hours=-12)
-
-        station_loc = nearest_station_loc(req_loc)
-
-        # check if this location was cached in the last 12 hours
-        values = check_cache(station_loc, utc_minus_12)
-
-        if not values:
-            # if this location wasn't cached
-            tz_data = maps_api.get_tz_offset(req_loc, utc_now)
-
-            status = tz_data['status']
-            if status != 'OK':
-                values = tz_data
-                template_file = "error.html"
-            else:
-                tides = tides_api.fetch_tides(
-                    req_loc, utc_minus_12, utc_now, tz_data['offset']
-                )
-
-                status = tides['status']
-                if status == 'OK':
-                    start_timestamp = to_nearest_minute(
-                        offset_timestamp(utc_now, tz_data['offset'])
-                    )
-                    req_timestamp = {
-                        'date': start_timestamp.strftime(DATE_FORMAT),
-                        'time': start_timestamp.strftime(TIME_FORMAT),
-                        'day': start_timestamp.strftime(DAY_FORMAT),
-                    }
-                    values = {
-                        'req_timestamp': req_timestamp,
-                        'req_lat': req_lat,
-                        'req_lon': req_lon,
-                        'resp_lat': tides['lat'],
-                        'resp_lon': tides['lon'],
-                        'resp_station': tides['station'],
-                        'tz_offset': tz_data['offset'],
-                        'tz_name': tz_data['name'],
-                        'tides': tides['tides'],
-                    }
-                    save_to_cache((tides['lat'], tides['lon']), utc_now)
-                    template_file = "tides.html"
-                else:
-                    values = tides
-                    template_file = "error.html"
-
-            render_template(self, template_file, values)
-
-
-class StationsHandler(webapp2.RequestHandler):
-    def get(self):
-        stations = Station.query()
-        values = {
-            'station_count': stations.count(),
-            'stations': stations
-        }
-        render_template(self, 'stations.html', values)
-
-
-class StationRefreshHandler(webapp2.RequestHandler):
-    def get(self):
-        station_data = tides_api.fetch_stations()
-
-        if station_data['status'] != 'OK':
-            values = station_data
-            template_file = "error.html"
-            render_template(self, template_file, values)
-        else:
-            for station in station_data['stations']:
-                new_station = Station(
-                    id=int(station['id'][5:]),
-                    loc=(ndb.GeoPt(station['lat'], station['lon'])),
-                    name=station['name'],
-                )
-                new_station.put()
-            return self.redirect('/stations')
-
+import handlers
+import json_handlers
+import test_handlers
 
 app = webapp2.WSGIApplication([
-    ('/', TidesHandler),
-    ('/stations', StationsHandler),
-    ('/refresh-stations', StationRefreshHandler),
-    ('/test', TestHandler),
-    ('/test/base', BaseTestHandler),
-    ('/test/error', ErrorTestHandler),
-    ('/test/tides', TidesTestHandler),
-    ('/test/stations', StationsTestHandler),
+
+    ('/', handlers.TidesHandler),
+    ('/stations', handlers.StationsHandler),
+    ('/refresh-stations', handlers.StationRefreshHandler),
+
+    ('/json/tides', json_handlers.JSONTidesHandler),
+    ('/json/stations', json_handlers.JSONStationsHandler),
+
+    ('/test', test_handlers.TestHandler),
+    ('/test/base', test_handlers.BaseTestHandler),
+    ('/test/error', test_handlers.ErrorTestHandler),
+    ('/test/tides', test_handlers.TidesTestHandler),
+    ('/test/stations', test_handlers.StationsTestHandler),
+
 ], debug=True)
