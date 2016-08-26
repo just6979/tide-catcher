@@ -2,15 +2,19 @@
 {% block title %}Tide Catcher{% endblock %}
 
 {% block scripts %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script src="/scripts/underscore-1.8.3-min.js"></script>
-<script src="/scripts/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="/scripts/underscore-1.8.3-min.js"></script>
+    <script src="/scripts/main.js"></script>
 {% endblock %}
 
 {% block data %}
 
-    <div id="tides">
-        <table id="tides_table">
+    <div id="loading">
+        <p>Loading</p>
+    </div>
+
+    <div id="tides" class="hidden">
+        <table id="tides-table">
             <caption id="bottom_caption" class="bottom">
                 Color Key:<br/>
                 <span class="prior">Prior&nbsp;Tides</span><br/>
@@ -20,7 +24,7 @@
         </table>
     </div>
 
-    <div id="info">
+    <div id="info" class="hidden">
         <table id="request">
             <caption class="top">Request</caption>
             <tr>
@@ -47,7 +51,7 @@
         </table>
     </div>
 
-    <div id="coming_soon">
+    <div id="coming-soon">
         <h2>Coming Soon</h2>
         <ul>
             <li>Auto-select station based on your location.</li>

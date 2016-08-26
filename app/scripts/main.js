@@ -5,6 +5,8 @@ $(document).ready(function () {
 function getLocation(position) {
     var location_string = position.coords.latitude + "," + position.coords.longitude;
 
+    $('#loading').empty().append('Loading<br/>(' + location_string + ')');
+
     $.ajax({
         url: '/json/tides',
         data: 'loc=' + location_string,
@@ -20,7 +22,7 @@ function getLocation(position) {
 }
 
 function build_table(data) {
-    var table = $("#tides_table");
+    var table = $("#tides-table");
     table.append(
         '<caption id="top_caption" class="top">\n' +
         data['resp_station'] +
@@ -46,4 +48,8 @@ function build_table(data) {
     );
     $('#resp_loc').text(data['resp_lat'] + ', ' + data['resp_lon']);
     $('#resp_tz').text(data['tz_name'] + ', UTC' + data['tz_offset']);
+
+    $('#loading').addClass('hidden');
+    $('#tides').removeClass('hidden');
+    $('#info').removeClass('hidden');
 }
