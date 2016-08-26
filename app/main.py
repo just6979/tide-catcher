@@ -10,6 +10,8 @@ app = webapp2.WSGIApplication([
     ('/stations', handlers.StationsHandler),
     ('/refresh-stations', handlers.StationRefreshHandler),
 
+    ('/tides', handlers.TidesAJAXHandler),
+
     ('/json/tides', json_handlers.JSONTidesHandler),
     ('/json/stations', json_handlers.JSONStationsHandler),
 
