@@ -36,7 +36,7 @@ def for_location(req_loc):
                 utils.offset_timestamp(utc_now, tz_data['offset'])
             )
             req_timestamp = {
-                'date': start_timestamp.strftime(utils.DATE_FORMAT),
+                'date': start_timestamp.strftime(utils.YYYY_MM_DD_DATE_FORMAT),
                 'time': start_timestamp.strftime(utils.TIME_FORMAT),
                 'day': start_timestamp.strftime(utils.DAY_FORMAT),
             }

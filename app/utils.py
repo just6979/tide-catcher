@@ -1,8 +1,9 @@
 import datetime
 
-DATE_FORMAT = '%m-%d'
-# TIME_FORMAT = '%H:%M'
-TIME_FORMAT = '%I:%M %p'
+MM_DD_DATE_FORMAT = '%m-%d'
+YYYY_MM_DD_DATE_FORMAT = '%Y-%m-%d'
+TIME_FORMAT = '%H:%M'
+# TIME_FORMAT = '%I:%M %p'
 DAY_FORMAT = '%a'
 
 # Lynn, MA

@@ -73,7 +73,7 @@ def fetch_tides(location, utc_start_time, utc_now_stamp, tz_offset):
 
                 out['tides'].append({
                     'type': tide['type'],
-                    'date': timestamp.strftime(utils.DATE_FORMAT),
+                    'date': timestamp.strftime(utils.MM_DD_DATE_FORMAT),
                     'day': timestamp.strftime(utils.DAY_FORMAT),
                     # TODO: round times to nearest minute
                     'time': timestamp.strftime(utils.TIME_FORMAT),
