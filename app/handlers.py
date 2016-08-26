@@ -47,15 +47,4 @@ class StationRefreshHandler(webapp2.RequestHandler):
 
 class TidesAJAXHandler(webapp2.RequestHandler):
     def get(self):
-        # Lynn, MA
-        req_lat = 42.478744
-        req_lon = -71.001188
-
-        values = tides.for_location((req_lat, req_lon))
-
-        if values['status'] == 'OK':
-            template_file = 'tides_ajax.html'
-        else:
-            template_file = 'error.html'
-
-        templates.render(self, template_file, values)
+        templates.render(self, 'tides_ajax.html', {})

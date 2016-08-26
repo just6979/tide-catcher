@@ -3,25 +3,15 @@
 
 {% block scripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="/scripts/underscore-1.8.3-min.js"></script>
 <script src="/scripts/main.js"></script>
 {% endblock %}
 
 {% block data %}
 
     <div id="tides">
-        <table>
-            <caption class="top">
-                {{ resp_station }}
-            </caption>
-            {% for tide in tides %}
-                <tr class="{{ tide.type|lower }} {{ tide.prior|lower }}">
-                    <td class="type">{{ tide.type }}</td>
-                    <td class="date">{{ tide.date }}</td>
-                    <td class="day">{{ tide.day }}</td>
-                    <td class="time">{{ tide.time }}</td>
-                </tr>
-            {% endfor %}
-            <caption class="bottom">
+        <table id="tides_table">
+            <caption id="bottom_caption" class="bottom">
                 Color Key:<br/>
                 <span class="prior">Prior&nbsp;Tides</span><br/>
                 <span class="low">Low&nbsp;Tides</span>
@@ -35,11 +25,11 @@
             <caption class="top">Request</caption>
             <tr>
                 <td>Location</td>
-                <td>{{ "%.4f" % req_lat }}, {{ "%.4f" % req_lon }}</td>
+                <td id="req_loc"></td>
             </tr>
             <tr>
                 <td>Time</td>
-                <td>{{ req_timestamp.date }} {{ req_timestamp.day }} {{ req_timestamp.time }}</td>
+                <td id="req_time"></td>
             </tr>
         </table>
         <table id="response">
@@ -47,12 +37,12 @@
             <tr>
                 <td>Location</td>
                 <td>
-                    <a href="/stations">{{ "%.4f" % resp_lat }}, {{ "%.4f" % resp_lon }}</a>
+                    <a href="/stations" id="resp_loc"></a>
                 </td>
             </tr>
             <tr>
                 <td>Timezone</td>
-                <td>{{ tz_name }}, UTC{{ "%+d" % tz_offset }}</td>
+                <td id="resp_tz"></td>
             </tr>
         </table>
     </div>
