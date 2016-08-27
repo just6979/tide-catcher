@@ -13,16 +13,16 @@ function getLocation(position) {
         type: 'GET',
         dataType: 'json'
     })
-        .done(function (json_data) {
-            build_table(json_data);
+        .done(function (data) {
+            build_table(data);
         })
-        .fail(function (xhr, status, errorThrown) {
-            console.log(xhr, status, errorThrown);
+        .fail(function (data, status, error) {
+           build_error(data, error);
         })
 }
 
 function build_table(data) {
-    var table = $("#tides-table");
+    var table = $("#tides");
     table.append(
         '<caption id="top_caption" class="top">\n' +
         _.escape(data['resp_station']) +
@@ -53,4 +53,20 @@ function build_table(data) {
     $('#loading').addClass('hidden');
     $('#tides').removeClass('hidden');
     $('#info').removeClass('hidden');
+}
+
+function build_error (data, error) {
+    console.log(data);
+    var content = $('#content');
+    var output;
+
+    if (data.responseText != null) {
+        output = 'Error: ' + data.responseText;
+    } else {
+        output = 'Error: ' + data.status + ' - ' + error;
+    }
+
+    $('#loading').addClass('hidden');
+
+    content.append('<p>' + _.escape(output) + '</p>');
 }

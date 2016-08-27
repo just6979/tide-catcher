@@ -11,12 +11,13 @@
 
 {% block data %}
 
-    <div id="loading">
-        <p>Loading</p>
-    </div>
 
-    <div id="tides" class="hidden">
-        <table id="tides-table">
+    <div id="content">
+        <div id="loading">
+            <p>Loading</p>
+        </div>
+
+        <table id="tides" class="hidden">
             <caption id="bottom_caption" class="bottom">
                 Key:
                 <span class="prior">Prior&nbsp;Tides</span>
@@ -24,33 +25,33 @@
                 <span class="high">High&nbsp;Tides</span>
             </caption>
         </table>
-    </div>
 
-    <div id="info" class="hidden">
-        <table id="request">
-            <caption class="top">Request</caption>
-            <tr>
-                <td>Location</td>
-                <td id="req_loc"></td>
-            </tr>
-            <tr>
-                <td>Time</td>
-                <td id="req_time"></td>
-            </tr>
-        </table>
-        <table id="response">
-            <caption class="top">Response</caption>
-            <tr>
-                <td>Location</td>
-                <td>
-                    <a href="/stations" id="resp_loc"></a>
-                </td>
-            </tr>
-            <tr>
-                <td>Timezone</td>
-                <td id="resp_tz"></td>
-            </tr>
-        </table>
+        <div id="info" class="hidden">
+            <table id="request">
+                <caption class="top">Request</caption>
+                <tr>
+                    <td>Location</td>
+                    <td id="req_loc"></td>
+                </tr>
+                <tr>
+                    <td>Time</td>
+                    <td id="req_time"></td>
+                </tr>
+            </table>
+            <table id="response">
+                <caption class="top">Response</caption>
+                <tr>
+                    <td>Location</td>
+                    <td>
+                        <a href="/stations" id="resp_loc"></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Timezone</td>
+                    <td id="resp_tz"></td>
+                </tr>
+            </table>
+        </div>
     </div>
 
 {% endblock %}
