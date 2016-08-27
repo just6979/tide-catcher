@@ -5,7 +5,7 @@ $(document).ready(function () {
 function getLocation(position) {
     var location_string = position.coords.latitude + "," + position.coords.longitude;
 
-    $('#loading').empty().append('Loading<br/>(' + location_string + ')');
+    $('#loading').empty().append('<p>Loading<br/>(' + location_string + ')</p>');
 
     $.ajax({
         url: '/json/tides',

@@ -17,8 +17,8 @@
                 </tr>
             {% endfor %}
             <caption class="bottom">
-                Color Key:<br/>
-                <span class="prior">Prior&nbsp;Tides</span><br/>
+                Key:
+                <span class="prior">Prior&nbsp;Tides</span>
                 <span class="low">Low&nbsp;Tides</span>
                 <span class="high">High&nbsp;Tides</span>
             </caption>
@@ -50,32 +50,6 @@
                 <td>{{ tz_name }}, UTC{{ "%+d" % tz_offset }}</td>
             </tr>
         </table>
-    </div>
-
-    <div id="coming_soon">
-        <h2>Coming Soon</h2>
-        <ul>
-            <li>Auto-select station based on your location.</li>
-            <li>Save your favorite stations.</li>
-            <li>Offline mode: see the last tides retrieved even if you lose connection.</li>
-        </ul>
-    </div>
-
-    <div id="notes">
-        <p>
-            <em>
-                Tidal Data retrieved from
-                <a href="http://www.worldtides.info"
-                   target="_blank">www.worldtides.info</a>.
-                Data obtained from National Oceanic and Atmospheric
-                Administration / Center for Operational Oceanographic Products
-                and Services (CO-OPS) and is not subjected to copyright
-                protection.
-                NO GUARANTEES ARE MADE ABOUT THE CORRECTNESS OF THIS TIDAL DATA.
-                You may not use this data if anyone or anything could come to
-                harm as a result of using it (e.g. for navigational purposes).
-            </em>
-        </p>
     </div>
 
 {% endblock %}
