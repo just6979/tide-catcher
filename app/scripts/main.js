@@ -3,7 +3,7 @@ $(document).ready(function () {
 });
 
 function getLocation(position) {
-    var location_string = position.coords.latitude + "," + position.coords.longitude;
+    var location_string = position.coords.latitude.toPrecision(6) + "," + position.coords.longitude.toPrecision(6);
 
     $('#loading').empty().append('<p>Loading<br/>(' + location_string + ')</p>');
 
