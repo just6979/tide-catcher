@@ -1,8 +1,17 @@
 application: tide-catcher
-version: 1
+version: 2
 runtime: python27
 api_version: 1
 threadsafe: true
+
+default_expiration: "1d"
+
+libraries:
+- name: webapp2
+  version: "2.5.2"
+- name: jinja2
+  version: "2.6"
+
 
 handlers:
 - url: /(.*icon.*)$
@@ -28,10 +37,3 @@ handlers:
   script: main.app
   login: optional
   secure: always
-
-libraries:
-- name: webapp2
-  version: "2.5.2"
-- name: jinja2
-  version: "2.6"
-
