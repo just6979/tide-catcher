@@ -25,21 +25,23 @@ function build_table(data) {
     var table = $("#tides-table");
     table.append(
         '<caption id="top_caption" class="top">\n' +
-        data['resp_station'] +
+        _.escape(data['resp_station']) +
         '</caption>'
     );
     console.log(data['tides']);
-    for (var i = 0; i < data['tides'].length; i++) {
-        var tide = data['tides'][i];
+    _.each(data['tides'], function (tide, index, tides) {
         table.append(
-            '<tr class="' + tide['type'].toLowerCase() + ' ' + tide['prior'].toLowerCase() + '">\n' +
-            '<td class="type">' + tide['type'] + '</td>\n' +
-            '<td class="date">' + tide['date'] + '</td>\n' +
-            '<td class="day">' + tide['day'] + '</td>\n' +
-            '<td class="time">' + tide['time'] + '</td>\n' +
+            '<tr class="' +
+            _.escape(tide['type']).toLowerCase() + ' ' +
+            _.escape(tide['prior']).toLowerCase() + '">\n' +
+            '<td class="type">' + _.escape(tide['type']) + '</td>\n' +
+            '<td class="date">' + _.escape(tide['date']) + '</td>\n' +
+            '<td class="day">' + _.escape(tide['day']) + '</td>\n' +
+            '<td class="time">' + _.escape(tide['time']) + '</td>\n' +
             '</tr>\n'
         );
-    }
+    });
+
     $('#req_loc').text(data['req_lat'] + ', ' + data['req_lon']);
     $('#req_time').text(
         data['req_timestamp']['date'] + ' ' +
