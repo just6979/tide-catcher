@@ -13,7 +13,8 @@
           <option name="OPTIMIZE_IMPORTS_JOIN_FROM_IMPORTS_WITH_SAME_SOURCE" value="true" />
         </Python>
         <codeStyleSettings language="HTML">
-          <option name="RIGHT_MARGIN" value="80" />
+          <option name="RIGHT_MARGIN" value="120" />
+          <option name="WRAP_ON_TYPING" value="0" />
         </codeStyleSettings>
       </value>
     </option>

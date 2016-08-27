@@ -60,7 +60,7 @@ def get_stations():
     for station in stations:
         out_stations.append({
             'name': station.name,
-            'loc' : {
+            'loc': {
                 'lat': station.loc.lat,
                 'lon': station.loc.lon
             },

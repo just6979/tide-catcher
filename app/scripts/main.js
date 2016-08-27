@@ -28,8 +28,7 @@ function build_table(data) {
         _.escape(data['resp_station']) +
         '</caption>'
     );
-    console.log(data['tides']);
-    _.each(data['tides'], function (tide, index, tides) {
+    _.each(data['tides'], function (tide) {
         table.append(
             '<tr class="' +
             _.escape(tide['type']).toLowerCase() + ' ' +
