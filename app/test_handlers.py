@@ -58,7 +58,7 @@ class TidesTestHandler(webapp2.RequestHandler):
                 },
             ]
         }
-        templates.render(self, 'tides.html', values)
+        templates.render(self, 'tides_lynn.html', values)
 
 
 class ErrorTestHandler(webapp2.RequestHandler):

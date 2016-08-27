@@ -10,7 +10,8 @@ app = webapp2.WSGIApplication([
     ('/stations', handlers.StationsHandler),
     ('/refresh-stations', handlers.StationRefreshHandler),
 
-    ('/tides', handlers.TidesAJAXHandler),
+    # the old default: non-AJAX, non geolocated
+    ('/lynn', handlers.TidesLynnHandler),
 
     ('/json/tides', json_handlers.JSONTidesHandler),
     ('/json/stations', json_handlers.JSONStationsHandler),
@@ -22,3 +23,4 @@ app = webapp2.WSGIApplication([
     ('/test/stations', test_handlers.StationsTestHandler),
 
 ], debug=True)
+

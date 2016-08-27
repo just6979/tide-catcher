@@ -7,19 +7,7 @@ import tides
 class TidesHandler(webapp2.RequestHandler):
     def get(self):
         # TODO: cache & reuse requests for the same station within 12 hours
-        # TODO: handle incoming location requests
-        # Lynn, MA
-        req_lat = 42.478744
-        req_lon = -71.001188
-
-        values = tides.for_location((req_lat, req_lon))
-
-        if values['status'] == 'OK':
-            template_file = 'tides.html'
-        else:
-            template_file = 'error.html'
-
-        templates.render(self, template_file, values)
+        templates.render(self, 'tides.html', {})
 
 
 class StationsHandler(webapp2.RequestHandler):
@@ -45,6 +33,17 @@ class StationRefreshHandler(webapp2.RequestHandler):
             return templates.render(self, template_file, values)
 
 
-class TidesAJAXHandler(webapp2.RequestHandler):
+class TidesLynnHandler(webapp2.RequestHandler):
     def get(self):
-        templates.render(self, 'tides_ajax.html', {})
+        # Lynn, MA
+        req_lat = 42.478744
+        req_lon = -71.001188
+
+        values = tides.for_location((req_lat, req_lon))
+
+        if values['status'] == 'OK':
+            template_file = 'tides_lynn.html'
+        else:
+            template_file = 'error.html'
+
+        templates.render(self, template_file, values)
