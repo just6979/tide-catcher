@@ -14,24 +14,19 @@ function getLocation(position) {
         dataType: 'json'
     })
         .done(function (data) {
-            build_table(data);
+            var content = $("#content");
+            var template = $("#template").html();
+            data.lower = function () {
+                return function (text, render) {
+                    return render(text).toLowerCase();
+                }
+            };
+            var rendered = Mustache.render(template, data);
+            content.html(rendered);
         })
         .fail(function (data, status, error) {
            build_error(data, error);
         })
-}
-
-function build_table(data) {
-    data.lower = function () {
-        return function (text, render) {
-            //wrong line return render(text.toLowerCase());
-            return render(text).toLowerCase();
-        }
-    };
-    var content = $("#content");
-    var template = $("#template").html();
-    var rendered = Mustache.render(template, data);
-    content.html(rendered);
 }
 
 function build_error (data, error) {
