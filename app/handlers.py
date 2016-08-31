@@ -12,14 +12,7 @@ class TidesHandler(webapp2.RequestHandler):
 
 class StationsHandler(webapp2.RequestHandler):
     def get(self):
-        values = tides.get_stations()
-
-        if values['status'] == 'OK':
-            template_file = 'stations.html'
-        else:
-            template_file = 'error.html'
-
-        templates.render(self, template_file, values)
+        templates.render(self, 'stations.html', {})
 
 
 class StationRefreshHandler(webapp2.RequestHandler):
