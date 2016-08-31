@@ -22,37 +22,16 @@ function getLocation(position) {
 }
 
 function build_table(data) {
-    var table = $("#tides");
-    table.append(
-        '<caption id="top_caption" class="top">\n' +
-        _.escape(data['resp_station']) +
-        '</caption>'
-    );
-    _.each(data['tides'], function (tide) {
-        table.append(
-            '<tr class="' +
-            _.escape(tide['type']).toLowerCase() + ' ' +
-            _.escape(tide['prior']).toLowerCase() + '">\n' +
-            '<td class="type">' + _.escape(tide['type']) + '</td>\n' +
-            '<td class="date">' + _.escape(tide['date']) + '</td>\n' +
-            '<td class="day">' + _.escape(tide['day']) + '</td>\n' +
-            '<td class="time">' + _.escape(tide['time']) + '</td>\n' +
-            '</tr>\n'
-        );
-    });
-
-    $('#req_loc').text(data['req_lat'] + ', ' + data['req_lon']);
-    $('#req_time').text(
-        data['req_timestamp']['date'] + ' ' +
-        data['req_timestamp']['day'] + ' ' +
-        data['req_timestamp']['time']
-    );
-    $('#resp_loc').text(data['resp_lat'] + ', ' + data['resp_lon']);
-    $('#resp_tz').text(data['tz_name'] + ', UTC' + data['tz_offset']);
-
-    $('#loading').addClass('hidden');
-    $('#tides').removeClass('hidden');
-    $('#info').removeClass('hidden');
+    data.lower = function () {
+        return function (text, render) {
+            //wrong line return render(text.toLowerCase());
+            return render(text).toLowerCase();
+        }
+    };
+    var content = $("#content");
+    var template = $("#template").html();
+    var rendered = Mustache.render(template, data);
+    content.html(rendered);
 }
 
 function build_error (data, error) {
