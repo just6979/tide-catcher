@@ -11,27 +11,6 @@ class IndexHandler(webapp2.RequestHandler):
         self.response.write(open('templates/index.mustache').read())
 
 
-class TidesHandler(webapp2.RequestHandler):
-    def get(self):
-        templates.render(self, 'tides.html', {})
-
-
-class StationsHandler(webapp2.RequestHandler):
-    def get(self):
-        templates.render(self, 'stations.html', {})
-
-
-class StationRefreshHandler(webapp2.RequestHandler):
-    def get(self):
-        values = tides.refresh_stations()
-
-        if values['status'] == 'OK':
-            return self.redirect('/stations')
-        else:
-            template_file = 'error.html'
-            return templates.render(self, template_file, values)
-
-
 class JSONTidesHandler(webapp2.RequestHandler):
     def get(self):
         location = self.request.get(u'loc', default_value=None)
@@ -62,12 +41,28 @@ class JSONStationsHandler(webapp2.RequestHandler):
         self.response.write(json.dumps(values))
 
 
+class StationRefreshHandler(webapp2.RequestHandler):
+    def get(self):
+        values = tides.refresh_stations()
+
+        if values['status'] == 'OK':
+            return self.redirect('/stations')
+        else:
+            template_file = 'error.html'
+            return templates.render(self, template_file, values)
+
+
+class StationsHandler(webapp2.RequestHandler):
+    def get(self):
+        templates.render(self, 'stations.html', {})
+
+
 app = webapp2.WSGIApplication([
     ('/', IndexHandler),
-    ('/refresh-stations', StationRefreshHandler),
     ('/json/tides', JSONTidesHandler),
     ('/json/stations', JSONStationsHandler),
-    # will re removed
-    ('/tides', TidesHandler),
+    # will be modified soon to return JSON and not redirect
+    ('/refresh-stations', StationRefreshHandler),
+    # will be removed soon, moving completely into JS
     ('/stations', StationsHandler),
 ], debug=True)
