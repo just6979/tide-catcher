@@ -6,7 +6,9 @@ import test_handlers
 
 app = webapp2.WSGIApplication([
 
-    ('/', handlers.TidesHandler),
+    ('/', handlers.IndexHandler),
+    ('/tides', handlers.TidesHandler),
+
     ('/stations', handlers.StationsHandler),
     ('/refresh-stations', handlers.StationRefreshHandler),
 

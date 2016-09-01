@@ -4,9 +4,13 @@ import templates
 import tides
 
 
+class IndexHandler(webapp2.RequestHandler):
+    def get(self):
+        self.response.write(open('templates/index.mustache').read())
+
+
 class TidesHandler(webapp2.RequestHandler):
     def get(self):
-        # TODO: cache & reuse requests for the same station within 12 hours
         templates.render(self, 'tides.html', {})
 
 
