@@ -64,7 +64,7 @@ def get_stations():
                 'lat': station.loc.lat,
                 'lon': station.loc.lon
             },
-            'id': station.id
+            'id': station.key.id()
         })
 
     return {
