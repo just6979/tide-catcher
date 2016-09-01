@@ -51,10 +51,10 @@ def fetch_tides(location, utc_start_time, utc_now_stamp, tz_offset):
         if status == 200:
             out = {
                 'status': 'OK',
-                'copyright': data['copyright'],
-                'lat': data['responseLat'],
-                'lon': data['responseLon'],
+                'responseLat': data['responseLat'],
+                'responseLon': data['responseLon'],
                 'station': data['station'],
+                'copyright': data['copyright'],
                 'tides': []
             }
 

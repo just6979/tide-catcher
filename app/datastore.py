@@ -13,7 +13,8 @@ class LocationMatch(ndb.Model):
 
 
 class Station(ndb.Model):
-    loc = ndb.GeoPtProperty(indexed=True)
+    lat = ndb.FloatProperty(indexed=True)
+    lon = ndb.FloatProperty(indexed=True)
     name = ndb.StringProperty(required=True)
 
 

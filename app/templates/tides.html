@@ -17,7 +17,7 @@
     <script id="template" type="x-tmpl-mustache">
     <table id="tides">
         <caption class="top">
-            {{resp_station}}
+            {{station_name}}
         </caption>
         {{#tides}}
         <tr class="{{#lower}}{{type}}{{/lower}} {{prior}}">
@@ -40,7 +40,7 @@
             <caption class="top">Request</caption>
             <tr>
                 <td>Location</td>
-                <td>{{req_lat}}, {{req_lon}}</td>
+                <td>({{req_lat}}, {{req_lon}})</td>
             </tr>
             <tr>
                 <td>Time</td>
@@ -50,14 +50,20 @@
         <table id="response">
             <caption class="top">Response</caption>
             <tr>
-                <td>Location</td>
+                <td><a href="/stations">Station</a></td>
                 <td>
-                    <a href="/stations">{{resp_lat}}, {{resp_lon}}</a>
+                    <a href=https://tidesandcurrents.noaa.gov/noaatidepredictions/NOAATidesFacade.jsp?Stationid={{station_id}}>
+                        NOAA {{station_id}}
+                    </a>
                 </td>
             </tr>
             <tr>
+                <td>Location</td>
+                <td>({{resp_lat}}, {{resp_lon}})</td>
+            </tr>
+            <tr>
                 <td>Timezone</td>
-                <td>{{tz_name}}, UTC+{{tz_offset}}</td>
+                <td>{{tz_name}}, UTC{{tz_offset}}</td>
             </tr>
         </table>
     </div>

@@ -1,11 +1,9 @@
 import datetime
 
-from google.appengine.ext import ndb
-
-import datastore
 import google_maps_api as maps_api
 import utils
 import worldtides_info_api as tides_api
+from datastore import Station
 
 
 def for_location(req_loc):
@@ -31,7 +29,15 @@ def for_location(req_loc):
 
         status = tide_data['status']
         if status == 'OK':
-            # tides data is good
+            # tide data is good
+
+            # get station data
+            resp_lat = tide_data['responseLat']
+            resp_lon = tide_data['responseLon']
+            station = get_station(resp_lat, resp_lon)
+            station_name = station.name
+            station_id = station.key.id()
+
             start_timestamp = utils.to_nearest_minute(
                 utils.offset_timestamp(utc_now, tz_data['offset'])
             )
@@ -40,13 +46,17 @@ def for_location(req_loc):
                 'time': start_timestamp.strftime(utils.TIME_FORMAT),
                 'day': start_timestamp.strftime(utils.DAY_FORMAT),
             }
-            values = {'status': status, 'req_timestamp': req_timestamp,
-                      'req_lat': req_lat, 'req_lon': req_lon,
-                      'resp_lat': tide_data['lat'],
-                      'resp_lon': tide_data['lon'],
-                      'resp_station': tide_data['station'],
-                      'tz_offset': tz_data['offset'],
-                      'tz_name': tz_data['name'], 'tides': tide_data['tides'],}
+            values = {
+                'status': status,
+                'req_timestamp': req_timestamp,
+                'req_lat': req_lat, 'req_lon': req_lon,
+                'resp_lat': resp_lat, 'resp_lon': resp_lon,
+                'station_id': station_id,
+                'station_name': station_name,
+                'tz_offset': tz_data['offset'],
+                'tz_name': tz_data['name'],
+                'tides': tide_data['tides'],
+            }
         else:
             # error
             values = tide_data
@@ -54,15 +64,20 @@ def for_location(req_loc):
     return values
 
 
+def get_station(lat, lon):
+    # should only ever be one station at a given (lat,lon)
+    return Station.query(Station.lat == lat, Station.lon == lon).fetch(1)[0]
+
+
 def get_stations():
-    stations = datastore.Station.query()
+    stations = Station.query()
     out_stations = []
     for station in stations:
         out_stations.append({
             'name': station.name,
             'loc': {
-                'lat': station.loc.lat,
-                'lon': station.loc.lon
+                'lat': station.lat,
+                'lon': station.lon
             },
             'id': station.key.id()
         })
@@ -84,9 +99,10 @@ def refresh_stations():
             'status': 'OK'
         }
         for station in station_data['stations']:
-            new_station = datastore.Station(
+            new_station = Station(
                 id=int(station['id'][5:]),
-                loc=(ndb.GeoPt(station['lat'], station['lon'])),
+                lat=station['lat'],
+                lon=station['lon'],
                 name=station['name'],
             )
             new_station.put()
