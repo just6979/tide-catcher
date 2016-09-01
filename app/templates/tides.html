@@ -40,7 +40,9 @@
             <caption class="top">Request</caption>
             <tr>
                 <td>Location</td>
-                <td>({{req_lat}}, {{req_lon}})</td>
+                <td>
+                    <a href="http://maps.google.com/maps/place/{{ req_lat }},{{ req_lon }}/@{{ req_lat }},{{ req_lon }},12z">({{ req_lat }}, {{ req_lon }})</a>
+                </td>
             </tr>
             <tr>
                 <td>Time</td>
@@ -59,7 +61,9 @@
             </tr>
             <tr>
                 <td>Location</td>
-                <td>({{resp_lat}}, {{resp_lon}})</td>
+                <td>
+                    <a href="http://maps.google.com/maps/place/{{ resp_lat }},{{ resp_lon }}/@{{ resp_lat }},{{ resp_lon }},12z">({{ resp_lat }}, {{ resp_lon }})</a>
+                </td>
             </tr>
             <tr>
                 <td>Timezone</td>

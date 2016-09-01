@@ -22,8 +22,8 @@
             {{ #stations }}
                 <li>
                     {{ name }},
-                    ({{ loc.lat }}, {{ loc.lon }}),
-                    ID: {{ id }}
+                    <a href="http://maps.google.com/maps/place/{{loc.lat}},{{loc.lon}}/@{{loc.lat}},{{loc.lon}},12z">({{ loc.lat }}, {{ loc.lon }})</a>,
+                    <a href=https://tidesandcurrents.noaa.gov/noaatidepredictions/NOAATidesFacade.jsp?Stationid={{id}}>NOAA {{id}}</a>
                 </li>
             {{ /stations }}
         </ul>
