@@ -1,18 +1,48 @@
-$(document).ready(
-    function () {
-        navigator.geolocation.getCurrentPosition(getLocation);
-    }
-);
+var cur_pos = {};
 
-function getLocation(position) {
-    getTides(
-        position.coords.latitude.toPrecision(6) +
-        "," +
-        position.coords.longitude.toPrecision(6)
-    );
+$(document).ready(function () {
+    getLocationAndTides()
+});
+
+function getLocationAndTides() {
+    function geo_success(position) {
+        cur_pos = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+        };
+        getTides();
+    }
+
+    function geo_error(error) {
+        var data, message;
+        switch (error.code) {
+        case 1:
+            data = {status: "PERMISSION_DENIED"};
+            message = "No permission to access location data.";
+            break;
+        case 2:
+            data = {status: "POSITION_UNAVAILABLE"};
+            message = "Internal error acquiring location data.";
+            break;
+        case 3:
+            data = {status: "TIMEOUT"};
+            message = "No location data acquired in the time allotted.";
+            break;
+        }
+        build_error(data, message);
+    }
+
+    var geo_options = {
+        enableHighAccuracy: true,
+        maximumAge: 30000,
+        timeout: 5000
+    };
+
+    navigator.geolocation.getCurrentPosition(geo_success, geo_error, geo_options);
 }
 
-function getTides(location_string) {
+function getTides() {
+    var location_string = cur_pos.latitude.toPrecision(6) + "," + cur_pos.longitude.toPrecision(6);
     $("#tides").removeClass("hidden");
     $('#loading')
         .empty()
@@ -75,18 +105,25 @@ function getStations() {
      )
 }
 
-function build_error(data, error) {
-    console.log(data);
-    var content = $('#content');
-    var output;
+function build_error(err_data, error) {
+    var status;
 
-    if (data.responseText != null) {
-        output = 'Error: ' + data.responseText;
+    if (err_data.responseText != null) {
+        status = err_data.responseText;
     } else {
-        output = 'Error: ' + data.status + ' - ' + error;
+        status = err_data.status;
     }
 
-    $('#loading').addClass('hidden');
+    var data = {
+        status: status,
+        error: error
+    };
 
-    content.append('<p>' + _.escape(output) + '</p>');
+    var template = $('#error-template').html();
+    var rendered = Mustache.render(template, data);
+    $('#error')
+        .html(rendered)
+        .removeClass('hidden')
+    ;
+    $('#loading').addClass('hidden');
 }
