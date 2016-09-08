@@ -1,3 +1,7 @@
+var tides_template = $("#tides-template").html();
+var stations_template = $('#stations-template').html();
+var error_template = $('#error-template').html();
+
 var cur_pos = {};
 
 $(document).ready(function () {
@@ -13,11 +17,9 @@ $(document).ready(function () {
 
     router.on({
         'route:default': function () {
-            console.log("route:default");
             getLocationAndTides();
         },
         'route:stations': function () {
-            console.log("route:stations");
             getStations();
         }
     });
@@ -83,13 +85,12 @@ function getTides() {
     )
      .done(
          function (data) {
-             var template = $("#tides-template").html();
              data.lower = function () {
                  return function (text, render) {
                      return render(text).toLowerCase();
                  }
              };
-             var rendered = Mustache.render(template, data);
+             var rendered = Mustache.render(tides_template, data);
              $("#tides")
                  .html(rendered)
                  .removeClass("hidden")
@@ -122,8 +123,7 @@ function getStations() {
     )
      .done(
          function (data) {
-             var template = $('#stations-template').html();
-             var rendered = Mustache.render(template, data);
+             var rendered = Mustache.render(stations_template, data);
              $('#stations')
                  .html(rendered)
                  .removeClass('hidden')
@@ -159,8 +159,7 @@ function build_error(err_data, error) {
         error: error
     };
 
-    var template = $('#error-template').html();
-    var rendered = Mustache.render(template, data);
+    var rendered = Mustache.render(error_template, data);
     $('#error')
         .html(rendered)
         .removeClass('hidden')
