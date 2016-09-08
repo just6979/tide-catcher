@@ -51,6 +51,7 @@ class StationRefreshHandler(webapp2.RequestHandler):
             template_file = 'error.html'
             return templates.render(self, template_file, values)
 
+
 app = webapp2.WSGIApplication([
     ('/', IndexHandler),
     ('/json/tides', JSONTidesHandler),

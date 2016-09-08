@@ -108,7 +108,7 @@ function getStations() {
     $('#loading')
         .empty()
         .append('<p>Loading stations list...</p>')
-        .removeClass("hidden");
+        .removeClass("hidden")
     ;
     $("#tides").addClass("hidden");
     $("#error").addClass("hidden");
@@ -138,10 +138,11 @@ function getStations() {
 }
 
 function build_error(err_data, error) {
-    $('#loading')
+    var loading = $('#loading');
+    loading
         .empty()
         .append('<p>Analyzing error...</p>')
-        .removeClass("hidden");
+        .removeClass("hidden")
     ;
     $("#tides").addClass("hidden");
     $("#stations").addClass("hidden");
@@ -164,5 +165,5 @@ function build_error(err_data, error) {
         .html(rendered)
         .removeClass('hidden')
     ;
-    $('#loading').addClass('hidden');
+    loading.addClass('hidden');
 }
