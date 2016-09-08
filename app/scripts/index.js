@@ -8,7 +8,7 @@ $(document).ready(function () {
     var Router = Backbone.Router.extend(
         {
             routes: {
-                "": "default",
+                "": "tides",
                 "stations": "stations"
             }
         }
@@ -16,7 +16,7 @@ $(document).ready(function () {
     var router = new Router;
 
     router.on({
-        'route:default': function () {
+        'route:tides': function () {
             getLocationAndTides();
         },
         'route:stations': function () {
