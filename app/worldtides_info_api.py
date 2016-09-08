@@ -15,7 +15,7 @@ https://www.worldtides.info/api?\
 {options}&lat={lat}&lon={lon}&start={start}&key={key}\
 '''
 
-_api_key = open('worldtides_api_key.txt').readline().strip()
+_api_key = open('worldtides_info_api_key.txt').readline().strip()
 
 
 def fetch_tides(location, utc_start_time, utc_now_stamp, tz_offset):

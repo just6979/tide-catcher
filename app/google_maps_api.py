@@ -13,7 +13,7 @@ https://maps.googleapis.com/maps/api/timezone/json?\
 location={location}&timestamp={timestamp}&key={api_key}\
 """
 
-_api_key = open('google_api_key.txt').readline().strip()
+_api_key = open('google_maps_api_key.txt').readline().strip()
 
 
 def get_tz_offset(location, timestamp):
