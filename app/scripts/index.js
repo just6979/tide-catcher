@@ -1,7 +1,23 @@
 var cur_pos = {};
 
 $(document).ready(function () {
-    getLocationAndTides()
+    var AppRouter = Backbone.Router.extend(
+        {
+            routes: {
+                "": "defaultRoute"
+            }
+        }
+    );
+    var app_router = new AppRouter;
+
+    app_router.on(
+        'route:defaultRoute', function (actions) {
+            getLocationAndTides()
+        }
+    );
+
+    // Start Backbone history, a necessary step for bookmarkable URL's
+    Backbone.history.start();
 });
 
 function getLocationAndTides() {
