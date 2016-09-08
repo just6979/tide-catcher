@@ -71,6 +71,7 @@ function getTides() {
     $('#loading')
         .empty()
         .append('<p>Loading tides for<br/>(' + location_string + ')...</p>')
+        .removeClass("hidden")
     ;
     $("#stations").addClass("hidden");
     $("#error").addClass("hidden");
