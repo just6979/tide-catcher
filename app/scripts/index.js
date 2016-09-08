@@ -1,20 +1,27 @@
 var cur_pos = {};
 
 $(document).ready(function () {
-    var AppRouter = Backbone.Router.extend(
+    var Router = Backbone.Router.extend(
         {
             routes: {
-                "": "defaultRoute"
+                "": "default",
+                "stations": "stations"
             }
         }
     );
-    var app_router = new AppRouter;
+    var router = new Router;
 
-    app_router.on(
-        'route:defaultRoute', function (actions) {
-            getLocationAndTides()
+    router.on({
+        'route:default': function () {
+            console.log("route:default");
+            getLocationAndTides();
+        },
+        'route:stations': function () {
+            console.log("route:stations");
+            getStations();
         }
-    );
+    });
+
 
     // Start Backbone history, a necessary step for bookmarkable URL's
     Backbone.history.start();
@@ -59,11 +66,12 @@ function getLocationAndTides() {
 
 function getTides() {
     var location_string = cur_pos.latitude.toPrecision(6) + "," + cur_pos.longitude.toPrecision(6);
-    $("#tides").removeClass("hidden");
     $('#loading')
         .empty()
-        .append('<p>Loading<br/>(' + location_string + ')</p>')
+        .append('<p>Loading tides for<br/>(' + location_string + ')...</p>')
     ;
+    $("#stations").addClass("hidden");
+    $("#error").addClass("hidden");
 
     $.ajax(
         {
@@ -82,7 +90,7 @@ function getTides() {
                  }
              };
              var rendered = Mustache.render(template, data);
-             $("#tides-data")
+             $("#tides")
                  .html(rendered)
                  .removeClass("hidden")
              ;
@@ -97,6 +105,14 @@ function getTides() {
 }
 
 function getStations() {
+    $('#loading')
+        .empty()
+        .append('<p>Loading stations list...</p>')
+        .removeClass("hidden");
+    ;
+    $("#tides").addClass("hidden");
+    $("#error").addClass("hidden");
+
     $.ajax(
         {
             url: '/json/stations',
@@ -108,7 +124,7 @@ function getStations() {
          function (data) {
              var template = $('#stations-template').html();
              var rendered = Mustache.render(template, data);
-             $('#stations-data')
+             $('#stations')
                  .html(rendered)
                  .removeClass('hidden')
              ;
@@ -122,8 +138,15 @@ function getStations() {
 }
 
 function build_error(err_data, error) {
-    var status;
+    $('#loading')
+        .empty()
+        .append('<p>Analyzing error...</p>')
+        .removeClass("hidden");
+    ;
+    $("#tides").addClass("hidden");
+    $("#stations").addClass("hidden");
 
+    var status;
     if (err_data.responseText != null) {
         status = err_data.responseText;
     } else {

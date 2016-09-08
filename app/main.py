@@ -46,16 +46,10 @@ class StationRefreshHandler(webapp2.RequestHandler):
         values = tides.refresh_stations()
 
         if values['status'] == 'OK':
-            return self.redirect('/stations')
+            return self.redirect('/#stations')
         else:
             template_file = 'error.html'
             return templates.render(self, template_file, values)
-
-
-class StationsHandler(webapp2.RequestHandler):
-    def get(self):
-        templates.render(self, 'stations.html', {})
-
 
 app = webapp2.WSGIApplication([
     ('/', IndexHandler),
@@ -63,6 +57,4 @@ app = webapp2.WSGIApplication([
     ('/json/stations', JSONStationsHandler),
     # will be modified soon to return JSON and not redirect
     ('/refresh-stations', StationRefreshHandler),
-    # will be removed soon, moving completely into JS
-    ('/stations', StationsHandler),
 ], debug=True)

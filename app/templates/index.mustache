@@ -50,117 +50,106 @@
 </div>
 
 <div id="sections">
+    <div id="loading">
+        <p>Loading...</p>
+    </div>
 
     <div id="tides" class="hidden">
-        <div id="loading">
-            <p>Loading</p>
-        </div>
+        <script id="tides-template" type="x-tmpl-mustache">
+        <table id="tides-table">
+        <caption class="top">
+            {{station_name}}
+        </caption>
+        {{#tides}}
+        <tr class="{{#lower}}{{type}}{{/lower}} {{prior}}">
+            <td class="type">{{type}}</td>
+            <td class="date">{{date}}</td>
+            <td class="day">{{day}}</td>
+            <td class="time">{{time}}</td>
+        </tr>
+        {{/tides}}
+        <caption id="bottom_caption" class="bottom">
+            Key:
+            <span class="prior">Prior&nbsp;Tides</span>
+            <span class="low">Low&nbsp;Tides</span>
+            <span class="high">High&nbsp;Tides</span>
+        </caption>
+        </table>
 
-        <div id="tides-data"  class="hidden">
-            <script id="tides-template" type="x-tmpl-mustache">
-            <table id="tides-table">
-            <caption class="top">
-                {{station_name}}
-            </caption>
-            {{#tides}}
-            <tr class="{{#lower}}{{type}}{{/lower}} {{prior}}">
-                <td class="type">{{type}}</td>
-                <td class="date">{{date}}</td>
-                <td class="day">{{day}}</td>
-                <td class="time">{{time}}</td>
-            </tr>
-            {{/tides}}
-            <caption id="bottom_caption" class="bottom">
-                Key:
-                <span class="prior">Prior&nbsp;Tides</span>
-                <span class="low">Low&nbsp;Tides</span>
-                <span class="high">High&nbsp;Tides</span>
-            </caption>
+        <div id="info">
+            <table id="request">
+                <caption class="top">Request</caption>
+                <tr>
+                    <td>Location</td>
+                    <td>
+                        <a href="http://maps.google.com/maps/place/{{req_lat}}
+            ,{{req_lon}}/@{{req_lat}},{{req_lon}},12z">({{req_lat}}
+            , {{req_lon}})</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Time</td>
+                    <td>{{req_timestamp.date}} {{req_timestamp.day}} {{req_timestamp.time}}</td>
+                </tr>
             </table>
-
-            <div id="info">
-                <table id="request">
-                    <caption class="top">Request</caption>
-                    <tr>
-                        <td>Location</td>
-                        <td>
-                            <a href="http://maps.google.com/maps/place/{{req_lat}}
-                ,{{req_lon}}/@{{req_lat}},{{req_lon}},12z">({{req_lat}}
-                , {{req_lon}})</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Time</td>
-                        <td>{{req_timestamp.date}} {{req_timestamp.day}} {{req_timestamp.time}}</td>
-                    </tr>
-                </table>
-                <table id="response">
-                    <caption class="top">Response</caption>
-                    <tr>
-                        <td><a href="/stations">Station</a></td>
-                        <td>
-                            <a href=https://tidesandcurrents.noaa.gov/noaatidepredictions/NOAATidesFacade.jsp?Stationid={{station_id}}>
-                                NOAA {{station_id}}
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Location</td>
-                        <td>
-                            <a href="http://maps.google.com/maps/place/{{resp_lat}}
-                ,{{resp_lon}}/@{{resp_lat}},{{resp_lon}},12z">({{resp_lat}}
-                , {{resp_lon}})</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Timezone</td>
-                        <td>{{tz_name}}, UTC{{tz_offset}}</td>
-                    </tr>
-                </table>
-            </div>
-            </script>
+            <table id="response">
+                <caption class="top">Response</caption>
+                <tr>
+                    <td><a href="#stations">Station</a></td>
+                    <td>
+                        <a href=https://tidesandcurrents.noaa.gov/noaatidepredictions/NOAATidesFacade.jsp?Stationid={{station_id}}>
+                            NOAA {{station_id}}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Location</td>
+                    <td>
+                        <a href="http://maps.google.com/maps/place/{{resp_lat}}
+            ,{{resp_lon}}/@{{resp_lat}},{{resp_lon}},12z">({{resp_lat}}
+            , {{resp_lon}})</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Timezone</td>
+                    <td>{{tz_name}}, UTC{{tz_offset}}</td>
+                </tr>
+            </table>
         </div>
+        </script>
     </div>
 
     <div id="stations"  class="hidden">
+        <script id="stations-template" type="x-tmpl-mustache">
         <h2>Stations</h2>
-        <div id="loading">
-            <p>Loading...</p>
-        </div>
-
-        <div id="stations-data" class="hidden">
-            <script id="stations-template" type="x-tmpl-mustache">
-            <p>
-                {{station_count}} stations cached: <a href="/refresh-stations">Refresh</a>
-            </p>
-            <ul>
-                {{#stations}}
-                    <li>
-                        {{name}},
-                        <a href="http://maps.google.com/maps/place/{{loc.lat}},{{loc.lon}}/@{{loc.lat}},{{loc.lon}}
-                ,12z">({{loc.lat}}, {{loc.lon}})</a>,
-                        <a href=https://tidesandcurrents.noaa.gov/noaatidepredictions/NOAATidesFacade.jsp?Stationid={{id}}
-                >NOAA {{id}}</a>
-                    </li>
-                {{/stations}}
-            </ul>
-            </script>
-        </div>
+        <p>
+            {{station_count}} stations cached: <a href="/refresh-stations">Refresh</a>
+        </p>
+        <ul>
+            {{#stations}}
+                <li>
+                    {{name}},
+                    <a href="http://maps.google.com/maps/place/{{loc.lat}},{{loc.lon}}/@{{loc.lat}},{{loc.lon}}
+            ,12z">({{loc.lat}}, {{loc.lon}})</a>,
+                    <a href=https://tidesandcurrents.noaa.gov/noaatidepredictions/NOAATidesFacade.jsp?Stationid={{id}}
+            >NOAA {{id}}</a>
+                </li>
+            {{/stations}}
+        </ul>
+        </script>
     </div>
 
     <div id="error" class="hidden">
-        <div id="error-data"  class="hidden">
-            <script id="error-template" type="x-tmpl-mustache">
-            <p>
-                Error: {{status}}
-                <br/>
-                <pre>{{error}}</pre>
-            </p>
-            <p>
-                <a href="/">Try again?</a>
-            </p>
-            </script>
-        </div>
+        <script id="error-template" type="x-tmpl-mustache">
+        <p>
+            Error: {{status}}
+            <br/>
+            <pre>{{error}}</pre>
+        </p>
+        <p>
+            <a href="/">Try again?</a>
+        </p>
+        </script>
     </div>
 
 </div>
