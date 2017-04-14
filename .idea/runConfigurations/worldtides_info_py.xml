@@ -15,6 +15,7 @@
     <option name="SCRIPT_NAME" value="C:\Users\just6\Code\tide-catcher\app\worldtides_info_api.py" />
     <option name="PARAMETERS" value="" />
     <option name="SHOW_COMMAND_LINE" value="false" />
+    <option name="EMULATE_TERMINAL" value="false" />
     <method />
   </configuration>
 </component>
