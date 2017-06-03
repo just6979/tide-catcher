@@ -53,10 +53,6 @@ caption.top {
     caption-side: top;
 }
 
-caption.bottom {
-    caption-side: bottom;
-}
-
 td {
     border: none;
 }
@@ -93,30 +89,25 @@ ul {
     background-color: lightgreen;
 }
 
-.prior {
-    font-size: 80%;
-    font-style: italic;
-    color: gray;
+#response caption {
+    border-top: thin dotted;
+    padding-top: 0.25em;
 }
 
-caption .prior {
-    background: repeating-linear-gradient(
-            -45deg,
-            lightyellow,
-            lightyellow 0.25em,
-            lightgreen 0.25em,
-            lightgreen 0.5em
-    );
+.prior {
+    font-size: 75%;
+    color: darkgray;
+    background-color: lightgray;
 }
 
 #info {
     margin: 1em 1em;
-    font-size: 80%
+    font-size: 75%
 }
 
 #coming-soon, #notes {
     border-top: dotted thin;
-    font-size: 60%;
+    font-size: 50%;
 }
 
 #coming-soon ul, #notes, #stations ul {
