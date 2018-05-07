@@ -1,6 +1,7 @@
 import calendar
 import json
 import logging
+import stat
 import urllib
 from datetime import datetime, timedelta
 from pprint import pprint
@@ -99,6 +100,7 @@ def fetch_stations():
         options='stations',
         key=_api_key,
     )
+    logging.info(stations_url)
     response = urllib.urlopen(stations_url)
     data = response.read()
 
@@ -127,7 +129,7 @@ def fetch_stations():
 
 
 def main():
-    print('Test WorldTides API')
+    print('Test WorldTides API:')
 
     req_loc = utils.test_location
     # right now in  UTC as unix time
@@ -135,30 +137,39 @@ def main():
     # minus 12 hours to make sure we get the last tide
     utc_minus_12 = utc_now + timedelta(hours=-12)
 
+    print('Getting timezone offset from Google Maps API:')
     tz_data = maps_api.get_tz_offset(req_loc, utc_now)
     if tz_data['status'] == 'OK':
+        print('SUCCESS')
         pass
     else:
+        print('FAILURE:')
         print(utils.error_dump(tz_data))
         return
 
+    print('Testing WorldTides Location API:')
     tides_data = fetch_tides(req_loc, utc_minus_12, utc_now, tz_data['offset'])
-
+    print('Request completed.')
     if tides_data['status'] == 'OK':
+        print('SUCCESS: Accepted API Key and returned results:')
         print(tides_data)
     else:
+        print('FAILURE:')
         print(utils.error_dump(tides_data))
 
     # now we break it on purpose
-    print('Testing Google Maps Timezone API error handling (bad API key):')
+    print('')
+    print('Testing WorldTides API error handling (bad API key):')
     global _api_key
     _api_key = 'foobar'
 
     tides_data = fetch_tides(req_loc, utc_minus_12, utc_now, tz_data['offset'])
-
+    print('Request completed')
     if tides_data['status'] == 'OK':
+        print('FAILURE: Accepted bogus API Key:')
         pprint(tides_data)
     else:
+        print('SUCCESS: Failed on bogus API Key:')
         print(utils.error_dump(tides_data))
 
 

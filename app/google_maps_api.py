@@ -58,29 +58,33 @@ def get_tz_offset(location, timestamp):
 
 
 def _main():
-    print('Testing Google Maps Timezone API:')
 
     request_location = utils.test_location
     # right now in UTC as seconds since epoch
     timestamp = datetime.datetime.utcnow()
 
+    print('Testing Google Maps Timezone API:')
     tz_data = get_tz_offset(request_location, timestamp)
-
+    print('Request completed.')
     if tz_data['status'] == 'OK':
+        print('SUCCESS: Accepted API Key and returned results:')
         pprint(tz_data)
     else:
+        print('FAILURE:')
         print(utils.error_dump(tz_data))
 
     # now we break it on purpose
-    print('Testing Google Maps Timezone API error handling (bad API key):')
+    print('')
     global _api_key
     _api_key = 'foobar'
-
+    print('Testing Google Maps Timezone API error handling (bad API key):')
     tz_data = get_tz_offset(request_location, timestamp)
-
+    print('Request completed')
     if tz_data['status'] == 'OK':
+        print('FAILURE: Accepted bogus API Key:')
         pprint(tz_data)
     else:
+        print('SUCCESS: Failed on bogus API Key:')
         print(utils.error_dump(tz_data))
 
 
