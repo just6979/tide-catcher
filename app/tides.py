@@ -100,7 +100,7 @@ def refresh_stations():
         }
         for station in station_data['stations']:
             new_station = Station(
-                id=int(station['id'][5:]),
+                id=station['id'],
                 lat=station['lat'],
                 lon=station['lon'],
                 name=station['name'],
