@@ -54,7 +54,6 @@ def fetch_tides(location, utc_start_time, utc_now_stamp, tz_offset):
                 'status': 'OK',
                 'responseLat': data['responseLat'],
                 'responseLon': data['responseLon'],
-                'station': data['station'],
                 'copyright': data['copyright'],
                 'tides': []
             }
