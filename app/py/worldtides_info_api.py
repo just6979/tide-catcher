@@ -1,7 +1,6 @@
 import calendar
 import json
 import logging
-import stat
 import urllib
 from datetime import datetime, timedelta
 from pprint import pprint

@@ -2,8 +2,7 @@ import json
 
 import webapp2
 
-import templates
-import tides
+from . import tides, templates
 
 
 class IndexHandler(webapp2.RequestHandler):
