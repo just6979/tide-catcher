@@ -23,11 +23,11 @@ handlers:
   static_dir: images
   expiration: 7d
 
-- url: /styles
-  static_dir: styles
+- url: /css
+  static_dir: css
 
-- url: /scripts
-  static_dir: scripts
+- url: /js
+  static_dir: js
 
 - url: /(manifest.json|browserconfig.xml)
   static_files: static/\1
