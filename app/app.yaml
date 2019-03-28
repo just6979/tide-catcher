@@ -37,3 +37,11 @@ handlers:
   script: py.main.app
   login: optional
   secure: always
+
+skip_files:
+  - ^(.*/)?#.*#$
+  - ^(.*/)?.*~$
+  - ^(.*/)?.*\.py[co]$
+  - ^(.*/)?.*/RCS/.*$
+  - ^(.*/)?\..*$
+  - ^(.*/)?index\.yaml$
