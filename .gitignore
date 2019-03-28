@@ -1,14 +1,14 @@
-.idea/libraries/
-.idea/misc.xml
-.idea/workspace.xml
+/.idea/libraries/
+/.idea/misc.xml
+/.idea/workspace.xml
 /.idea/dataSources.ids
 /.idea/dataSources.xml
 /.idea/dataSources.local.xml
 
 *.pyc
 
-venv/
+/venv/
 
-index.yaml
+/app/index.yaml
 
 /app/api_keys.yaml
