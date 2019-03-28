@@ -3,7 +3,7 @@
     <module name="tide-catcher" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
-    <option name="SDK_HOME" value="" />
+    <option name="SDK_HOME" value="$PROJECT_DIR$/venv/bin/python" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app" />
     <option name="IS_MODULE_SDK" value="true" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -11,7 +11,7 @@
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="launchJavascriptDebuger" value="false" />
     <option name="host" value="0.0.0.0" />
-    <option name="browserUrl" value="http://127.0.0.1:8080/" />
+    <option name="browserUrl" value="" />
     <option name="additionalOptions" value="" />
     <method v="2" />
   </configuration>

@@ -5,21 +5,23 @@
       <configuration>
         <option name="rootFolder" value="$MODULE_DIR$/app" />
         <option name="sdkFolder" value="$USER_HOME$/Library/google-cloud-sdk/platform/google_appengine" />
-        <option name="templatesFolder" value="" />
-        <option name="oauth2" value="false" />
-        <option name="deployConfigured" value="false" />
-        <option name="saveCredentials" value="false" />
       </configuration>
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/app/py" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/images" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/app/icons" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/app/static" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/app/css" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/app/js" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/venv" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="jquery" level="application" />
-    <orderEntry type="library" name="underscore" level="application" />
-    <orderEntry type="library" name="mustache" level="application" />
     <orderEntry type="library" name="Google App Engine SDK" level="project" />
   </component>
   <component name="TemplatesService">

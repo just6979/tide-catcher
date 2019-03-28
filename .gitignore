@@ -8,3 +8,5 @@
 /app/worldtides_info_api_key.txt
 /app/google_maps_api_key.txt
 *.pyc
+
+venv/
