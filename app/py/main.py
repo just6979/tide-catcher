@@ -2,7 +2,7 @@ import json
 
 import webapp2
 
-from . import tides, templates
+from . import templates, tides
 
 
 class IndexHandler(webapp2.RequestHandler):
@@ -28,7 +28,11 @@ class JSONTidesHandler(webapp2.RequestHandler):
                 self.response.set_status(404)
             else:
                 values = tides.for_location((req_lat, req_lon))
-                self.response.write(json.dumps(values))
+                if values['status'] == 'OK':
+                    self.response.write(json.dumps(values))
+                else:
+                    self.response.write(json.dumps(values))
+                    self.response.set_status(404)
         else:
             self.response.write(u'No Location Given')
             self.response.set_status(404)

@@ -148,15 +148,8 @@ function build_error(err_data, error) {
     $("#tides").addClass("hidden");
     $("#stations").addClass("hidden");
 
-    var status;
-    if (err_data.responseText != null) {
-        status = err_data.responseText;
-    } else {
-        status = err_data.status;
-    }
-
     var data = {
-        status: status,
+        status: JSON.parse(err_data.responseText)['msg'],
         error: error
     };
 

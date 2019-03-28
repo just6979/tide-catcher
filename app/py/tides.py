@@ -5,6 +5,8 @@ import utils
 import worldtides_info_api as tides_api
 from datastore import Station
 
+_module = 'Tides'
+
 
 def for_location(req_loc):
     req_lat, req_lon = req_loc
@@ -35,6 +37,8 @@ def for_location(req_loc):
             resp_lat = tide_data['responseLat']
             resp_lon = tide_data['responseLon']
             station = get_station(resp_lat, resp_lon)
+            if station is None:
+                return utils.error_builder(_module, 'ERR', "No Valid Stations Found.")
             station_name = station.name
             station_id = station.key.id()
 
@@ -65,8 +69,11 @@ def for_location(req_loc):
 
 
 def get_station(lat, lon):
-    # should only ever be one station at a given (lat,lon)
-    return Station.query(Station.lat == lat, Station.lon == lon).fetch(1)[0]
+    stations = Station.query(Station.lat == lat, Station.lon == lon).fetch(1)
+    if len(stations) != 0:
+        return stations[0]
+    else:
+        return None
 
 
 def get_stations():
