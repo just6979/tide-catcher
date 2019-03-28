@@ -5,7 +5,8 @@ import urllib
 from datetime import datetime, timedelta
 from pprint import pprint
 
-from . import config, google_maps_api as maps_api, utils
+import google_maps_api as maps_api
+import utils
 
 _module = 'World Tides API'
 
@@ -14,7 +15,7 @@ https://www.worldtides.info/api?\
 {options}&lat={lat}&lon={lon}&start={start}&key={key}\
 '''
 
-_api_key = config.worldtides_info_api_key
+_api_key = open('worldtides_info_api_key.txt').readline().strip()
 
 
 def fetch_tides(location, utc_start_time, utc_now_stamp, tz_offset):
