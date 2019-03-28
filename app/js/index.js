@@ -148,8 +148,15 @@ function build_error(err_data, error) {
     $("#tides").addClass("hidden");
     $("#stations").addClass("hidden");
 
+    var response;
+    try {
+        var jsonResponse = JSON.parse(err_data.responseText);
+        response = jsonResponse['msg'];
+    } catch (SyntaxError) {
+        response = err_data.responseText;
+    }
     var data = {
-        status: JSON.parse(err_data.responseText)['msg'],
+        status: response,
         error: error
     };
 
