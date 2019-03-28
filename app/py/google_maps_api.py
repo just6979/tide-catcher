@@ -6,14 +6,14 @@ from pprint import pprint
 
 import utils
 
+from . import config
+
 _module = 'Google Maps Timezone API'
 
 _base_url = """\
 https://maps.googleapis.com/maps/api/timezone/json?\
 location={location}&timestamp={timestamp}&key={api_key}\
 """
-
-_api_key = open('google_maps_api_key.txt').readline().strip()
 
 
 def get_tz_offset(location, timestamp):
@@ -26,7 +26,7 @@ def get_tz_offset(location, timestamp):
     request_url = _base_url.format(
         location=location_string,
         timestamp=unix_timestamp,
-        api_key=_api_key,
+        api_key=config.google_maps_api_key,
     )
 
     response = urllib2.urlopen(request_url).read()
@@ -58,7 +58,6 @@ def get_tz_offset(location, timestamp):
 
 
 def _main():
-
     request_location = utils.test_location
     # right now in UTC as seconds since epoch
     timestamp = datetime.datetime.utcnow()
