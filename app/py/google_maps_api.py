@@ -1,6 +1,7 @@
 import calendar
 import datetime
 import json
+import os
 import urllib2
 from pprint import pprint
 
@@ -13,7 +14,7 @@ https://maps.googleapis.com/maps/api/timezone/json?\
 location={location}&timestamp={timestamp}&key={api_key}\
 """
 
-_api_key = open('google_maps_api_key.txt').readline().strip()
+_api_key = os.environ['GOOGLE_MAPS_API_KEY']
 
 
 def get_tz_offset(location, timestamp):

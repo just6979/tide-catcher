@@ -45,3 +45,7 @@ skip_files:
   - ^(.*/)?.*/RCS/.*$
   - ^(.*/)?\..*$
   - ^(.*/)?index\.yaml$
+
+env_variables:
+  GOOGLE_MAPS_API_KEY: REPLACE_ME
+  WORLDTIDES_INFO_API_KEY: REPLACE_ME
