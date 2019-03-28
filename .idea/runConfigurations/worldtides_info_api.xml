@@ -5,6 +5,8 @@
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
+      <env name="WORLDTIDES_INFO_API_KEY" value="" />
+      <env name="GOOGLE_MAPS_API_KEY" value="" />
     </envs>
     <option name="SDK_HOME" value="$PROJECT_DIR$/venv/bin/python" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app/py" />
