@@ -10,3 +10,5 @@
 venv/
 
 index.yaml
+
+/app/api_keys.yaml
