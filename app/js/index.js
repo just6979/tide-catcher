@@ -9,7 +9,8 @@ $(document).ready(function () {
         {
             routes: {
                 "": "tides",
-                "stations": "stations"
+                "stations": "stations",
+                "refresh-stations": "refresh-stations"
             }
         }
     );
@@ -21,6 +22,9 @@ $(document).ready(function () {
         },
         'route:stations': function () {
             getStations();
+        },
+        'route:refresh-stations': function () {
+            refreshStations();
         }
     });
 
@@ -118,6 +122,38 @@ function getStations() {
     $.ajax(
         {
             url: '/json/stations',
+            type: 'GET',
+            dataType: 'json'
+        }
+    )
+     .done(
+         function (data) {
+             var rendered = Mustache.render(stations_template, data);
+             $('#stations')
+                 .html(rendered)
+                 .removeClass('hidden')
+             ;
+             $('#loading').addClass('hidden');
+         }
+     )
+     .fail(
+         function (data, status, error) {
+         }
+     )
+}
+
+function refreshStations() {
+    $('#loading')
+        .empty()
+        .append('<p>Refreshing stations list...</p>')
+        .removeClass("hidden")
+    ;
+    $("#tides").addClass("hidden");
+    $("#error").addClass("hidden");
+
+    $.ajax(
+        {
+            url: '/json/refresh-stations',
             type: 'GET',
             dataType: 'json'
         }

@@ -100,17 +100,15 @@ def refresh_stations():
     station_data = tides_api.fetch_stations()
 
     if station_data['status'] != 'OK':
-        values = station_data
-    else:
-        values = {
-            'status': 'OK'
-        }
-        for station in station_data['stations']:
-            new_station = Station(
-                id=station['id'],
-                lat=station['lat'],
-                lon=station['lon'],
-                name=station['name'],
-            )
-            new_station.put()
-    return values
+        return station_data
+
+    for found_station in station_data['stations']:
+        new_station = Station(
+            id=found_station['id'],
+            lat=found_station['lat'],
+            lon=found_station['lon'],
+            name=found_station['name'],
+        )
+        new_station.put()
+
+    return get_stations()

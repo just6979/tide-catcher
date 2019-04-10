@@ -2,7 +2,7 @@ import json
 
 import webapp2
 
-from . import templates, tides
+from . import tides
 
 
 class IndexHandler(webapp2.RequestHandler):
@@ -44,21 +44,15 @@ class JSONStationsHandler(webapp2.RequestHandler):
         self.response.write(json.dumps(values))
 
 
-class StationRefreshHandler(webapp2.RequestHandler):
+class JSONStationRefreshHandler(webapp2.RequestHandler):
     def get(self):
         values = tides.refresh_stations()
-
-        if values['status'] == 'OK':
-            return self.redirect('/#stations')
-        else:
-            template_file = 'error.html'
-            return templates.render(self, template_file, values)
+        self.response.write(json.dumps(values))
 
 
 app = webapp2.WSGIApplication([
     ('/', IndexHandler),
     ('/json/tides', JSONTidesHandler),
     ('/json/stations', JSONStationsHandler),
-    # will be modified soon to return JSON and not redirect
-    ('/refresh-stations', StationRefreshHandler),
+    ('/json/refresh-stations', JSONStationRefreshHandler),
 ], debug=True)
