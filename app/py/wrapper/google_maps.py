@@ -1,12 +1,12 @@
 import calendar
 import datetime
 import json
+import logging
 import os
 import urllib2
-import logging
 from pprint import pprint
 
-import utils
+from .. import utils
 
 _module = 'Google Maps Timezone API'
 
@@ -60,7 +60,6 @@ def get_tz_offset(location, timestamp):
 
 
 def _main():
-
     request_location = utils.test_location
     # right now in UTC as seconds since epoch
     timestamp = datetime.datetime.utcnow()

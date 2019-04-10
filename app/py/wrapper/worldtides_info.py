@@ -6,8 +6,8 @@ import urllib
 from datetime import datetime, timedelta
 from pprint import pprint
 
-import google_maps_api as maps_api
-import utils
+import google_maps
+from .. import utils
 
 _module = 'World Tides API'
 
@@ -137,7 +137,7 @@ def main():
     utc_minus_12 = utc_now + timedelta(hours=-12)
 
     print('Getting timezone offset from Google Maps API:')
-    tz_data = maps_api.get_tz_offset(req_loc, utc_now)
+    tz_data = google_maps.get_tz_offset(req_loc, utc_now)
     if tz_data['status'] == 'OK':
         print('SUCCESS')
         pass

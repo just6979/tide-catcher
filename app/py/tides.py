@@ -1,9 +1,8 @@
 import datetime
 
-import google_maps_api as maps_api
-import utils
-import worldtides_info_api as tides_api
 from datastore import Station
+from wrapper import google_maps, worldtides_info
+from . import utils
 
 _module = 'Tides'
 
@@ -17,7 +16,7 @@ def for_location(req_loc):
     utc_minus_12 = utc_now + datetime.timedelta(hours=-12)
 
     # if this location wasn't cached
-    tz_data = maps_api.get_tz_offset(req_loc, utc_now)
+    tz_data = google_maps.get_tz_offset(req_loc, utc_now)
 
     status = tz_data['status']
     if status != 'OK':
@@ -25,7 +24,7 @@ def for_location(req_loc):
         values = tz_data
     else:
         # timezone data is good, fetch & check tide data
-        tide_data = tides_api.fetch_tides(
+        tide_data = worldtides_info.fetch_tides(
             req_loc, utc_minus_12, utc_now, tz_data['offset']
         )
 
@@ -97,7 +96,7 @@ def get_stations():
 
 
 def refresh_stations():
-    station_data = tides_api.fetch_stations()
+    station_data = worldtides_info.fetch_stations()
 
     if station_data['status'] != 'OK':
         return station_data
