@@ -3,7 +3,7 @@ import datetime
 import json
 import logging
 import os
-import urllib2
+import urllib.request as request
 from pprint import pprint
 
 from .. import utils
@@ -31,7 +31,7 @@ def get_tz_offset(location, timestamp):
         api_key=_api_key,
     )
     logging.info(request_url)
-    response = urllib2.urlopen(request_url).read()
+    response = request.urlopen(request_url).read()
     response_data = json.loads(response)
 
     try:

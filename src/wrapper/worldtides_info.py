@@ -2,11 +2,11 @@ import calendar
 import json
 import logging
 import os
-import urllib
+import urllib.request as request
 from datetime import datetime, timedelta
 from pprint import pprint
 
-import google_maps
+from . import google_maps
 from .. import utils
 
 _module = 'World Tides API'
@@ -31,7 +31,7 @@ def fetch_tides(location, utc_start_time, utc_now_stamp, tz_offset):
         key=_api_key,
     )
     logging.info(request_url)
-    response = urllib.urlopen(request_url)
+    response = request.urlopen(request_url)
     data = response.read()
 
     try:
@@ -100,7 +100,7 @@ def fetch_stations():
         key=_api_key,
     )
     logging.info(stations_url)
-    response = urllib.urlopen(stations_url)
+    response = request.urlopen(stations_url)
     data = response.read()
 
     try:

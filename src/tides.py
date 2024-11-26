@@ -1,7 +1,7 @@
 import datetime
 
-from datastore import Station
-from wrapper import google_maps, worldtides_info
+from .datastore import Station
+from .wrapper import google_maps, worldtides_info
 from . import utils
 
 _module = 'Tides'

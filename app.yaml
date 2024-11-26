@@ -1,5 +1,4 @@
 runtime: python312
-api_version: 1
 
 instance_class: F1
 
@@ -25,8 +24,8 @@ handlers:
   static_files: static/\1
   upload: static/*
 
-- url: .*
-  script: py.main.app
+- url: /.*
+  script: app.app
   login: optional
   secure: always
 
