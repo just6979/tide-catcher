@@ -1,58 +1,42 @@
-import json
-
-import webapp2
+from flask import Flask, request
 
 from . import tides
 
-
-class IndexHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.write(open('templates/index.mustache').read())
+app = Flask(__name__)
 
 
-class JSONTidesHandler(webapp2.RequestHandler):
-    def get(self):
-        location = self.request.get(u'loc', default_value=None)
-        if location:
-            try:
-                req_lat, req_lon = location.split(',')
-            except ValueError as e:
-                self.response.write(
-                    u'Bad Location: "%s", %s' % (location, e.message)
-                )
-                self.response.set_status(404)
-            except Exception as e:
-                self.response.write(
-                    u'Bad Location: "%s", %s' % (location, e.message)
-                )
-                self.response.set_status(404)
-            else:
-                values = tides.for_location((req_lat, req_lon))
-                if values['status'] == 'OK':
-                    self.response.write(json.dumps(values))
-                else:
-                    self.response.write(json.dumps(values))
-                    self.response.set_status(404)
+@app.get('/.*')
+def get():
+    return open('templates/index.mustache').read()
+
+
+app.get('/json/tides')
+def json_tides():
+    location = request.get(u'loc', default_value=None)
+    if location:
+        try:
+            req_lat, req_lon = location.split(',')
+        except ValueError as e:
+            return u'Bad Location: "%s", %s' % (location, e), 404
+        except Exception as e:
+            return u'Bad Location: "%s", %s' % (location, e), 404
         else:
-            self.response.write(u'No Location Given')
-            self.response.set_status(404)
+            values = tides.for_location((req_lat, req_lon))
+            if values['status'] == 'OK':
+                return values
+            else:
+                return values, 404
+    else:
+        return u'No Location Given', 404
 
 
-class JSONStationsHandler(webapp2.RequestHandler):
-    def get(self):
-        values = tides.get_stations()
-        self.response.write(json.dumps(values))
+app.get('/json/stations')
+def json_stations():
+    values = tides.get_stations()
+    return values
 
 
-class JSONStationRefreshHandler(webapp2.RequestHandler):
-    def get(self):
-        values = tides.refresh_stations()
-        self.response.write(json.dumps(values))
-
-
-app = webapp2.WSGIApplication([
-    ('/', IndexHandler),
-    ('/json/tides', JSONTidesHandler),
-    ('/json/stations', JSONStationsHandler),
-    ('/json/refresh-stations', JSONStationRefreshHandler),
-], debug=True)
+app.get('/json/refresh-stations')
+def refresh_stations():
+    values = tides.refresh_stations()
+    return values

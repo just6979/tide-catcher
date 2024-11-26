@@ -6,7 +6,6 @@
 /.idea/dataSources.local.xml
 
 *.pyc
+*.pyo
 
-/venv/
-
-/app/index.yaml
+/venv*/
