@@ -1,1 +1,6 @@
 #!include:.gitignore
+
+.idea/
+*.iml
+.gcloudignore
+.gitignore
