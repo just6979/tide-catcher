@@ -9,3 +9,5 @@
 *.pyo
 
 /.venv*/
+/.python-version
+/.env
