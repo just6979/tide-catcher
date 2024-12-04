@@ -24,7 +24,7 @@ handlers:
   static_dir: static/manifest
 
 - url: /.*
-  script: app.app
+  script: main.app
   login: optional
   secure: always
 
