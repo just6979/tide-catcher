@@ -1,4 +1,3 @@
 flask
 google-cloud-ndb
-appengine-python-standard
 python-dotenv

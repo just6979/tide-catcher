@@ -1,5 +1,4 @@
 runtime: python312
-app_engine_apis: true
 
 instance_class: F1
 
