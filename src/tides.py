@@ -11,7 +11,7 @@ def for_location(req_loc):
     req_lat, req_lon = req_loc
 
     # right now in UTC as naive datetime
-    utc_now = datetime.datetime.utcnow()
+    utc_now = datetime.datetime.now(datetime.UTC)
     # minus 12 hours to make sure we get the last tide (maybe last 2)
     utc_minus_12 = utc_now + datetime.timedelta(hours=-12)
 

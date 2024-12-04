@@ -3,7 +3,7 @@ import json
 import logging
 import os
 import urllib.request as request
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pprint import pprint
 
 from . import google_maps
@@ -59,8 +59,8 @@ def fetch_tides(location, utc_start_time, utc_now_stamp, tz_offset):
             }
 
             for tide in data['extremes']:
-                utc_timestamp = datetime.utcfromtimestamp(
-                    tide['dt'])
+                utc_timestamp = datetime.fromtimestamp(
+                    tide['dt'], timezone.utc)
                 timestamp = utils.to_nearest_minute(
                     utils.offset_timestamp(utc_timestamp, tz_offset))
                 now_stamp = utils.to_nearest_minute(
