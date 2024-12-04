@@ -30,17 +30,17 @@ def json_tides():
         try:
             req_lat, req_lon = location.split(',')
         except ValueError as e:
-            return [u'Bad Location: "%s", %s' % (location, e)], 404
+            return [u'Bad Location: "%s", %s' % (location, e)]
         except Exception as e:
-            return [u'Bad Location: "%s", %s' % (location, e)], 404
+            return [u'Bad Location: "%s", %s' % (location, e)]
         else:
             values = tides.for_location((req_lat, req_lon))
             if values['status'] == 'OK':
                 return values
             else:
-                return values, 404
+                return values, 400
     else:
-        return u'No Location Given', 404
+        return u'No Location Given'
 
 
 @app.get('/json/stations')
