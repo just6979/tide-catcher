@@ -15,10 +15,8 @@ https://maps.googleapis.com/maps/api/timezone/json?\
 location={location}&timestamp={timestamp}&key={api_key}\
 """
 
-_api_key = os.environ['GOOGLE_MAPS_API_KEY']
 
-
-def get_tz_offset(location, timestamp):
+def get_tz_offset(api_key, location, timestamp):
     tz_data = {}
 
     location_string = '%s,%s' % location
@@ -28,7 +26,7 @@ def get_tz_offset(location, timestamp):
     request_url = _base_url.format(
         location=location_string,
         timestamp=unix_timestamp,
-        api_key=_api_key,
+        api_key=api_key,
     )
     logging.info(request_url)
     response = request.urlopen(request_url).read()
@@ -60,12 +58,16 @@ def get_tz_offset(location, timestamp):
 
 
 def _main():
+    from dotenv import load_dotenv
+    load_dotenv()
+    maps_api_key = os.environ['GOOGLE_MAPS_API_KEY']
+
     request_location = utils.test_location
     # right now in UTC as seconds since epoch
-    timestamp = datetime.datetime.utcnow()
+    timestamp = datetime.datetime.now(datetime.UTC)
 
     print('Testing Google Maps Timezone API:')
-    tz_data = get_tz_offset(request_location, timestamp)
+    tz_data = get_tz_offset(maps_api_key, request_location, timestamp)
     print('Request completed.')
     if tz_data['status'] == 'OK':
         print('SUCCESS: Accepted API Key and returned results:')
@@ -76,10 +78,8 @@ def _main():
 
     # now we break it on purpose
     print('')
-    global _api_key
-    _api_key = 'foobar'
     print('Testing Google Maps Timezone API error handling (bad API key):')
-    tz_data = get_tz_offset(request_location, timestamp)
+    tz_data = get_tz_offset('foobar', request_location, timestamp)
     print('Request completed')
     if tz_data['status'] == 'OK':
         print('FAILURE: Accepted bogus API Key:')
