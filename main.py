@@ -1,8 +1,21 @@
 from flask import Flask, request
+from google.cloud import ndb
 
 from src import tides
 
+client = ndb.Client()
+
+
+def ndb_wsgi_middleware(wsgi_app):
+    def middleware(environ, start_response):
+        with client.context():
+            return wsgi_app(environ, start_response)
+
+    return middleware
+
+
 app = Flask(__name__)
+app.wsgi_app = ndb_wsgi_middleware(app.wsgi_app)
 
 
 @app.get('/')
