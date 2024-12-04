@@ -6,24 +6,22 @@ instance_class: F1
 default_expiration: "1d"
 
 handlers:
-- url: /(.*icon.*)$
-  static_files: icons/\1
-  expiration: 7d
-  upload: icons/.*icon.*
-
-- url: /images
-  static_dir: images
+- url: /static/icons/
+  static_dir: static/icons
   expiration: 7d
 
-- url: /css
-  static_dir: css
+- url: /static/images
+  static_dir: static/images
+  expiration: 7d
 
-- url: /js
-  static_dir: js
+- url: /static/css
+  static_dir: static/css
 
-- url: /(manifest.json|browserconfig.xml)
-  static_files: static/\1
-  upload: static/*
+- url: /static/js
+  static_dir: static/js
+
+- url: /static/manifest
+  static_dir: static/manifest
 
 - url: /.*
   script: app.app
