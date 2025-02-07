@@ -26,30 +26,21 @@ def get():
 @app.get('/json/tides')
 def json_tides():
     location = request.args.get(u'loc', None)
-    if location:
-        try:
-            req_lat, req_lon = location.split(',')
-        except ValueError as e:
-            return [u'Bad Location: "%s", %s' % (location, e)]
-        except Exception as e:
-            return [u'Bad Location: "%s", %s' % (location, e)]
-        else:
-            values = tides.for_location((req_lat, req_lon))
-            if values['status'] == 'OK':
-                return values
-            else:
-                return values, 400
-    else:
-        return u'No Location Given'
+    if not location:
+        return ['No Location Given']
+
+    location_split = location.split(',')
+    if len(location_split) != 2:
+        return ['Bad Location Given']
+
+    return tides.for_location(location_split)
 
 
 @app.get('/json/stations')
 def json_stations():
-    values = tides.get_stations()
-    return values
+    return tides.get_stations()
 
 
 @app.get('/json/refresh-stations')
 def refresh_stations():
-    values = tides.refresh_stations()
-    return values
+    return tides.refresh_stations()

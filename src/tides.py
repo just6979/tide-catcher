@@ -7,12 +7,15 @@ from .wrapper import google_maps, worldtides_info
 
 _module = 'Tides'
 
-maps_api_key = os.getenv("GOOGLE_MAPS_API_KEY")
-tides_api_key = os.getenv("WORLDTIDES_INFO_API_KEY")
+maps_api_key = os.environ['GOOGLE_MAPS_API_KEY']
+tides_api_key = os.environ['WORLDTIDES_INFO_API_KEY']
 
 
-def for_location(req_loc):
-    req_lat, req_lon = req_loc
+def for_location(location_split: list):
+    lattitude: str
+    logitude: str
+
+    lattitude, logitude = location_split
 
     # right now in UTC as naive datetime
     utc_now = datetime.datetime.now(datetime.UTC)
@@ -20,7 +23,7 @@ def for_location(req_loc):
     utc_minus_12 = utc_now + datetime.timedelta(hours=-12)
 
     # if this location wasn't cached
-    tz_data = google_maps.get_tz_offset(maps_api_key, req_loc, utc_now)
+    tz_data = google_maps.get_tz_offset(maps_api_key, location_split, utc_now)
 
     status = tz_data['status']
     if status != 'OK':
@@ -29,7 +32,7 @@ def for_location(req_loc):
     else:
         # timezone data is good, fetch & check tide data
         tide_data = worldtides_info.fetch_tides(
-            tides_api_key, req_loc, utc_minus_12, utc_now, tz_data['offset']
+            tides_api_key, location_split, utc_minus_12, utc_now, tz_data['offset']
         )
 
         status = tide_data['status']
@@ -56,7 +59,7 @@ def for_location(req_loc):
             values = {
                 'status': status,
                 'req_timestamp': req_timestamp,
-                'req_lat': req_lat, 'req_lon': req_lon,
+                'req_lat': lattitude, 'req_lon': logitude,
                 'resp_lat': resp_lat, 'resp_lon': resp_lon,
                 'station_id': station_id,
                 'station_name': station_name,

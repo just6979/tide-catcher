@@ -10,28 +10,19 @@ from .. import utils
 
 _module = 'Google Maps Timezone API'
 
-_base_url = """\
-https://maps.googleapis.com/maps/api/timezone/json?\
-location={location}&timestamp={timestamp}&key={api_key}\
-"""
 
-
-def get_tz_offset(api_key, location, timestamp):
-    tz_data = {}
-
+def get_tz_offset(api_key: str, location: list, timestamp):
     location_string = '%s,%s' % location
-
-    # convert datetime to unix time
     unix_timestamp = calendar.timegm(timestamp.timetuple())
-    request_url = _base_url.format(
-        location=location_string,
-        timestamp=unix_timestamp,
-        api_key=api_key,
-    )
+
+    request_url = (f"https://maps.googleapis.com/maps/api/timezone/json?"
+                   f"location={location_string}&timestamp={unix_timestamp}&key={api_key}"
+                   )
     logging.info(request_url)
     response = request.urlopen(request_url).read()
     response_data = json.loads(response)
 
+    tz_data = {}
     try:
         status = response_data['status']
         if status == 'OK':
