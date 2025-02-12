@@ -12,7 +12,7 @@ _module = 'Google Maps Timezone API'
 
 
 def get_tz_offset(api_key: str, location: list, timestamp):
-    location_string = '%s,%s' % location
+    location_string = '%s,%s' % (location[0], location[1])
     unix_timestamp = calendar.timegm(timestamp.timetuple())
 
     request_url = (f"https://maps.googleapis.com/maps/api/timezone/json?"
@@ -21,7 +21,6 @@ def get_tz_offset(api_key: str, location: list, timestamp):
     logging.info(request_url)
     response = request.urlopen(request_url).read()
     response_data = json.loads(response)
-
     tz_data = {}
     try:
         status = response_data['status']
