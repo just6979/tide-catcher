@@ -1,5 +1,6 @@
-Fetches tide info from worldtides.info,
-adjusts timestamps using Google Maps API,
-display the next 8 tides in an HTML table.
+Fetches tide info from worldtides.info.
 
-Next up is finding last 2 tides and the next 6 tides, for reference.
+Soon:
+* Caches nearby stations and tide data to minimize requests to worldtides.info
+* Offline mode
+* Favorite stations
