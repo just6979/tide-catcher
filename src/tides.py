@@ -1,9 +1,10 @@
-import datetime
+from datetime import datetime, timezone
 import os
+import zoneinfo
 
 from . import utils
 from .datastore import Station
-from .wrapper import google_maps, worldtides_info
+from .wrapper import worldtides_info
 
 _module = 'Tides'
 
@@ -13,16 +14,19 @@ tides_api_key = os.environ['WORLDTIDES_INFO_API_KEY']
 
 def for_location(location: list):
 
-    # right now in UTC as naive datetime
-    utc_now = datetime.datetime.now(datetime.UTC)
-
-    tz_data = google_maps.get_tz_offset(maps_api_key, location, utc_now)
-    if tz_data['status'] != 'OK':
-        return tz_data
+    utc_now = datetime.now(timezone.utc)
+    print(utc_now)
+    print(utc_now.tzinfo)
 
     tide_data = worldtides_info.fetch_tides(tides_api_key, location)
     if tide_data['status'] != 200:
         return tide_data
+
+    tz = zoneinfo.ZoneInfo(tide_data['timezone'])
+    print(tz)
+    local_now = utc_now.astimezone(tz)
+    print(local_now)
+    print(local_now.tzinfo)
 
     tides = []
     for tide in tide_data['extremes']:
@@ -32,8 +36,8 @@ def for_location(location: list):
         type = tide['type']
 
         # is the tide in the past?
-        tide_time = datetime.datetime.fromtimestamp(dt, datetime.timezone.utc)
-        if tide_time < utc_now:
+        tide_time = datetime.fromisoformat(date)
+        if tide_time < local_now:
             prior = 'prior'
         else:
             prior = 'future'
@@ -50,12 +54,10 @@ def for_location(location: list):
 
     values = {
         'status': (tide_data['status']),
-        'req_timestamp': utils.offset_timestamp(utc_now, tz_data['offset']),
+        'req_timestamp': local_now.strftime('%a, %d %b %Y %H:%M:%S %Z'),
         'req_lat': (location[0]), 'req_lon': (location[1]),
         'resp_lat': (tide_data['responseLat']), 'resp_lon': (tide_data['responseLon']),
         'station': (tide_data['station']),
-        'req_tz_offset': tz_data['offset'],
-        'req_tz': tz_data['name'],
         'tides': tides,
         'wti_copyright': tide_data['copyright'],
         'station_tz': tide_data['timezone']
