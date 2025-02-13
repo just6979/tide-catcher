@@ -21,6 +21,8 @@ def for_location(location: list):
         return tz_data
 
     tide_data = worldtides_info.fetch_tides(tides_api_key, location)
+    if tide_data['status'] != 200:
+        return tide_data
 
     tides = []
     for tide in tide_data['extremes']:
@@ -40,40 +42,23 @@ def for_location(location: list):
             'type': type,
             'date': tide_time.strftime(utils.MM_DD_DATE_FORMAT),
             'day': tide_time.strftime(utils.DAY_FORMAT),
-            # TODO: round times to nearest minute
             'time': tide_time.strftime(utils.TIME_FORMAT),
             'prior': prior,
             'iso-date': date,
             'height': height
         })
 
-    # get station data
-    resp_lat = tide_data['responseLat']
-    resp_lon = tide_data['responseLon']
-    station = get_station(resp_lat, resp_lon)
-    if station is None:
-        return utils.error_builder(_module, 'ERR', "No Valid Stations Found.")
-    station_name = station.name
-    station_id = station.key.id()
-
-    start_timestamp = utils.to_nearest_minute(
-        utils.offset_timestamp(utc_now, tz_data['offset'])
-    )
-    req_timestamp = {
-        'date': start_timestamp.strftime(utils.YYYY_MM_DD_DATE_FORMAT),
-        'time': start_timestamp.strftime(utils.TIME_FORMAT),
-        'day': start_timestamp.strftime(utils.DAY_FORMAT),
-    }
     values = {
         'status': (tide_data['status']),
-        'req_timestamp': req_timestamp,
+        'req_timestamp': utils.offset_timestamp(utc_now, tz_data['offset']),
         'req_lat': (location[0]), 'req_lon': (location[1]),
-        'resp_lat': resp_lat, 'resp_lon': resp_lon,
-        'station_id': station_id,
-        'station_name': station_name,
-        'tz_offset': tz_data['offset'],
-        'tz_name': tz_data['name'],
+        'resp_lat': (tide_data['responseLat']), 'resp_lon': (tide_data['responseLon']),
+        'station': (tide_data['station']),
+        'req_tz_offset': tz_data['offset'],
+        'req_tz': tz_data['name'],
         'tides': tides,
+        'wti_copyright': tide_data['copyright'],
+        'station_tz': tide_data['timezone']
     }
 
     return values

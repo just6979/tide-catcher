@@ -10,7 +10,7 @@ _module = 'World Tides API'
 
 
 def fetch_tides(api_key: str, loc: list):
-    request_url = f'https://www.worldtides.info/api/v3?extremes&datum=CD&lat={loc[0]}&lon={loc[1]}&key={api_key}'
+    request_url = f'https://www.worldtides.info/api/v3?extremes&localtime&datum=CD&lat={loc[0]}&lon={loc[1]}&key={api_key}'
     logging.info(request_url)
 
     try:

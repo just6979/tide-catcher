@@ -61,7 +61,7 @@
             {{station_name}}
         </caption>
         {{#tides}}
-        <tr class="{{#lower}}{{type}}{{/lower}} {{prior}}">
+        <tr class="{{#lower}}{{type}}{{/lower}} {{prior}}" title="{{type}} at {{iso-date}}">
             <td class="type">{{type}}</td>
             <td class="date">{{date}}</td>
             <td class="day">{{day}}</td>
@@ -83,14 +83,18 @@
                 </tr>
                 <tr>
                     <td>Time</td>
-                    <td>{{req_timestamp.date}} {{req_timestamp.day}} {{req_timestamp.time}}</td>
+                    <td>{{req_timestamp}}</td>
+                </tr>
+                <tr>
+                    <td>Timezone</td>
+                    <td>{{req_tz}}, UTC {{req_tz_offset}}</td>
                 </tr>
             </table>
             <table id="response">
                 <caption class="top">Response</caption>
                 <tr>
                     <td><a href="#stations">Station</a></td>
-                    <td>{{station_id}}</td>
+                    <td>{{station}}</td>
                 </tr>
                 <tr>
                     <td>Location</td>
@@ -102,7 +106,7 @@
                 </tr>
                 <tr>
                     <td>Timezone</td>
-                    <td>{{tz_name}}, UTC{{tz_offset}}</td>
+                    <td>{{station_tz}}</td>
                 </tr>
             </table>
         </div>
@@ -148,22 +152,13 @@
 <div id="notes">
     <p>
         <em>
-            Tidal Data retrieved from
-            <a href="http://www.worldtides.info"
-               target="_blank">www.worldtides.info</a>.
-            Data obtained from National Oceanic and Atmospheric
-            Administration / Center for Operational Oceanographic Products
-            and Services (CO-OPS) and is not subjected to copyright
-            protection.
-            NO GUARANTEES ARE MADE ABOUT THE CORRECTNESS OF THIS TIDAL DATA.
-            You may not use this data if anyone or anything could come to
-            harm as a result of using it (e.g. for navigational purposes).
+            {{wti_copyright}}
         </em>
     </p>
 </div>
 
 <div id="coming-soon">
-    <h2>Other Features Coming Soon...</h2>
+    <h2>Coming Soon...</h2>
     <ul>
         <li>Offline mode: see the last tides retrieved even if you lose connection.</li>
         <li>Save your favorite stations.</li>
