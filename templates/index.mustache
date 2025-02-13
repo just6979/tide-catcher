@@ -58,7 +58,7 @@
         <script id="tides-template" type="x-tmpl-mustache">
         <table id="tides-table">
         <caption class="top">
-            {{station_name}}
+            {{station}}
         </caption>
         {{#tides}}
         <tr class="{{#lower}}{{type}}{{/lower}} {{prior}}" title="{{type}} at {{iso-date}}">
@@ -74,20 +74,16 @@
             <table id="request">
                 <caption class="top">Request</caption>
                 <tr>
-                    <td>Location</td>
-                    <td>
-                        <a href="http://maps.google.com/maps/place/{{req_lat}}
-            ,{{req_lon}}/@{{req_lat}},{{req_lon}},12z">({{req_lat}}
-            , {{req_lon}})</a>
-                    </td>
-                </tr>
-                <tr>
                     <td>Time</td>
                     <td>{{req_timestamp}}</td>
                 </tr>
                 <tr>
-                    <td>Timezone</td>
-                    <td>{{req_tz}}, UTC {{req_tz_offset}}</td>
+                    <td>Location</td>
+                    <td>
+                        <a href="http://maps.google.com/maps/place/{{req_lat}},{{req_lon}}/@{{req_lat}},{{req_lon}},12z">
+                        {{req_lat}}, {{req_lon}}
+                        </a>
+                    </td>
                 </tr>
             </table>
             <table id="response">
@@ -99,70 +95,66 @@
                 <tr>
                     <td>Location</td>
                     <td>
-                        <a href="http://maps.google.com/maps/place/{{resp_lat}}
-            ,{{resp_lon}}/@{{resp_lat}},{{resp_lon}},12z">({{resp_lat}}
-            , {{resp_lon}})</a>
+                        <a href="http://maps.google.com/maps/place/{{resp_lat}},{{resp_lon}}/@{{resp_lat}},{{resp_lon}},12z">
+                        {{resp_lat}} , {{resp_lon}}
+                        </a>
                     </td>
                 </tr>
-                <tr>
-                    <td>Timezone</td>
-                    <td>{{station_tz}}</td>
-                </tr>
             </table>
+        </div>
+
+        <div id="notes">
+        <p>
+        <em>
+            {{wti_copyright}}
+        </em>
+        </p>
         </div>
 
         </script>
     </div>
 
+    <div id="coming-soon">
+        <h2>Coming Soon...</h2>
+        <ul>
+            <li>Offline mode: always see the last tides retrieved.</li>
+            <li>Save your favorite stations.</li>
+        </ul>
+    </div>
+
     <div id="stations" class="hidden">
         <script id="stations-template" type="x-tmpl-mustache">
-        <h2>Stations</h2>
-        <p>
+            <h2>Stations</h2>
+            <p>
             {{station_count}} stations cached: <a href="/#refresh-stations">Refresh</a>
         </p>
         <ul>
             {{#stations}}
                 <li>
-                    {{name}},
+                {{name}},
                     <a href="http://maps.google.com/maps/place/{{loc.lat}},{{loc.lon}}/@{{loc.lat}},{{loc.lon}}
-            ,12z">({{loc.lat}}, {{loc.lon}})</a>,
+                ,12z">({{loc.lat}}, {{loc.lon}})</a>,
                     <a href=https://tidesandcurrents.noaa.gov/noaatidepredictions/NOAATidesFacade.jsp?Stationid={{id}}
-            >NOAA {{id}}</a>
+                >NOAA {{id}}</a>
                 </li>
             {{/stations}}
-        </ul>
+            </ul>
 
         </script>
     </div>
 
     <div id="error" class="hidden">
         <script id="error-template" type="x-tmpl-mustache">
-        <p>
-            Error: {{status}}
-        </p>
-        <p>
-            Try refreshing the <a href="#stations">Stations List</a>.
-        </p>
+            <p>
+                Error: {{status}}
+            </p>
+            <p>
+                Try refreshing the <a href="#stations">Stations List</a>.
+            </p>
 
         </script>
     </div>
 
-</div>
-
-<div id="notes">
-    <p>
-        <em>
-            {{wti_copyright}}
-        </em>
-    </p>
-</div>
-
-<div id="coming-soon">
-    <h2>Coming Soon...</h2>
-    <ul>
-        <li>Offline mode: see the last tides retrieved even if you lose connection.</li>
-        <li>Save your favorite stations.</li>
-    </ul>
 </div>
 
 </body>

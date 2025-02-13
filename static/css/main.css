@@ -31,10 +31,6 @@ table {
     margin-right: auto;
 }
 
-#content, #info {
-    border-top: dotted thin;
-}
-
 #loading {
     margin-bottom: 1em;
 }
@@ -89,11 +85,6 @@ ul {
     background-color: lightgreen;
 }
 
-#response caption {
-    border-top: thin dotted;
-    padding-top: 0.25em;
-}
-
 .prior {
     font-size: 75%;
     color: darkgray;
@@ -102,15 +93,24 @@ ul {
 
 #info {
     margin: 1em 1em;
-    font-size: 75%
+    font-size: 66%
 }
 
-#coming-soon, #notes {
+#coming-soon {
     border-top: dotted thin;
-    font-size: 50%;
+    font-size: 66%;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
-#coming-soon ul, #notes, #stations ul {
+#notes {
+    font-size: 50%;
+    max-width: 500px;
+    text-align: justify;
+    margin: 0 auto;
+}
+
+#coming-soon ul, #stations ul {
     text-align: left;
 }
 
