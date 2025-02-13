@@ -1,31 +1,18 @@
-import calendar
-import datetime
 import json
 import logging
 import os
 from pprint import pprint
 from urllib import error, request
 
-from . import google_maps
 from .. import utils
 
 _module = 'World Tides API'
 
-_base_url = 'https://www.worldtides.info/api?{options}&lat={lat}&lon={lon}&start={start}&key={key}'
 
-
-def fetch_tides(api_key, location, utc_start_time, utc_now_stamp, tz_offset):
-    # TODO: adjust timezone based on request location or response location?
-    origin_lat, origin_lon = location
-
-    request_url = _base_url.format(
-        options='extremes',
-        lat=origin_lat,
-        lon=origin_lon,
-        start=calendar.timegm(utc_start_time.timetuple()),
-        key=api_key,
-    )
+def fetch_tides(api_key: str, loc: list):
+    request_url = f'https://www.worldtides.info/api/v3?extremes&datum=CD&lat={loc[0]}&lon={loc[1]}&key={api_key}'
     logging.info(request_url)
+
     try:
         response = request.urlopen(request_url)
         data = response.read()
@@ -36,60 +23,19 @@ def fetch_tides(api_key, location, utc_start_time, utc_now_stamp, tz_offset):
         data = json.loads(data)
     except ValueError as e:
         # we got bad JSON from worldtides.info, probably a 500 ISE
-        out = utils.error_builder(
-            _module,
-            500,
-            'Our tides information source seems to be down at the moment, '
-            'please try again later.' + e.message
-        )
-        return out
+        api_down = 'Our tide data source seems to be down at the moment, ' \
+                 'please try again later.' + e.message
+        return utils.error_builder(_module, 500, api_down)
 
-    # looks like we got a JSON response, try to extract data from it
-    try:
-        status = data['status']
-        if status == 200:
-            out = {
-                'status': 'OK',
-                'responseLat': data['responseLat'],
-                'responseLon': data['responseLon'],
-                'copyright': data['copyright'],
-                'tides': []
-            }
+    status = data['status']
 
-            for tide in data['extremes']:
-                utc_timestamp = datetime.datetime.fromtimestamp(
-                    tide['dt'], datetime.timezone.utc)
-                timestamp = utils.to_nearest_minute(
-                    utils.offset_timestamp(utc_timestamp, tz_offset))
-                now_stamp = utils.to_nearest_minute(
-                    utils.offset_timestamp(utc_now_stamp, tz_offset))
+    if status == 200:
+        return data
 
-                if timestamp < now_stamp:
-                    prior = 'prior'
-                else:
-                    prior = 'future'
+    if status == 400:
+        return utils.error_builder(module=_module, status=status, msg='Bad API Key')
 
-                out['tides'].append({
-                    'type': tide['type'],
-                    'date': timestamp.strftime(utils.MM_DD_DATE_FORMAT),
-                    'day': timestamp.strftime(utils.DAY_FORMAT),
-                    # TODO: round times to nearest minute
-                    'time': timestamp.strftime(utils.TIME_FORMAT),
-                    'prior': prior,
-                })
-            return out
-        else:
-            return utils.error_builder(
-                module=_module,
-                status=status,
-                msg=data['error']
-            )
-    except KeyError:
-        return utils.error_builder(
-            module=_module,
-            status='JSON_DECODING_ERROR',
-            msg=str(data)
-        )
+    return utils.error_builder(module=_module, status=status, msg=data)
 
 
 def fetch_stations(api_key):
@@ -128,51 +74,37 @@ def fetch_stations(api_key):
 def main():
     from dotenv import load_dotenv
     load_dotenv()
-    maps_api_key = os.environ['GOOGLE_MAPS_API_KEY']
     tides_api_key = os.environ['WORLDTIDES_INFO_API_KEY']
 
-    print('Test WorldTides API:')
-
     req_loc = utils.test_location
-    # right now in  UTC as unix time
-    utc_now = datetime.datetime.now(datetime.UTC)
-    # minus 12 hours to make sure we get the last tide
-    utc_minus_12 = utc_now + datetime.timedelta(hours=-12)
 
-    print('Getting timezone offset from Google Maps API:')
-    tz_data = google_maps.get_tz_offset(maps_api_key, req_loc, utc_now)
-    if tz_data['status'] == 'OK':
-        print('SUCCESS:')
-        pprint(tz_data)
-    else:
-        print('FAILURE:')
-        print(utils.error_dump(tz_data))
-        return
-
-    print('')
     print('Testing WorldTides Location API:')
-    tides_data = fetch_tides(tides_api_key, req_loc, utc_minus_12, utc_now, tz_data['offset'])
+    tides_data = fetch_tides(tides_api_key, req_loc)
     print('Request completed.')
-    if tides_data['status'] == 'OK':
+    if tides_data['status'] == 200:
         print('SUCCESS: Accepted API Key and returned results:')
         print(tides_data)
     else:
         print('FAILURE:')
         print(utils.error_dump(tides_data))
 
-    # now we break it on purpose
+    # now break it on purpose
     print('')
     print('Testing WorldTides API error handling (bad API key):')
-    api_key = 'foobar'
 
-    tides_data = fetch_tides('foobar', req_loc, utc_minus_12, utc_now, tz_data['offset'])
+    tides_data = fetch_tides('foobar', req_loc)
     print('Request completed')
-    if tides_data['status'] == 'OK':
+    if tides_data['status'] == 400:
+        print('SUCCESS: Failed on bogus API Key:')
+        print(tides_data)
+    elif tides_data['status'] == 200:
         print('FAILURE: Accepted bogus API Key:')
         pprint(tides_data)
     else:
-        print('SUCCESS: Failed on bogus API Key:')
-        print(tides_data)
+        print(f'FAILURE: Unexpected Response: {tides_data["status"]}')
+        print(utils.error_dump(tides_data))
+    print('')
+
 
     stations_filename = 'stations.json'
     print(f'Writing stations list to {stations_filename}')

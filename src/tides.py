@@ -15,50 +15,66 @@ def for_location(location: list):
 
     # right now in UTC as naive datetime
     utc_now = datetime.datetime.now(datetime.UTC)
-    # minus 12 hours to make sure we get the last tide
-    utc_minus_12 = utc_now + datetime.timedelta(hours=-12)
 
     tz_data = google_maps.get_tz_offset(maps_api_key, location, utc_now)
     if tz_data['status'] != 'OK':
         return tz_data
 
-    # timezone data is good, fetch & check tide data
-    tide_data = worldtides_info.fetch_tides(
-        tides_api_key, location, utc_minus_12, utc_now, tz_data['offset']
+    tide_data = worldtides_info.fetch_tides(tides_api_key, location)
+
+    tides = []
+    for tide in tide_data['extremes']:
+        dt = tide['dt']
+        date = tide['date']
+        height = tide['height']
+        type = tide['type']
+
+        # is the tide in the past?
+        tide_time = datetime.datetime.fromtimestamp(dt, datetime.timezone.utc)
+        if tide_time < utc_now:
+            prior = 'prior'
+        else:
+            prior = 'future'
+
+        tides.append({
+            'type': type,
+            'date': tide_time.strftime(utils.MM_DD_DATE_FORMAT),
+            'day': tide_time.strftime(utils.DAY_FORMAT),
+            # TODO: round times to nearest minute
+            'time': tide_time.strftime(utils.TIME_FORMAT),
+            'prior': prior,
+            'iso-date': date,
+            'height': height
+        })
+
+    # get station data
+    resp_lat = tide_data['responseLat']
+    resp_lon = tide_data['responseLon']
+    station = get_station(resp_lat, resp_lon)
+    if station is None:
+        return utils.error_builder(_module, 'ERR', "No Valid Stations Found.")
+    station_name = station.name
+    station_id = station.key.id()
+
+    start_timestamp = utils.to_nearest_minute(
+        utils.offset_timestamp(utc_now, tz_data['offset'])
     )
-
-    if tide_data['status'] == 'OK':
-        # get station data
-        resp_lat = tide_data['responseLat']
-        resp_lon = tide_data['responseLon']
-        station = get_station(resp_lat, resp_lon)
-        if station is None:
-            return utils.error_builder(_module, 'ERR', "No Valid Stations Found.")
-        station_name = station.name
-        station_id = station.key.id()
-
-        start_timestamp = utils.to_nearest_minute(
-            utils.offset_timestamp(utc_now, tz_data['offset'])
-        )
-        req_timestamp = {
-            'date': start_timestamp.strftime(utils.YYYY_MM_DD_DATE_FORMAT),
-            'time': start_timestamp.strftime(utils.TIME_FORMAT),
-            'day': start_timestamp.strftime(utils.DAY_FORMAT),
-        }
-        values = {
-            'status': (tide_data['status']),
-            'req_timestamp': req_timestamp,
-            'req_lat': (location[0]), 'req_lon': (location[1]),
-            'resp_lat': resp_lat, 'resp_lon': resp_lon,
-            'station_id': station_id,
-            'station_name': station_name,
-            'tz_offset': tz_data['offset'],
-            'tz_name': tz_data['name'],
-            'tides': tide_data['tides'],
-        }
-    else:
-        # error
-        values = tide_data
+    req_timestamp = {
+        'date': start_timestamp.strftime(utils.YYYY_MM_DD_DATE_FORMAT),
+        'time': start_timestamp.strftime(utils.TIME_FORMAT),
+        'day': start_timestamp.strftime(utils.DAY_FORMAT),
+    }
+    values = {
+        'status': (tide_data['status']),
+        'req_timestamp': req_timestamp,
+        'req_lat': (location[0]), 'req_lon': (location[1]),
+        'resp_lat': resp_lat, 'resp_lon': resp_lon,
+        'station_id': station_id,
+        'station_name': station_name,
+        'tz_offset': tz_data['offset'],
+        'tz_name': tz_data['name'],
+        'tides': tides,
+    }
 
     return values
 

@@ -1,0 +1,8 @@
+### localtime
+GET https://www.worldtides.info/api/v3?extremes&datum=CD&localtime&lat={42.6723}&lon={-70.9449}&key={{WORLDTIDES_INFO_API_KEY}}
+
+### timezone
+GET https://www.worldtides.info/api/v3?extremes&timezone&datum=CD&lat={42.6723}&lon={-70.9449}&key={{WORLDTIDES_INFO_API_KEY}}
+
+### utc
+GET https://www.worldtides.info/api/v3?extremes&datum=CD&lat={42.6723}&lon={-70.9449}&key={{WORLDTIDES_INFO_API_KEY}}
