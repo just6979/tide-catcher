@@ -24,7 +24,7 @@ def fetch_tides(api_key: str, loc: list):
     except ValueError as e:
         # we got bad JSON from worldtides.info, probably a 500 ISE
         api_down = 'Our tide data source seems to be down at the moment, ' \
-                 'please try again later.' + e.message
+                   'please try again later.' + e.message
         return utils.error_builder(_module, 500, api_down)
 
     status = data['status']
@@ -104,7 +104,6 @@ def main():
         print(f'FAILURE: Unexpected Response: {tides_data["status"]}')
         print(utils.error_dump(tides_data))
     print('')
-
 
     stations_filename = 'stations.json'
     print(f'Writing stations list to {stations_filename}')

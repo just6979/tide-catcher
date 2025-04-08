@@ -1,4 +1,4 @@
 flask
-google-cloud-ndb
+google-cloud-datastore
 python-dotenv
 tzdata

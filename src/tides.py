@@ -1,9 +1,10 @@
-from datetime import datetime, timezone
 import os
 import zoneinfo
+from datetime import datetime, timezone
+
+from google.cloud import datastore
 
 from src import utils
-from .datastore import Station
 from . import worldtides_info
 
 _module = 'Tides'
@@ -65,30 +66,38 @@ def for_location(location: list):
     return values
 
 
-def get_station(lat, lon):
-    stations = Station.query(Station.lat == lat, Station.lon == lon).fetch(1)
-    if len(stations) != 0:
-        return stations[0]
-    else:
-        return None
+# def get_station(lat, lon):
+#     stations = Station.query(Station.lat == lat, Station.lon == lon).fetch(1)
+#     if len(stations) != 0:
+#         return stations[0]
+#     else:
+#         return None
 
 
 def get_stations():
-    stations = Station.query()
-    out_stations = []
-    for station in stations:
-        out_stations.append({
-            'name': station.name,
-            'loc': {
-                'lat': station.lat,
-                'lon': station.lon
-            },
-            'id': station.key.id()
-        })
+    client = datastore.Client()
+    query = client.query(kind='Station')
+    stations = list(query.fetch())
 
+    out_stations = []
+    for station_entity in stations:
+        id = station_entity.key.name
+        org, org_id = id.split(':')
+        station_dict = {
+            'id': id,
+            'org': org,
+            'org_id': org_id,
+            'noaa': 'NOAA' in org,
+            'name': station_entity['name'],
+            'loc': {
+                'lat': station_entity['lat'],
+                'lon': station_entity['lon']
+            }
+        }
+        out_stations.append(station_dict)
     return {
         'status': 'OK',
-        'station_count': stations.count(),
+        'station_count': len(out_stations),
         'stations': out_stations
     }
 
@@ -99,13 +108,15 @@ def refresh_stations():
     if station_data['status'] != 'OK':
         return station_data
 
+    client = datastore.Client()
     for found_station in station_data['stations']:
-        new_station = Station(
-            id=found_station['id'],
-            lat=found_station['lat'],
-            lon=found_station['lon'],
-            name=found_station['name'],
-        )
-        new_station.put()
+        key = client.key('Station', found_station['id'])
+        station = datastore.Entity(key)
+        station.update({
+            'lat': found_station['lat'],
+            'lon': found_station['lon'],
+            'name': found_station['name'],
+        })
+        client.put(station)
 
     return get_stations()

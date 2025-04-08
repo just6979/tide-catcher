@@ -56,60 +56,62 @@
 
     <div id="tides" class="hidden">
         <script id="tides-template" type="x-tmpl-mustache">
-        <table id="tides-table">
-        <caption class="top">
+            <table id="tides-table">
+            <caption class="top">
             {{station}}
-        </caption>
-        {{#tides}}
-        <tr class="{{#lower}}{{type}}{{/lower}} {{prior}}" title="{{type}} at {{iso-date}}">
+            </caption>
+            {{#tides}}
+                <tr class="{{#lower}}{{type}}{{/lower}} {{prior}}" title="{{type}} at {{iso-date}}">
             <td class="type">{{type}}</td>
             <td class="date">{{date}}</td>
             <td class="day">{{day}}</td>
             <td class="time">{{time}}</td>
         </tr>
-        {{/tides}}
-        </table>
+            {{/tides}}
+            </table>
 
-        <div id="info">
-            <table id="request">
-                <caption class="top">Request</caption>
-                <tr>
-                    <td>Time</td>
-                    <td>{{req_timestamp}}</td>
+            <div id="info">
+                <table id="request">
+                    <caption class="top">Request</caption>
+                    <tr>
+                        <td>Time</td>
+                        <td>{{req_timestamp}}</td>
                 </tr>
                 <tr>
                     <td>Location</td>
                     <td>
-                        <a href="http://maps.google.com/maps/place/{{req_lat}},{{req_lon}}/@{{req_lat}},{{req_lon}},12z">
-                        {{req_lat}}, {{req_lon}}
-                        </a>
-                    </td>
-                </tr>
-            </table>
-            <table id="response">
-                <caption class="top">Response</caption>
-                <tr>
-                    <td><a href="#stations">Station</a></td>
-                    <td>{{station}}</td>
+                        <a href="http://maps.google.com/maps/place/{{req_lat}},{{req_lon}}/@{{req_lat}},{{req_lon}}
+            ,12z">
+            {{req_lat}}, {{req_lon}}
+            </a>
+        </td>
+    </tr>
+</table>
+<table id="response">
+    <caption class="top">Response</caption>
+    <tr>
+        <td><a href="#stations">Station</a></td>
+        <td>{{station}}</td>
                 </tr>
                 <tr>
                     <td>Location</td>
                     <td>
-                        <a href="http://maps.google.com/maps/place/{{resp_lat}},{{resp_lon}}/@{{resp_lat}},{{resp_lon}},12z">
-                        {{resp_lat}} , {{resp_lon}}
-                        </a>
-                    </td>
-                </tr>
-            </table>
-        </div>
+                        <a href="http://maps.google.com/maps/place/{{resp_lat}},{{resp_lon}}/@{{resp_lat}},{{resp_lon}}
+            ,12z">
+            {{resp_lat}} , {{resp_lon}}
+            </a>
+        </td>
+    </tr>
+</table>
+</div>
 
-        <div id="notes">
-        <p>
-        <em>
+<div id="notes">
+<p>
+<em>
             {{wti_copyright}}
-        </em>
-        </p>
-        </div>
+            </em>
+            </p>
+            </div>
 
         </script>
     </div>
@@ -131,11 +133,17 @@
         <ul>
             {{#stations}}
                 <li>
-                {{name}},
-                    <a href="http://maps.google.com/maps/place/{{loc.lat}},{{loc.lon}}/@{{loc.lat}},{{loc.lon}}
-                ,12z">({{loc.lat}}, {{loc.lon}})</a>,
-                    <a href=https://tidesandcurrents.noaa.gov/noaatidepredictions/NOAATidesFacade.jsp?Stationid={{id}}
-                >NOAA {{id}}</a>
+                {{org}},
+                {{name}}
+                @(<a href="http://maps.google.com/maps/place/{{loc.lat}},{{loc.lon}}">{{loc.lat}},{{loc.lon}}</a>)
+                {{#noaa}}
+                    NOAA ID: <a href=https://tidesandcurrents.noaa.gov/noaatidepredictions.html?id={{org_id}}>
+                    {{org_id}}
+                    </a>
+                {{/noaa}}
+                {{^noaa}}
+                    {{org_id}}
+                {{/noaa}}
                 </li>
             {{/stations}}
             </ul>
