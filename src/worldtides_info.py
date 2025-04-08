@@ -4,7 +4,7 @@ import os
 from pprint import pprint
 from urllib import error, request
 
-from .. import utils
+from src import utils
 
 _module = 'World Tides API'
 

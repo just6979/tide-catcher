@@ -2,13 +2,12 @@ from datetime import datetime, timezone
 import os
 import zoneinfo
 
-from . import utils
+from src import utils
 from .datastore import Station
-from .wrapper import worldtides_info
+from . import worldtides_info
 
 _module = 'Tides'
 
-maps_api_key = os.environ['GOOGLE_MAPS_API_KEY']
 tides_api_key = os.environ['WORLDTIDES_INFO_API_KEY']
 
 
