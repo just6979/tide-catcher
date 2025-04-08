@@ -13,9 +13,10 @@ class LocationMatch(ndb.Model):
 
 
 class Station(ndb.Model):
+    id = ndb.StringProperty(required=True)
+    name = ndb.StringProperty(required=True)
     lat = ndb.FloatProperty(indexed=True)
     lon = ndb.FloatProperty(indexed=True)
-    name = ndb.StringProperty(required=True)
 
 
 def nearest_station_loc(req_loc):
