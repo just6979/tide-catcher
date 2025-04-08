@@ -80,11 +80,16 @@ def get_stations():
     stations = list(query.fetch())
 
     out_stations = []
+    station_entity: datastore.Entity
     for station_entity in stations:
-        id = station_entity.key.name
-        org, org_id = id.split(':')
+        station_id = station_entity.key.name
+        if not station_entity.get('org') or not station_entity.get('org_id'):
+            org, org_id = station_id.split(':')
+        else:
+            org = station_entity['org']
+            org_id = station_entity['org_id']
         station_dict = {
-            'id': id,
+            'id': station_id,
             'org': org,
             'org_id': org_id,
             'noaa': 'NOAA' in org,
@@ -110,12 +115,16 @@ def refresh_stations():
 
     client = datastore.Client()
     for found_station in station_data['stations']:
-        key = client.key('Station', found_station['id'])
+        station_id = found_station['id']
+        key = client.key('Station', station_id)
         station = datastore.Entity(key)
+        org, org_id = station_id.split(':')
         station.update({
-            'lat': found_station['lat'],
-            'lon': found_station['lon'],
+            'org': org,
+            'org_id': org_id,
             'name': found_station['name'],
+            'lat': found_station['lat'],
+            'lon': found_station['lon']
         })
         client.put(station)
 
