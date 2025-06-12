@@ -65,13 +65,8 @@ def for_location(location: list):
 
     return values
 
-
-# def get_station(lat, lon):
-#     stations = Station.query(Station.lat == lat, Station.lon == lon).fetch(1)
-#     if len(stations) != 0:
-#         return stations[0]
-#     else:
-#         return None
+def for_station(station):
+    return {}
 
 
 def get_stations():
@@ -129,3 +124,25 @@ def refresh_stations():
         client.put(station)
 
     return get_stations()
+
+
+def station_by_id(station_id):
+    return {}
+
+
+def station_by_nearest(location):
+    stations = worldtides_info.fetch_nearest_stations(tides_api_key, location.split(','))
+    nearest_station = stations['stations'][0]
+    station_id = nearest_station['id']
+    org, org_id = station_id.split(':')
+    station = {
+        'id': station_id,
+        'org': org,
+        'org_id': org_id,
+        'name': nearest_station['name'],
+        'lat': nearest_station['lat'],
+        'lon': nearest_station['lon'],
+        'noaa': 'NOAA' in org,
+    }
+
+    return station

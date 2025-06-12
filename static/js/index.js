@@ -82,8 +82,7 @@ function getTides() {
 
     $.ajax(
         {
-            url: '/json/tides',
-            data: 'loc=' + location_string,
+            url: '/json/tides/by-location/' + location_string,
             type: 'GET',
             dataType: 'json'
         }
@@ -153,7 +152,7 @@ function refreshStations() {
 
     $.ajax(
         {
-            url: '/json/refresh-stations',
+            url: '/json/stations/refresh',
             type: 'GET',
             dataType: 'json'
         }
@@ -166,6 +165,7 @@ function refreshStations() {
                  .removeClass('hidden')
              ;
              $('#loading').addClass('hidden');
+             Backbone.history.navigate("/#stations", trigger=false);
          }
      )
      .fail(

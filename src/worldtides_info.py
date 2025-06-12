@@ -39,14 +39,22 @@ def fetch_tides(api_key: str, loc: list):
 
 
 def fetch_stations(api_key):
-    stations_url = 'https://www.worldtides.info/api?stations&key={key}'.format(
-        options='stations',
-        key=api_key,
-    )
+    stations_url = f'https://www.worldtides.info/api?stations&key={api_key}'
     logging.info(stations_url)
     response = request.urlopen(stations_url)
     data = response.read()
+    return process_stations(data)
 
+
+def fetch_nearest_stations(api_key, loc):
+    stations_url = f'https://www.worldtides.info/api/v3?stations&lat={loc[0]}&lon={loc[1]}&key={api_key}'
+    logging.info(stations_url)
+    response = request.urlopen(stations_url)
+    data = response.read()
+    return process_stations(data)
+
+
+def process_stations(data):
     try:
         data = json.loads(data)
     except ValueError as e:
@@ -105,9 +113,15 @@ def main():
         print(utils.error_dump(tides_data))
     print('')
 
-    stations_filename = 'stations.json'
+    stations_filename = 'all_stations.json'
     print(f'Writing stations list to {stations_filename}')
     stations = fetch_stations(tides_api_key)
+    with open(stations_filename, 'w') as outfile:
+        outfile.write(json.dumps(stations, indent=4))
+
+    stations_filename = 'near_stations.json'
+    print(f'Writing stations list to {stations_filename}')
+    stations = fetch_nearest_stations(tides_api_key, [42.665, -70.9119])
     with open(stations_filename, 'w') as outfile:
         outfile.write(json.dumps(stations, indent=4))
 
