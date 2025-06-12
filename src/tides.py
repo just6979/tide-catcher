@@ -65,6 +65,7 @@ def for_location(location: list):
 
     return values
 
+
 def for_station(station):
     return {}
 
@@ -75,26 +76,11 @@ def get_stations():
     stations = list(query.fetch())
 
     out_stations = []
-    station_entity: datastore.Entity
-    for station_entity in stations:
-        station_id = station_entity.key.name
-        if not station_entity.get('org') or not station_entity.get('org_id'):
-            org, org_id = station_id.split(':')
-        else:
-            org = station_entity['org']
-            org_id = station_entity['org_id']
-        station_dict = {
-            'id': station_id,
-            'org': org,
-            'org_id': org_id,
-            'noaa': 'NOAA' in org,
-            'name': station_entity['name'],
-            'loc': {
-                'lat': station_entity['lat'],
-                'lon': station_entity['lon']
-            }
-        }
-        out_stations.append(station_dict)
+    station_data: datastore.Entity
+    for station_data in stations:
+        station_id = station_data.key.name
+        next_station = build_station(station_id, station_data)
+        out_stations.append(next_station)
     return {
         'status': 'OK',
         'station_count': len(out_stations),
@@ -127,22 +113,38 @@ def refresh_stations():
 
 
 def station_by_id(station_id):
-    return {}
+    client = datastore.Client()
+    key = client.key('Station', station_id)
+    station_data = client.get(key)
+    found_station = build_station(station_id, station_data)
+    return {
+        'status': 'OK',
+        'station': (found_station)
+    }
 
 
 def station_by_nearest(location):
     stations = worldtides_info.fetch_nearest_stations(tides_api_key, location.split(','))
-    nearest_station = stations['stations'][0]
-    station_id = nearest_station['id']
-    org, org_id = station_id.split(':')
-    station = {
+    station_data = stations['stations'][0]
+    found_station = build_station(station_data['id'], station_data)
+    return {
+        'status': 'OK',
+        'station': found_station
+    }
+
+
+def build_station(station_id, station_data):
+    if not station_data.get('org') or not station_data.get('org_id'):
+        org, org_id = station_id.split(':')
+    else:
+        org = station_data['org']
+        org_id = station_data['org_id']
+    return {
         'id': station_id,
         'org': org,
         'org_id': org_id,
-        'name': nearest_station['name'],
-        'lat': nearest_station['lat'],
-        'lon': nearest_station['lon'],
+        'name': station_data['name'],
+        'lat': station_data['lat'],
+        'lon': station_data['lon'],
         'noaa': 'NOAA' in org,
     }
-
-    return station

@@ -25,7 +25,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Tides"
+                $ref: "#/components/schemas/TidesResponse"
 
   /json/tides/by-station/{station}:
     get:
@@ -43,7 +43,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Tides"
+                $ref: "#/components/schemas/TidesResponse"
 
   /json/stations:
     get:
@@ -65,7 +65,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Stations"
+                $ref: "#/components/schemas/StationsResponse"
 
   /json/station/by-id/{station}:
     get:
@@ -75,7 +75,7 @@ paths:
           name: station
           schema:
             type: string
-            example: "NOAA:8440452"
+            example: "NOAA:8441241"
           required: true
       responses:
         "200":
@@ -83,7 +83,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Station"
+                $ref: "#/components/schemas/StationResponse"
 
   /json/station/by-nearest/{location}:
     get:
@@ -101,12 +101,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Station"
+                $ref: "#/components/schemas/StationResponse"
 
 components:
   schemas:
     Tide:
-      description: a single Tide event
+      description: Tide entity
       type: object
       properties:
         date:
@@ -142,25 +142,30 @@ components:
           "time": "18:31",
           "type": "Low"
         }
-    Tides:
-      description: Tides data from a station
+
+    TidesResponse:
+      description: A set of Tides from a station
       type: object
       properties:
         req_lat:
-          type: string
+          type: number
+          format: float
           description: Requested latitude
         req_lon:
-          type: string
+          type: number
+          format: float
           description: Requested longitude
         req_timestamp:
           type: string
           format: date-time
           description: Requested timestamp
         resp_lat:
-          type: string
+          type: number
+          format: float
           description: Responded latitude
         resp_lon:
-          type: string
+          type: number
+          format: float
           description: Responded longitude
         station:
           type: string
@@ -177,11 +182,11 @@ components:
             $ref: "#/components/schemas/Tide"
       example:
         {
-          "req_lat": "42.6724",
-          "req_lon": "-70.9443",
+          "req_lat": 42.6724,
+          "req_lon": -70.9443,
           "req_timestamp": "Wed, 11 Jun 2025 10:08:36 EDT",
-          "resp_lat": "42.7101",
-          "resp_lon": "-70.7886",
+          "resp_lat": 42.7101,
+          "resp_lon": -70.7886,
           "station": "Plum Island Sound (south end), Massachusetts",
           "station_tz": "America/New_York",
           "status": 200,
@@ -199,16 +204,19 @@ components:
         }
 
     Station:
+      description: Station entity
       type: object
       properties:
         id:
           type: string
           description: Unique ID of the station
         lat:
-          type: string
+          type: number
+          format: float
           description: Latitude of the station
         lon:
-          type: string
+          type: number
+          format: float
           description: Longitude of the station
         name:
           type: string
@@ -225,31 +233,59 @@ components:
       example:
         {
           "id": "NOAA:8441241",
-          "lat": "42.7101",
-          "lon": "-70.7886",
+          "lat": 42.7101,
+          "lon": -70.7886,
           "name": "Plum Island Sound (south end), Massachusetts",
           "noaa": true,
           "org": "NOAA",
           "org_id": "8441241"
         }
-    Stations:
+
+    StationResponse:
+      description: One Station
       type: object
       properties:
+        status:
+          type: string
+        station:
+          $ref: "#/components/schemas/Station"
+      example:
+        {
+          "status": "OK",
+          "station": [
+            {
+              "id": "NOAA:8441241",
+              "lat": 42.7101,
+              "lon": -70.7886,
+              "name": "Plum Island Sound (south end), Massachusetts",
+              "noaa": true,
+              "org": "NOAA",
+              "org_id": "8441241"
+            }
+          ]
+        }
+
+    StationsResponse:
+      description: List of Stations
+      type: object
+      properties:
+        status:
+          type: string
         station_count:
           type: integer
-          description: Total number of tide stations
         stations:
           type: array
           items:
             $ref: "#/components/schemas/Station"
       example:
         {
+          "status": "OK",
           "station_count": 1,
           "stations": [
             {
               "id": "NOAA:8441241",
-              "lat": "42.7101",
-              "lon": "-70.7886",
+              "lat": 42.7101,
+              "lon": -70.7886,
               "name": "Plum Island Sound (south end), Massachusetts",
               "noaa": true,
               "org": "NOAA",
