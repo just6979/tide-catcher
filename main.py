@@ -18,9 +18,11 @@ def json_tides_by_location(location: str):
 
     return tides.for_location(location_split)
 
+
 @app.get('/json/tides/by-station/<station>')
 def json_tides_by_station(station: str):
     return tides.for_station(station)
+
 
 @app.get('/json/stations')
 def json_stations():
@@ -31,9 +33,11 @@ def json_stations():
 def refresh_stations():
     return tides.refresh_stations()
 
+
 @app.get('/json/station/by-id/<station_id>')
 def json_station_by_id(station_id: str):
     return tides.station_by_id(station_id)
+
 
 @app.get('/json/station/by-nearest/<location>')
 def json_station_by_nearest(location: str):
