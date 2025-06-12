@@ -81,7 +81,7 @@
                     <td>Location</td>
                     <td>
                         <a href="http://maps.google.com/maps/place/{{req_lat}},{{req_lon}}/@{{req_lat}},{{req_lon}}
-            ,12z">
+            ,12z" target="_blank">
             {{req_lat}}, {{req_lon}}
             </a>
         </td>
@@ -97,7 +97,7 @@
                     <td>Location</td>
                     <td>
                         <a href="http://maps.google.com/maps/place/{{resp_lat}},{{resp_lon}}/@{{resp_lat}},{{resp_lon}}
-            ,12z">
+            ,12z" target="_blank">
             {{resp_lat}} , {{resp_lon}}
             </a>
         </td>
@@ -135,9 +135,12 @@
                 <li>
                 {{org}},
                 {{name}}
-                @(<a href="http://maps.google.com/maps/place/{{loc.lat}},{{loc.lon}}">{{loc.lat}},{{loc.lon}}</a>)
+                @(<a href="http://maps.google.com/maps/place/{{loc.lat}},{{loc.lon}}" target="_blank">
+                {{loc.lat}},{{loc.lon}}
+                </a>)
                 {{#noaa}}
-                    NOAA ID: <a href=https://tidesandcurrents.noaa.gov/noaatidepredictions.html?id={{org_id}}>
+                    NOAA ID: <a href=https://tidesandcurrents.noaa.gov/noaatidepredictions.html?id={{org_id}}
+                    target="_blank">
                     {{org_id}}
                     </a>
                 {{/noaa}}
