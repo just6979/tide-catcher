@@ -1,0 +1,259 @@
+openapi: 3.1.0
+info:
+  title: tide-catcher-backend
+  description: tide-catcher-backend
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:5000'
+    description: Development
+  - url: 'https://tide-catcher.appspot.com'
+    description: Production
+paths:
+  /json/tides/by-location/{location}:
+    get:
+      description: list of next tides for the closest station
+      parameters:
+        - in: path
+          name: location
+          schema:
+            type: string
+            example: "42.665,-70.9119"
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tides"
+
+  /json/tides/by-station/{station}:
+    get:
+      description: list of next tides for the given station
+      parameters:
+        - in: path
+          name: station
+          schema:
+            type: string
+            example: "NOAA:8440452"
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tides"
+
+  /json/stations:
+    get:
+      description: list of all cached stations
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stations"
+
+  /json/stations/refresh:
+    get:
+      description: update stations cache, return list of newly cached stations
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stations"
+
+  /json/station/by-id/{station}:
+    get:
+      description: metadata for given station
+      parameters:
+        - in: path
+          name: station
+          schema:
+            type: string
+            example: "NOAA:8440452"
+          required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Station"
+
+  /json/station/by-nearest/{location}:
+    get:
+      description: closest station to the given location
+      parameters:
+        - in: path
+          name: location
+          schema:
+            type: string
+            example: "42.665,-70.9119"
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Station"
+
+components:
+  schemas:
+    Tide:
+      description: a single Tide event
+      type: object
+      properties:
+        date:
+          type: string
+          description: Date of the tide
+        day:
+          type: string
+          description: Day of the week
+        height:
+          type: number
+          format: float
+          description: Height of the tide
+        iso-date:
+          type: string
+          format: date-time
+          description: ISO formatted date and time of the tide
+        prior:
+          type: string
+          description: Indicates if the tide is "prior" or "next"
+        time:
+          type: string
+          description: Time of the tide
+        type:
+          type: string
+          description: Type of tide (e.g., "Low", "High")
+      example:
+        {
+          "date": "06-11",
+          "day": "Wed",
+          "height": 0.483,
+          "iso-date": "2025-06-11T18:31:50-04:00",
+          "prior": "prior",
+          "time": "18:31",
+          "type": "Low"
+        }
+    Tides:
+      description: Tides data from a station
+      type: object
+      properties:
+        req_lat:
+          type: string
+          description: Requested latitude
+        req_lon:
+          type: string
+          description: Requested longitude
+        req_timestamp:
+          type: string
+          format: date-time
+          description: Requested timestamp
+        resp_lat:
+          type: string
+          description: Responded latitude
+        resp_lon:
+          type: string
+          description: Responded longitude
+        station:
+          type: string
+          description: Name of the tide station
+        station_tz:
+          type: string
+          description: Timezone of the station
+        status:
+          type: integer
+          description: HTTP status code
+        tides:
+          type: array
+          items:
+            $ref: "#/components/schemas/Tide"
+      example:
+        {
+          "req_lat": "42.6724",
+          "req_lon": "-70.9443",
+          "req_timestamp": "Wed, 11 Jun 2025 10:08:36 EDT",
+          "resp_lat": "42.7101",
+          "resp_lon": "-70.7886",
+          "station": "Plum Island Sound (south end), Massachusetts",
+          "station_tz": "America/New_York",
+          "status": 200,
+          "tides": [
+            {
+              "date": "06-11",
+              "day": "Wed",
+              "height": 0.483,
+              "iso-date": "2025-06-11T18:31:50-04:00",
+              "prior": "prior",
+              "time": "18:31",
+              "type": "Low"
+            }
+          ]
+        }
+
+    Station:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID of the station
+        lat:
+          type: string
+          description: Latitude of the station
+        lon:
+          type: string
+          description: Longitude of the station
+        name:
+          type: string
+          description: Name of the station
+        noaa:
+          type: boolean
+          description: Indicates if the station is a NOAA station
+        org:
+          type: string
+          description: Organization managing the station
+        org_id:
+          type: string
+          description: Organization-specific ID of the station
+      example:
+        {
+          "id": "NOAA:8441241",
+          "lat": "42.7101",
+          "lon": "-70.7886",
+          "name": "Plum Island Sound (south end), Massachusetts",
+          "noaa": true,
+          "org": "NOAA",
+          "org_id": "8441241"
+        }
+    Stations:
+      type: object
+      properties:
+        station_count:
+          type: integer
+          description: Total number of tide stations
+        stations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Station"
+      example:
+        {
+          "station_count": 1,
+          "stations": [
+            {
+              "id": "NOAA:8441241",
+              "lat": "42.7101",
+              "lon": "-70.7886",
+              "name": "Plum Island Sound (south end), Massachusetts",
+              "noaa": true,
+              "org": "NOAA",
+              "org_id": "8441241"
+            }
+          ]
+        }
