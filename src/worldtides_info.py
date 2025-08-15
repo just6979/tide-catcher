@@ -23,8 +23,8 @@ def fetch_tides(api_key: str, loc: list):
         data = json.loads(data)
     except ValueError as e:
         # we got bad JSON from worldtides.info, probably a 500 ISE
-        api_down = 'Our tide data source seems to be down at the moment, ' \
-                   'please try again later.' + e.message
+        api_down = f'Our tide data source seems to be down at the moment, ' \
+                   f'please try again later. {e}'
         return utils.error_builder(_module, 500, api_down)
 
     status = data['status']
@@ -62,8 +62,8 @@ def process_stations(data):
         return utils.error_builder(
             module=_module,
             status=500,
-            msg='Our tides information source seems to be down at the moment, '
-                'please try again later.' + e.message
+            msg=f'Our tides information source seems to be down at the moment, '
+                f'please try again later. {e}'
         )
 
     try:
